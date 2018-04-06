@@ -1,0 +1,27 @@
+
+<div class="card-header text-white d-flex w-100">
+  <label for="voterNumber" style="margin-bottom: .1rem; padding: 0.375rem 0.5rem 0 0; ">Voters: </label>
+  <input id="voterNumber" class="form-control"
+          style="width: 50%;"
+          (input)="onVoterNumberUpdate()"
+          type="Number"
+          min="1"
+          step="1"
+          value="1"
+          name="numberOfVoters"
+          [(ngModel)]="model.profiles[index].numberOfVoters"
+          [disabled]="model.majorityMatrixIsDirty">
+
+  <button style="padding: 0 0 0 1rem;" type="button" class="close" (click) = "model.removeProfile(index)" aria-label="Close" [disabled]="model.majorityMatrixIsDirty">
+        <span aria-hidden="true">&times;</span>
+  </button>
+
+</div>
+
+<ul [sortablejs]="model.profiles[index].relation" [sortablejsOptions]="sortableOptions" class="list-group list-group-flush">
+    <li class="list-group-item"
+        style="text-align:center"
+        *ngFor="let item of model.profiles[index].relation"
+        [class.draggable]="!model.majorityMatrixIsDirty"
+        [class.disabled]="model.majorityMatrixIsDirty">{{ model.getIdentifier(item) }}</li>
+</ul>

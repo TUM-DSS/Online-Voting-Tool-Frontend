@@ -1,0 +1,48 @@
+<div class="container">
+  <h4>SD Efficency</h4>
+  <app-error-box *ngIf="showInvalidMessage" [title] = "'Efficency Test Failed: '" [msg] = "data.msg" (close)="closeInvalidMessage()"></app-error-box>
+  <ul class="list-group" *ngIf="data.success">
+    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let sdRes of data.sdresult; let i = index;">
+      Lottery {{i+1}}:
+      <div>
+        <div class="badge badge-pill btn {{getBadgeClass(sdRes)}} tooltipDiv">
+        SD {{getBadgeString(sdRes)}}
+        <span class="tooltiptext" *ngIf="!sdRes.success">
+          Error: {{sdRes.msg}}
+        </span>
+
+        <span class="tooltiptext" *ngIf="sdRes.success && !sdRes.efficient">
+          Dominated by: <br/>
+          <div *ngFor="let prob of sdRes.dominator; let j = index;">
+            {{getDomText(prob,j)}}
+          </div>
+        </span>
+
+        <span class="tooltiptext" *ngIf="sdRes.success && sdRes.efficient">
+          Lottery is SD-Efficient.
+        </span>
+
+      </div>
+        <div class="badge badge-pill btn {{getBadgeClass(data.pcresult[i])}} tooltipDiv">
+        PC {{getBadgeString(data.pcresult[i])}}
+        <span class="tooltiptext" *ngIf="!data.pcresult[i].success">
+          Error: {{sdRes.msg}}
+        </span>
+
+        <span class="tooltiptext" *ngIf="data.pcresult[i].success && !data.pcresult[i].efficient">
+          Dominated by: <br/>
+          <div *ngFor="let prob of data.pcresult[i].dominator; let j = index;">
+            {{getDomText(prob,j)}}
+          </div>
+        </span>
+
+        <span class="tooltiptext" *ngIf="data.pcresult[i].success && data.pcresult[i].efficient">
+          Lottery is PC-Efficient.
+        </span>
+
+      </div>
+      </div>
+    </li>
+  </ul>
+  <br/>
+</div>

@@ -1,0 +1,56 @@
+<div *ngIf="advancedMode" style="margin: 1vw 1vw 0vw 1vw;" (mouseleave) = "selectMenu(-1)">
+  <ul class="nav nav-tabs">
+    <li class="nav-item dropdown" *ngFor="let menu of menues; let menuIndex = index">
+      <a class="nav-link dropdown-toggle {{ (menuIndex === selectedMenu)? '':'text-primary'}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" style="color:inherit;" (mouseenter) = "selectMenu(menuIndex)">{{menues[menuIndex].name}}</a>
+      <div class="dropdown-menu {{ (menuIndex === selectedMenu)? 'show':''}}" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 42px, 0px); top: 0px; left: 0px; will-change: transform;">
+        <a class="dropdown-item" *ngFor="let item of menues[menuIndex].list; let itemIndex = index" (click)="selectAlgorithm(menuIndex,itemIndex)">{{menues[menuIndex].list[itemIndex].name}}</a>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="jumbotron">
+  <div class="container" style="min-height: 20em;">
+    <h3>{{menues[selectedItem.menu].list[selectedItem.item].name}}</h3>
+
+    <div *ngIf="menues[selectedItem.menu].list[selectedItem.item].hasParameter" style="margin-bottom:1em;">
+      <strong style="display:block">{{menues[selectedItem.menu].list[selectedItem.item].paraName}}: {{voteParameter}}</strong>
+      <span style="">
+        {{menues[selectedItem.menu].list[selectedItem.item].paraMin}}
+        <input type = "range"
+              min="{{menues[selectedItem.menu].list[selectedItem.item].paraMin}}"
+              max="{{menues[selectedItem.menu].list[selectedItem.item].paraMax}}"
+              name="voteParameter"
+              [(ngModel)]="voteParameter"
+              (change) = "updateVisualization()"
+              step="1"/>
+        {{menues[selectedItem.menu].list[selectedItem.item].paraMax}} <br/>
+      </span>
+      <br/>
+    </div>
+
+    <app-error-box *ngIf="showInvalidMessage" [title] = "errorBlock.title" [msg] = "errorBlock.msg" (close)="closeInvalidMessage()"></app-error-box>
+
+    <div class="progress" *ngIf="waiting">
+      <br/>
+      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+    </div>
+
+    <div [ngSwitch]="resultType" *ngIf="!waiting">
+      <app-bar-chart *ngSwitchCase="resultDataType.Lotteries" [data] = "resultBarData"></app-bar-chart>
+      <div *ngSwitchCase="resultDataType.Profile" class="card card-block bg-primary" style="width: 13rem; margin-right:5px; display:inline-block">
+        <div class="card-header text-white d-flex w-100">
+          Group Profile
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"
+                style="text-align:center"
+                *ngFor="let item of resultProfile">{{ model.getIdentifier(item) }}</li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-efficiency-chart *ngIf="(resultType == resultDataType.Lotteries) && advancedMode && !waiting" [data]="efficencyData"></app-efficiency-chart>
