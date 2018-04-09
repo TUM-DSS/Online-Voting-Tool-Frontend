@@ -1,4 +1,5 @@
 import { Component, OnInit, Input,ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
+import {toFrac} from "../frac";
 
 @Component({
   selector: 'app-efficiency-chart',
@@ -55,7 +56,7 @@ export class EfficiencyChartComponent implements OnInit {
 
   getDomText(prob,index) {
     if(prob>0) {
-      return "Candidate "+String.fromCharCode(index+65)+': '+prob;
+      return "Candidate "+String.fromCharCode(index+65)+': '+(Math.round(prob * 10000)/10000);//+" ("+toFrac(prob)+")";
     }
     return "";
   }

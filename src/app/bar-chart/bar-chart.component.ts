@@ -1,6 +1,7 @@
 import {Component,OnInit,Input,ViewChild,ElementRef,SimpleChanges} from '@angular/core';
 import { ChartsModule,BaseChartDirective } from "ng2-charts/ng2-charts";
 import {Observable} from 'rxjs/Rx';
+import {toFrac} from "../frac";
 
 
 @Component({
@@ -37,7 +38,19 @@ export class BarChartComponent implements OnInit {
     },
     tooltips: {
       xPadding: 20,
-      mode:"index",
+      callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                    if (label) {
+                        label += ': ';
+                    }
+                    label += Math.round(tooltipItem.xLabel * 10000) / 10000;
+                    //label += " ("+toFrac(tooltipItem.xLabel)+ ")";
+                    return label;
+                }
+            }
+      //mode:"index",
     },
     scales: {
             xAxes: [{

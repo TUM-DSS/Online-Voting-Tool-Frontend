@@ -1,0 +1,42 @@
+export function toFrac(x:number) {
+  const absLog	= Math.abs(Math.log10(x));
+  const precFac = Math.pow(10, Math.ceil(absLog));
+  //Based on http://stackoverflow.com/questions/5968636/converting-a-float-into-a-string-fraction-representation
+  if(Math.abs(x-1)<=0.000001) {
+  	return "1";
+  }
+
+  let out = "";
+
+	if (x < 0) {
+		out+='-';
+		x = -x;
+  }
+
+  let l = Math.floor(x);
+  if (l != 0) {
+    out+=l;
+    x-=l;
+  }
+  let error = Math.abs(x);
+  let bestDenominator = 1;
+  for(let i=2; i<=precFac ;i++) {
+    let error2 = Math.abs(x - (Math.round(x * i) / i));
+  	if (error2 < error) {
+  		error = error2;
+  		bestDenominator = i;
+  	}
+  }
+  if (bestDenominator > 1) {
+    out+=" "+ Math.round(x * bestDenominator)+"/"+bestDenominator;
+  }
+  if(out.length == 0){
+    out = "0";
+  }
+  //One Test
+  let oSplit = out.slice().replace("-","").split("/")
+	if(oSplit.length==2 && (oSplit[0] == oSplit[1])) {
+		return "1";
+	}
+  return out;
+}
