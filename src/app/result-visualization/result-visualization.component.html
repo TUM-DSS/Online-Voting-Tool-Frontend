@@ -1,8 +1,15 @@
 <div *ngIf="advancedMode" style="margin: 1vw 1vw 0vw 1vw;" (mouseleave) = "selectMenu(-1)">
   <ul class="nav nav-tabs">
+    <li class="nav-item dropdown" >
+      <a class="nav-link dropdown-toggle {{ (0 === selectedMenu)? '':'text-primary'}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" style="color:inherit;" (mouseenter) = "selectMenu(0)">Social Choice Functions</a>
+      <div class="dropdown-menu {{ (0 === selectedMenu)? 'show':''}}" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 42px, 0px); top: 0px; left: 0px; will-change: transform;">
+        <a class="dropdown-item" *ngFor="let item of socialChoiceFunctions; let itemIndex = index">{{socialChoiceFunctions[itemIndex]}}: {{socialChoiceResults[itemIndex]}}</a>
+      </div>
+    <li>
+
     <li class="nav-item dropdown" *ngFor="let menu of menues; let menuIndex = index">
-      <a class="nav-link dropdown-toggle {{ (menuIndex === selectedMenu)? '':'text-primary'}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" style="color:inherit;" (mouseenter) = "selectMenu(menuIndex)">{{menues[menuIndex].name}}</a>
-      <div class="dropdown-menu {{ (menuIndex === selectedMenu)? 'show':''}}" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 42px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="nav-link dropdown-toggle {{ ((menuIndex+1) === selectedMenu)? '':'text-primary'}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" style="color:inherit;" (mouseenter) = "selectMenu(menuIndex+1)">{{menues[menuIndex].name}}</a>
+      <div class="dropdown-menu {{ ((menuIndex+1) === selectedMenu)? 'show':''}}" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 42px, 0px); top: 0px; left: 0px; will-change: transform;">
         <a class="dropdown-item" *ngFor="let item of menues[menuIndex].list; let itemIndex = index" (click)="selectAlgorithm(menuIndex,itemIndex)">{{menues[menuIndex].list[itemIndex].name}}</a>
       </div>
     </li>
@@ -37,7 +44,7 @@
     </div>
 
     <div [ngSwitch]="resultType" *ngIf="!waiting">
-      <app-bar-chart *ngSwitchCase="resultDataType.Lotteries" [data] = "resultBarData"></app-bar-chart>
+      <app-bar-chart *ngSwitchCase="resultDataType.Lotteries" [data] = "resultBarData" [lotteries]="resultLotteries"></app-bar-chart>
       <div *ngSwitchCase="resultDataType.Profile" class="card card-block bg-primary" style="width: 13rem; margin-right:5px; display:inline-block">
         <div class="card-header text-white d-flex w-100">
           Group Profile

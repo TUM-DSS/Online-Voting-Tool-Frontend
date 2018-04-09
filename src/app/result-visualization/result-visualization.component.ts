@@ -37,6 +37,7 @@ export class ResultVisualizationComponent implements OnInit {
   resultDataType = ResultDataType;
   resultType : ResultDataType;
   resultProfile: number[];
+  resultLotteries: number[][];
   resultBarData: BarChartData;
 
   showInvalidMessage : boolean;
@@ -44,38 +45,14 @@ export class ResultVisualizationComponent implements OnInit {
 
   efficencyData : any = {success:false, msg:"No data."};
   waiting : boolean = false;
+  socialChoiceFunctions : string[];
+  socialChoiceResults: string[];
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
+    this.socialChoiceFunctions = ["Borda","Minimax","Nanson","Black","Tideman","Essential Set"]
+    this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
+
     this.menues = [
-      {
-        name:"Social Choice Functions",
-        list: [
-          {
-            name: "Borda",
-            hasParameter : false
-          },
-          {
-            name: "Minimax",
-            hasParameter : false
-          },
-          {
-            name: "Nanson",
-            hasParameter : false
-          },
-          {
-            name: "Black",
-            hasParameter : false
-          },
-          {
-            name: "Tideman",
-            hasParameter : false
-          },
-          {
-            name: "Essential Set",
-            hasParameter : false
-          }
-        ]
-      },
       {
         name:"Social Choice Polytopes",
         list: [
@@ -112,7 +89,7 @@ export class ResultVisualizationComponent implements OnInit {
     ];
 
     this.selectedMenu = -1;
-    this.selectedItem = {menu:1,item:0};
+    this.selectedItem = {menu:0,item:0};
 
     this.showInvalidMessage = false;
     this.errorBlock = {
@@ -175,6 +152,21 @@ export class ResultVisualizationComponent implements OnInit {
     this.waiting = true;
 
     this.fetcher.getVote(sendData).subscribe(data => this.updateVisualizationCallback(data));
+
+
+    for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
+        this.socialChoiceResults[i] = "Loading";
+        sendData.algorithm = this.socialChoiceFunctions[i];
+        this.fetcher.getVote(sendData).subscribe(data => {
+          if(data.success) {
+            let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
+            let str = (rMap.length>1? "Candidates": "Candidate")+" "+rMap;
+            this.socialChoiceResults[i] = str;
+          } else {
+            this.socialChoiceResults[i] = "Error";
+          }
+        })
+    }
   }
 
   updateVisualizationCallback(data) {
@@ -186,6 +178,7 @@ export class ResultVisualizationComponent implements OnInit {
       let typeTemp = +ResultDataType[data.type];
       if(typeTemp == ResultDataType.Lotteries) {
         //Lotteries
+        this.resultLotteries = data.result;
         this.resultBarData = this.getBarData(data.result);
         this.getBarData(data.result);
 
