@@ -56,7 +56,7 @@ export class MajorityMatrixComponent implements OnInit {
       //Check & Save
       if(!this.isValidStaircase(this.tempStaircase)) {
         // Invalid Staircase
-        console.log("Matrix Invalid");
+        //console.log("Matrix Invalid");
         this.showInvalidMessage = true;
         this.errorBlock = {
           title : "Invalid Majority Matrix:",
@@ -67,12 +67,12 @@ export class MajorityMatrixComponent implements OnInit {
         // Valid Staircase & Request profile
         this.extract.getProfiles(this.tempStaircase).subscribe(data => {
           if(data.success) {
-            console.log("Success");
+            //console.log("Success");
             this.editMode = false;
             this.model.majorityMatrixIsDirty = false;
             this.model.updateProfiles(data.profiles);
           } else {
-            console.log("Fail");
+            //console.log("Fail");
             this.showInvalidMessage = true;
             this.errorBlock = {
               title : "Server Error:",

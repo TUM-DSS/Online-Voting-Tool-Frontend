@@ -16,7 +16,6 @@ export class EfficiencyChartComponent implements OnInit {
   ngOnInit() {}
 
   ngOnChanges() {
-    console.log(this.data);
     this.showInvalidMessage = !this.data.success;
   }
 
@@ -56,7 +55,13 @@ export class EfficiencyChartComponent implements OnInit {
 
   getDomText(prob,index) {
     if(prob>0) {
-      return "Candidate "+String.fromCharCode(index+65)+': '+(Math.round(prob * 10000)/10000);//+" ("+toFrac(prob)+")";
+      let out = "Candidate "+String.fromCharCode(index+65)+': '+(Math.round(prob * 10000)/10000);
+      let frac = toFrac(prob);
+      if(frac.length >1) {
+        out+=" ("+toFrac(prob)+")";
+      }
+
+      return out;
     }
     return "";
   }

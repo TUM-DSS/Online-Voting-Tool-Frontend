@@ -3,7 +3,6 @@ import { ChartsModule,BaseChartDirective } from "ng2-charts/ng2-charts";
 import {Observable} from 'rxjs/Rx';
 import {toFrac} from "../frac";
 
-
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
@@ -12,6 +11,7 @@ import {toFrac} from "../frac";
 export class BarChartComponent implements OnInit {
   @Input() data: {labels:string[],data:any[]};
   @Input() lotteries : number[][];
+  @Input() fractions : string[][]
 
   @ViewChild(BaseChartDirective) public chart: BaseChartDirective;
   barLabels : string[]
@@ -46,7 +46,10 @@ export class BarChartComponent implements OnInit {
                         label += ': ';
                     }
                     label += Math.round(tooltipItem.xLabel * 10000) / 10000;
-                    //label += " ("+toFrac(tooltipItem.xLabel)+ ")";
+                    let frac = toFrac(tooltipItem.xLabel);
+                    if(frac.length>1) {
+                      label += " ("+toFrac(tooltipItem.xLabel)+ ")";
+                    }
                     return label;
                 }
             }
@@ -96,6 +99,7 @@ export class BarChartComponent implements OnInit {
   }
 
   ngOnChanges(...args: any[]) {
+    //this.fractions = this.lotteries.map(arr => arr.map(prob => toFrac(prob)));
     this.chart.datasets = this.data.data;
     this.chart.labels = this.data.labels;
     this.chart.ngOnChanges({} as SimpleChanges);

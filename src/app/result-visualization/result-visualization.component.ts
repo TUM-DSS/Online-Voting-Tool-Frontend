@@ -2,7 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import { ProfileModel,Profile,Matrix } from "../model";
 import { VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service";
 import { EfficencyTestService } from "../services/efficency-test/efficency-test.service"
-import {ErrorBlock} from "../error-box/error-box.component";
+import {ErrorBlock} from "../error-box/error-box.component"
 
 
 enum ResultDataType {
