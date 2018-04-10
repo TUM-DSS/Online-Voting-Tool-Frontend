@@ -64,7 +64,7 @@ export class ResultVisualizationComponent implements OnInit {
             name: "Homogeneous Maximal Lottery",
             hasParameter : true,
             paraMin : 0,
-            paraMax : 10,
+            paraMax : 5,
             paraName: "Signed exponent"
           }
         ]
@@ -138,6 +138,7 @@ export class ResultVisualizationComponent implements OnInit {
   }
 
   updateVisualization() {
+    this.closeInvalidMessage();
     //console.log("Update");
     let sendData:SendData  = {
       algorithm : this.menues[this.selectedItem.menu].list[this.selectedItem.item].name,

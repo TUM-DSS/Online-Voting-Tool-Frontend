@@ -11,13 +11,18 @@ export function toFrac(x:number) {
     return "0";
   }
 
-  const absLog	= Math.abs(Math.log10(x));
-  const precFac = Math.pow(10, Math.ceil(absLog));
-
   //Based on http://stackoverflow.com/questions/5968636/converting-a-float-into-a-string-fraction-representation
   if(Math.abs(x-1)<=0.000001) {
   	return "1";
   }
+
+  const absLog	= Math.abs(Math.log10(x))+1;
+  const precFac = Math.pow(10, Math.ceil(absLog));
+
+  if(precFac >= 10000) {
+    return "0";
+  }
+
 
   let out = "";
 

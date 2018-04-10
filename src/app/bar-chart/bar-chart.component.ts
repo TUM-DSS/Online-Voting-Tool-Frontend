@@ -45,7 +45,7 @@ export class BarChartComponent implements OnInit {
                     if (label) {
                         label += ': ';
                     }
-                    label += Math.round(tooltipItem.xLabel * 10000) / 10000;
+                    label += Math.round(tooltipItem.xLabel * 100) / 100;
                     let frac = toFrac(tooltipItem.xLabel);
                     if(frac.length>1) {
                       label += " ("+toFrac(tooltipItem.xLabel)+ ")";
