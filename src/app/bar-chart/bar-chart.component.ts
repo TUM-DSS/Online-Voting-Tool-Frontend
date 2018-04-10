@@ -90,12 +90,14 @@ export class BarChartComponent implements OnInit {
     //[[230,23,23],[230,147,23],[188,230,23],[64,230,23],[23,230,106],[23,230,230],[23,106,230],[64,23,230],[188,23,230],[230,23,147]]
   }
 
+  updateSub : any;
+
   ngOnInit() {
     this.barLabels = this.data.labels;
     this.barData   = this.data.data;
 
-    let timer = Observable.timer(2000,10);
-    timer.subscribe(() => this.updateElection());
+    let updateTimer = Observable.timer(2000,10);
+    this.updateSub = updateTimer.subscribe(() => this.updateElection());
   }
 
   ngOnChanges(...args: any[]) {
@@ -104,6 +106,11 @@ export class BarChartComponent implements OnInit {
     this.chart.labels = this.data.labels;
     this.chart.ngOnChanges({} as SimpleChanges);
   }
+
+  ngOnDestroy() {
+    this.updateSub.unsubscribe();
+  }
+
 
   runElection() {
     this.animationState.trigPosition = 0;
