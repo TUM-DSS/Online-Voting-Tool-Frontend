@@ -16,7 +16,7 @@ export class AppComponent {
   constructor(location:Location) {
     let path = location.prepareExternalUrl(location.path()).toLowerCase();
     this.title = "Online Voting Tool";
-    this.advancedMode = true;//(path == "/advanced");
-    this.model = new ProfileModel(1);
+    this.advancedMode = true; //Set to false if only the minimal voting tool is required
+    this.model = new ProfileModel(1); // Initialize the preference profile
   }
 }

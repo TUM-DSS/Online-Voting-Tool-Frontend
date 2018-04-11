@@ -1,5 +1,10 @@
 import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
 
+
+/**
+* Component to display an error message.
+* Calls a closing callback if the box is closed.
+**/
 @Component({
   selector: 'app-error-box',
   templateUrl: './error-box.component.html',

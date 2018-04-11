@@ -1,19 +1,12 @@
-<form style="margin: 2vw 1vw 1vw 2vw; max-width: 40vw;">
-  <fieldset>
-    <div class="form-group">
-      <label for="numberOfCandidates">Number of Candidates</label>
-      <input [disabled]="model.majorityMatrixIsDirty" class="form-control" (input)="onCandidateNumberUpdate()" id="numberOfCandidates" type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"  name="numberOfCandidates" [(ngModel)]="profileOptions.numberOfCandidates">
-    </div>
-  </fieldset>
-</form>
-
-
-<hr class="my-4">
 <div style="margin: 2vw 1vw 1vw 2vw;">
-  <h3>Profile</h3>
+  <h3>Profile with <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
+    (input)="onCandidateNumberUpdate()" id="numberOfCandidates"
+    type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"
+    name="numberOfCandidates" [(ngModel)]="profileOptions.numberOfCandidates"
+    style="width:6em;display: inline;"/> alternatives</h3>
   <div class="row" style="overflow: scroll;">
     <div class="d-flex flex-row flex-nowrap" >
-      <app-profile-box class="card card-block bg-primary" style="width: 13rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>
+      <app-profile-box class="card card-block bg-primary" style="width: 11.9rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>
       <button (click) = "model.addProfile()" class="btn btn-success" [disabled]="model.majorityMatrixIsDirty">+</button>
     </div>
   </div>

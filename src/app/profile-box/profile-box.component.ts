@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+/**
+* Component for displaying and editing a preference relation using drag and drop.
+*/
 @Component({
   selector: 'app-profile-box',
   templateUrl: './profile-box.component.html',
@@ -21,6 +24,9 @@ export class ProfileBoxComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+  * The number of voters has changed. -> Update the matrix
+  */
   onVoterNumberUpdate() {
     if(this.model.profiles[this.index].numberOfVoters === null ||
     this.model.profiles[this.index].numberOfVoters < 1) {

@@ -1,7 +1,11 @@
 
 let fracMap = {};
 
+/**
+* Helper function to aproximate floats as fractions
+*/
 export function toFrac(x:number) {
+  //We use caching to prevent having to recompute the same fraction multiple times
   if(fracMap.hasOwnProperty(x)) {
     return fracMap[x];
   }
@@ -16,9 +20,11 @@ export function toFrac(x:number) {
   	return "1";
   }
 
+  //Compute the order of magnitude of the number ~ This will be the limit of big the denominator can get
   const absLog	= Math.abs(Math.log10(x))+1;
   const precFac = Math.pow(10, Math.ceil(absLog));
 
+  //We don't compute the fraction for really small values for performance reasons (also the denominators get to big)
   if(precFac >= 10000) {
     return "0";
   }
@@ -40,6 +46,7 @@ export function toFrac(x:number) {
   let error = Math.abs(x);
   let bestDenominator = 1;
 
+  //Iterate through all denominators and keep the one with the smallest error
   for(let i=2; i<=precFac ;i++) {
     let error2 = Math.abs(x - (Math.round(x * i) / i));
   	if (error2 < error) {
@@ -55,10 +62,13 @@ export function toFrac(x:number) {
     out = "0";
   }
 
-  //One Test
+  //Test to check if we got (-) x/x as our aproximation.
   let oSplit = out.slice().replace("-","").split("/");
 
   if(oSplit.length==2 && ( (+oSplit[0]) == (+oSplit[1]))) {
+    if(out.startsWith("-")) {
+      return "-1";
+    }
 		return "1";
 	}
   out = out.trim();

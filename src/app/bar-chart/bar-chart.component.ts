@@ -3,6 +3,9 @@ import { ChartsModule,BaseChartDirective } from "ng2-charts/ng2-charts";
 import {Observable} from 'rxjs/Rx';
 import {toFrac} from "../frac";
 
+/**
+* Component displaying a barchart for given barchart data
+*/
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
@@ -22,7 +25,7 @@ export class BarChartComponent implements OnInit {
     pass : 0,
     running : false
   }
-  electionWinner: string[] = [];//= ["Test","Test 2"];
+  electionWinner: string[] = [];
 
   @ViewChild('chartRef')
   chartRef: ElementRef;
@@ -39,6 +42,7 @@ export class BarChartComponent implements OnInit {
     tooltips: {
       xPadding: 20,
       callbacks: {
+                // Set a custum label function to change the text of the barchart tooltips
                 label: function(tooltipItem, data) {
                     var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
@@ -76,6 +80,7 @@ export class BarChartComponent implements OnInit {
   };
 
   constructor() {
+    //Change the bar colors
     BaseChartDirective.defaultColors = [
     [230,23,23],
     [23,106,230],
@@ -87,7 +92,6 @@ export class BarChartComponent implements OnInit {
     [230,23,147],
     [64,23,230],
     [188,230,23]]
-    //[[230,23,23],[230,147,23],[188,230,23],[64,230,23],[23,230,106],[23,230,230],[23,106,230],[64,23,230],[188,23,230],[230,23,147]]
   }
 
   updateSub : any;
@@ -101,7 +105,6 @@ export class BarChartComponent implements OnInit {
   }
 
   ngOnChanges(...args: any[]) {
-    //this.fractions = this.lotteries.map(arr => arr.map(prob => toFrac(prob)));
     this.chart.datasets = this.data.data;
     this.chart.labels = this.data.labels;
     this.chart.ngOnChanges({} as SimpleChanges);
@@ -111,7 +114,9 @@ export class BarChartComponent implements OnInit {
     this.updateSub.unsubscribe();
   }
 
-
+  /**
+  * Start the animation of the lottery process
+  */
   runElection() {
     this.animationState.trigPosition = 0;
     this.animationState.goalPosition  = Math.random();
@@ -120,6 +125,9 @@ export class BarChartComponent implements OnInit {
     this.electionWinner = [];
   }
 
+  /**
+  * Draw/Update the animation of the lottery process
+  */
   updateElection() {
     if(!this.animationState.running){
       return;
@@ -172,6 +180,9 @@ export class BarChartComponent implements OnInit {
     }
   }
 
+  /**
+  * Update the winner of the lottery process
+  */
   updateElectionWinner() {
     let winner:number[] = [];
     for (let lottery of this.lotteries) {
@@ -190,6 +201,5 @@ export class BarChartComponent implements OnInit {
       }
     }
     this.electionWinner = winner.map((x,i)=> "Lottery "+(i+1)+": Candidate "+String.fromCharCode(x+65));
-    //console.log(this.electionWinner);
   }
 }

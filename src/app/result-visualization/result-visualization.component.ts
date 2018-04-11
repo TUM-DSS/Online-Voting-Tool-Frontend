@@ -4,22 +4,46 @@ import { VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service
 import { EfficencyTestService } from "../services/efficency-test/efficency-test.service"
 import {ErrorBlock} from "../error-box/error-box.component"
 
-
+/**
+* Types of the answers the vote server can give.
+*/
 enum ResultDataType {
   Lotteries, Profile, None
 }
 
+/**
+* Datastructure for the Data sent to the vote server.
+*/
 interface SendData {
   algorithm:string,
   staircase:number[][],
   parameter?:number
 }
 
+/**
+* Datastructure for the visualization.
+* Lables contain the names of the lotteries "Lottery 1",...
+* data contains a list of object:
+* {
+*   label, name of the Candidate
+*   data, the probability of the candidate in each lottery
+*   (additional options)
+* }
+* Note: the Data is per candidate NOT per lottery
+* so if you have lotteries [1/2,1/2,0] and [1/3,1/6,1/2] you get the objects
+* {label:"Candidate 1", data [1/2,1/2]}
+* {label:"Candidate 2", data [1/2,1/6]}
+* {label:"Candidate 3", data [0,1/2]}
+*
+*/
 interface BarChartData{
   labels: string[]
   data: any[]
 }
 
+/**
+* Component for displaying the results of the elections
+*/
 @Component({
   selector: 'app-result-visualization',
   templateUrl: './result-visualization.component.html',
@@ -49,6 +73,11 @@ export class ResultVisualizationComponent implements OnInit {
   socialChoiceResults: string[];
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
+    /**
+    * The menues that will be displayed. Note Social Choice Functions are defined seperately.
+    * Since they are handeled in a different way.
+    */
+
     this.socialChoiceFunctions = ["Borda","Minimax","Nanson","Black","Tideman","Essential Set"]
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
@@ -110,6 +139,7 @@ export class ResultVisualizationComponent implements OnInit {
   }
 
   ngOnInit() {
+    //If the menu changes we want the visualization to be updated
     this.model.updateListener = () => {
       this.updateVisualization();
     };
@@ -121,6 +151,17 @@ export class ResultVisualizationComponent implements OnInit {
     this.selectedMenu = newIndex;
   }
 
+  toggleMenu(newIndex:number) {
+    if(this.selectedMenu != newIndex) {
+      this.selectedMenu = newIndex;
+    } else {
+      this.selectedMenu = -1;
+    }
+  }
+
+  /**
+  * The user selected a different algorithm form the menues.
+  */
   selectAlgorithm(menuIndex:number, itemIndex:number) {
     this.selectedItem = {
       menu: menuIndex,
@@ -133,13 +174,15 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.selectedMenu = -1;
 
-    this.closeInvalidMessage();
     this.updateVisualization();
   }
 
+  /**
+  * Something in the profile changed, request new results from the server
+  */
   updateVisualization() {
     this.closeInvalidMessage();
-    //console.log("Update");
+
     let sendData:SendData  = {
       algorithm : this.menues[this.selectedItem.menu].list[this.selectedItem.item].name,
       staircase : this.model.majorityMatrix.staircase
@@ -148,18 +191,18 @@ export class ResultVisualizationComponent implements OnInit {
     if(this.menues[this.selectedItem.menu].list[this.selectedItem.item].hasParameter) {
       sendData.parameter = this.voteParameter;
     }
-    //console.log("Send",sendData);
 
     this.waiting = true;
-
+    //Request the selected algorithm
     this.fetcher.getVote(sendData).subscribe(data => this.updateVisualizationCallback(data));
 
-
+    //Request all Social Choice Functions
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
         this.socialChoiceResults[i] = "Loading";
         sendData.algorithm = this.socialChoiceFunctions[i];
         this.fetcher.getVote(sendData).subscribe(data => {
           if(data.success) {
+            //Update the Social Choice Function Menu
             let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
             let str = (rMap.length>1? "Candidates": "Candidate")+" "+rMap;
             this.socialChoiceResults[i] = str;
@@ -170,6 +213,9 @@ export class ResultVisualizationComponent implements OnInit {
     }
   }
 
+  /**
+  * We got an answer from the vote server. Display them.
+  */
   updateVisualizationCallback(data) {
     //console.log("Received",data)
     this.waiting = false;
@@ -183,7 +229,7 @@ export class ResultVisualizationComponent implements OnInit {
         this.resultBarData = this.getBarData(data.result);
         this.getBarData(data.result);
 
-        //Test Data
+        //Test for efficency
         let profiles = this.model.profiles.map(p => p.relation);
 
         //console.log("Test Data", data.result, profiles);
@@ -208,6 +254,9 @@ export class ResultVisualizationComponent implements OnInit {
     this.efficencyData = data;
   }
 
+  /**
+  * Transform a list of lotteries into the format of the Barchart
+  */
   getBarData(lotteries:number[][]) {
     let numberOfCandidates = this.model.numberOfCandidates;
 

@@ -1,6 +1,10 @@
 import { Component, OnInit, Input,ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
 import {toFrac} from "../frac";
 
+
+/**
+* Component for displaying the efficiency results of the diferent lotteries
+*/
 @Component({
   selector: 'app-efficiency-chart',
   templateUrl: './efficiency-chart.component.html',
@@ -23,6 +27,9 @@ export class EfficiencyChartComponent implements OnInit {
     this.showInvalidMessage = false;
   }
 
+  /**
+  * Helper function for styling the info pillss
+  */
   getBadgeClass(res) {
     if(!res.success) {
       return "badge-warning";
@@ -33,6 +40,9 @@ export class EfficiencyChartComponent implements OnInit {
     return "badge-danger";
   }
 
+  /**
+  * Helper function for text display on the info pills
+  */
   getBadgeString(res) {
     if(!res.success) {
       return "Failed";
@@ -43,6 +53,9 @@ export class EfficiencyChartComponent implements OnInit {
     return "Dominated";
   }
 
+  /**
+  * Helper function for text inside the tooltip of the info pills
+  */
   getTooltipText(res) {
     if(!res.success) {
       return "Error: "+res.msg;
@@ -53,6 +66,9 @@ export class EfficiencyChartComponent implements OnInit {
     return "Lottery is SD Efficient.";
   }
 
+  /**
+  * Helper function for text inside the tooltip of the info pills
+  */
   getDomText(prob,index) {
     if(prob>0) {
       let out = "Candidate "+String.fromCharCode(index+65)+': '+(Math.round(prob * 100)/100);

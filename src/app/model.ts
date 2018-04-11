@@ -1,3 +1,10 @@
+/*
+* Helper Classes
+*/
+
+/**
+* ProfileModel contains the preference profile and the related majority matrix
+*/
 export class ProfileModel {
   profiles : Profile[]
   majorityMatrix : Matrix
@@ -15,9 +22,11 @@ export class ProfileModel {
     this.updateModel();
   }
 
+  /** Add/ Remove candidates (called if the numberOfCandidates is changed)*/
   resize(newSize : number) {
+    //update the profile
     this.profiles.forEach(p => p.resize(newSize));
-    //Make sure that dublicates get removed
+    //Make sure that dublicate preference relations get removed/ bundeled
     let pdic = {};
 
     for (let profile of this.profiles) {
@@ -38,16 +47,18 @@ export class ProfileModel {
       }
     }
 
-
     this.numberOfCandidates = newSize;
+    //Update the Matrix
     this.updateModel();
   }
 
+  /** Add an new Voter to the Profile */
   addProfile() {
     this.profiles.push(new Profile(this.numberOfCandidates,1));
     this.updateModel();
   }
 
+  /** Remove voters from the profile */
   removeProfile(index : number) {
     if (this.profiles.length>1) {
       this.profiles.splice(index,1);
@@ -55,11 +66,14 @@ export class ProfileModel {
     }
   }
 
+  /** Gets the Candidate Name (0->A , 1->B, ...) */
   getIdentifier(x:number) {
     return String.fromCharCode(x+65);
   }
 
+  /** Called when the preference relations change */
   updateProfiles(profiles) {
+    //Create new Profile objects.
     this.profiles = profiles.map(p => {
       let out = new Profile(p.relation.length,p.numberOfVoters);
       out.relation = p.relation;
@@ -69,6 +83,7 @@ export class ProfileModel {
     this.updateModel();
   }
 
+  //Updates the majority matrix and notifies the components that need to react to the change
   updateModel() {
     //UpdateMatrix
     let mat = new Matrix(this.numberOfCandidates);
@@ -85,6 +100,7 @@ export class ProfileModel {
     this.callListener();
   }
 
+  /** Call the update callback if one exitsts */
   callListener() {
     if( typeof this.updateListener != "undefined" && this.updateListener!== null) {
       this.updateListener();
@@ -92,8 +108,12 @@ export class ProfileModel {
   }
 }
 
+
+/**
+* Represents a preference Profile
+*/
 export class Profile {
-  //Represents a preference Profile
+
   relation: number[]
   numberOfVoters: number
 
@@ -115,15 +135,25 @@ export class Profile {
     }
   }
 
+  /**
+  *  Returns how many voters prefer x over y if y>x then it returns a negative number
+  */
   compare(x : number,y : number) {
-    //Returns how many voters prefer x over y if y>x then it returns a negative number
     let p1 = this.relation.indexOf(x);
     let p2 = this.relation.indexOf(y);
     return Math.sign(p2-p1)*this.numberOfVoters;
   }
 }
 
+/**
+* Represents a majority matrix
+*/
 export class Matrix {
+  //We only store the upper triangle of the matrix (=staircase)
+  /* E.g. 0  1 -3       1  -3
+  *       -1 0  -1  =>     -1
+  *       3  1  0
+  */
   staircase: number[][]
 
   constructor(size : number) {
@@ -133,7 +163,11 @@ export class Matrix {
     }
   }
 
+  /**
+  * Access any element of the matrix even outside the staircase
+  */
   get(row : number,col : number) {
+
     if(row===col) {
       return 0;
     }
