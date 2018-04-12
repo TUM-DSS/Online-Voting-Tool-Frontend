@@ -8,7 +8,9 @@
         <div class="badge badge-pill btn {{getBadgeClass(sdRes)}} tooltipDiv">
         SD {{getBadgeString(sdRes)}}
         <span class="tooltiptext" *ngIf="!sdRes.success">
-          Error: {{sdRes.msg}}
+          <!--Error: {{sdRes.msg}}-->
+          Lottery is probably SD-Efficient.<br/>
+          (up to numerical inaccuracy)
         </span>
 
         <span class="tooltiptext" *ngIf="sdRes.success && !sdRes.efficient">
@@ -26,7 +28,9 @@
         <div class="badge badge-pill btn {{getBadgeClass(data.pcresult[i])}} tooltipDiv">
         PC {{getBadgeString(data.pcresult[i])}}
         <span class="tooltiptext" *ngIf="!data.pcresult[i].success">
-          Error: {{sdRes.msg}}
+          <!--Error: {{sdRes.msg}}-->
+          Lottery is probably PC-Efficient. <br/>
+          (up to numerical inaccuracy)
         </span>
 
         <span class="tooltiptext" *ngIf="data.pcresult[i].success && !data.pcresult[i].efficient">

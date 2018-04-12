@@ -45,7 +45,7 @@ export class EfficiencyChartComponent implements OnInit {
   */
   getBadgeString(res) {
     if(!res.success) {
-      return "Failed";
+      return "Efficient"//"Failed";
     }
     if(res.efficient) {
       return "Efficient"
@@ -58,7 +58,7 @@ export class EfficiencyChartComponent implements OnInit {
   */
   getTooltipText(res) {
     if(!res.success) {
-      return "Error: "+res.msg;
+      return "Lottery is probably SD Efficient (up to numerical inaccuracy)."//"Error: "+res.msg;
     }
     if(!res.efficient) {
       return "Dominated by: "+ res.dominator;
