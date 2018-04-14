@@ -68,6 +68,7 @@ export class ResultVisualizationComponent implements OnInit {
   errorBlock: ErrorBlock;
 
   efficencyData : any = {success:false, msg:"No data."};
+  waitSub : any[];
   waiting : boolean = false;
   socialChoiceFunctions : string[];
   socialChoiceResults: string[];
@@ -78,6 +79,7 @@ export class ResultVisualizationComponent implements OnInit {
     * Since they are handeled in a different way.
     */
 
+    this.waitSub = [];
     this.socialChoiceFunctions = ["Borda","Minimax","Nanson","Black","Tideman","Essential Set"]
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
@@ -144,6 +146,7 @@ export class ResultVisualizationComponent implements OnInit {
       this.updateVisualization();
     };
 
+
     this.updateVisualization();
   }
 
@@ -181,6 +184,11 @@ export class ResultVisualizationComponent implements OnInit {
   * Something in the profile changed, request new results from the server
   */
   updateVisualization() {
+    //Close old connections, Prevent data races
+    for (let sub of this.waitSub) {
+        sub.unsubscribe();
+    }
+
     this.closeInvalidMessage();
 
     let sendData:SendData  = {
@@ -193,14 +201,15 @@ export class ResultVisualizationComponent implements OnInit {
     }
 
     this.waiting = true;
+    this.waitSub = [];
     //Request the selected algorithm
-    this.fetcher.getVote(sendData).subscribe(data => this.updateVisualizationCallback(data));
+    this.waitSub.push(this.fetcher.getVote(sendData).subscribe(data => this.updateVisualizationCallback(data)));
 
     //Request all Social Choice Functions
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
         this.socialChoiceResults[i] = "Loading";
         sendData.algorithm = this.socialChoiceFunctions[i];
-        this.fetcher.getVote(sendData).subscribe(data => {
+        this.waitSub.push(this.fetcher.getVote(sendData).subscribe(data => {
           if(data.success) {
             //Update the Social Choice Function Menu
             let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
@@ -209,7 +218,7 @@ export class ResultVisualizationComponent implements OnInit {
           } else {
             this.socialChoiceResults[i] = "Error";
           }
-        })
+        }));
     }
   }
 

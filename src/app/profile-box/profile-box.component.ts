@@ -15,7 +15,7 @@ export class ProfileBoxComponent implements OnInit {
 
   constructor() {
     this.sortableOptions = {
-      onUpdate: () => this.model.updateModel(),
+      onUpdate: () => {this.model.allowStringUpdate = true; this.model.updateModel();},
       draggable: '.draggable',
       animation: 100
     };
@@ -32,6 +32,7 @@ export class ProfileBoxComponent implements OnInit {
     this.model.profiles[this.index].numberOfVoters < 1) {
       this.model.profiles[this.index].numberOfVoters = 1;
     }
+    this.model.allowStringUpdate = true;
     this.model.updateModel();
   }
 }

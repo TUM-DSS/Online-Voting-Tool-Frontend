@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ProfileModel,Profile,Matrix } from "./model";
-import { Location } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -13,10 +13,24 @@ export class AppComponent {
   advancedMode: boolean;
   model : ProfileModel;
 
-  constructor(location:Location) {
-    let path = location.prepareExternalUrl(location.path()).toLowerCase();
+  paramSub : any;
+
+  constructor(private router: Router, private route: ActivatedRoute) {
+    console.log(this.route.queryParams['profile']);
     this.title = "Online Voting Tool";
     this.advancedMode = true; //Set to false if only the minimal voting tool is required
-    this.model = new ProfileModel(1); // Initialize the preference profile
+    this.model = new ProfileModel(1,router); // Initialize the preference profile
+  }
+
+  ngOnInit() {
+    this.paramSub = this.route.queryParams.subscribe(d => {
+      if(this.paramSub) {
+        this.paramSub.unsubscribe();
+      }
+
+      if(d.hasOwnProperty("profile")) {
+        this.model.setProfileString(d["profile"]);
+      }
+    });
   }
 }

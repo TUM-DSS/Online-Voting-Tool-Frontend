@@ -12,14 +12,78 @@ export class ProfileModel {
   numberOfCandidates : number
   changeRef: any
   updateListener : () => any
+  setProfileStringListener : () => any
+  allowStringUpdate : boolean
 
-  constructor(size : number) {
+  constructor(size : number, private router) {
     this.numberOfCandidates = size;
     this.profiles = [new Profile(size,1)];
     this.majorityMatrix = new Matrix(size);
     this.majorityMatrixIsDirty = false;
+    this.allowStringUpdate = false;
 
     this.updateModel();
+  }
+
+  /**
+  * Get A String of the form 2ABC-1CBA-...
+  * and convert it into a profile (if valid)
+  * 2: [1,2,3], 1:[2,1,0]
+  * use this profile in the model
+  */
+  setProfileString(prof : string) {
+    if(prof.length == 0) {
+      return;
+    }
+
+    let profs = prof.split("-");
+
+    let newProfiles = [];
+    for (let inpString of profs) {
+        inpString = inpString.toUpperCase();
+
+        let len = -1
+        if(inpString.match(/\d+[A-Z]+/)){
+          let match = /(\d+)([A-Z]+)/.exec(inpString);
+          let num = +match[1];
+          let profString = match[2];
+
+          if(len == -1) {
+            len = profString.length;
+          } else if (len != profString.length) {
+            //Invalid Profile length
+            return;
+          }
+
+          let profArray = [];
+          for(let i = 0; i < len;i++) {
+            let num = profString.charCodeAt(i)-"A".charCodeAt(0);
+            if(num>=0 && num < len && profArray.indexOf(num)==-1) {
+              profArray.push(num);
+            } else {
+              //Invalid Format
+              return
+            }
+          }
+
+          let p = {
+            relation:profArray,
+            numberOfVoters: num
+          }
+
+          newProfiles.push(p);
+        } else {
+          //Invalid Format
+          return;
+        }
+    }
+
+    this.numberOfCandidates = newProfiles[0].relation.length;
+    console.log("Candidates",this.numberOfCandidates);
+    if( typeof this.updateListener != "undefined" && this.updateListener!== null) {
+      this.setProfileStringListener();
+    }
+    this.updateProfiles(newProfiles);
   }
 
   /** Add/ Remove candidates (called if the numberOfCandidates is changed)*/
@@ -54,6 +118,7 @@ export class ProfileModel {
 
   /** Add an new Voter to the Profile */
   addProfile() {
+    this.allowStringUpdate = true;
     this.profiles.push(new Profile(this.numberOfCandidates,1));
     this.updateModel();
   }
@@ -80,11 +145,26 @@ export class ProfileModel {
       return out;
     });
 
+    this.allowStringUpdate = true;
     this.updateModel();
   }
 
-  //Updates the majority matrix and notifies the components that need to react to the change
+  getProfileString() {
+    return this.profiles.reduce( (acc,val) => {
+      return acc + "-" + val.numberOfVoters + val.relation.reduce((acc,val) => acc+this.getIdentifier(val),"");
+    },"").slice(1);
+  }
+
+  /**
+  * Updates the majority matrix and notifies the components that need to react to the change
+  */
   updateModel() {
+    if(this.allowStringUpdate) {
+      //Update Query String
+      this.router.navigate(['/'],{ queryParams: { profile:this.getProfileString()}})
+    }
+
+
     //UpdateMatrix
     let mat = new Matrix(this.numberOfCandidates);
 
