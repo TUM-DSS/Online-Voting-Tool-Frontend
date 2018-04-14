@@ -28,7 +28,10 @@ export class ProfileComponent implements OnInit {
       this.profileOptions.maxNumber = 10;
     }
 
-    this.model.setProfileStringListener = () => this.profileOptions.numberOfCandidates = this.model.numberOfCandidates;
+    this.model.setProfileStringListener = () => {
+      this.profileOptions.numberOfCandidates = this.model.numberOfCandidates;
+      this.onCandidateNumberUpdate();
+    }
     this.model.resize(this.profileOptions.numberOfCandidates);
   }
 

@@ -84,6 +84,7 @@ export class ProfileModel {
       this.setProfileStringListener();
     }
     this.updateProfiles(newProfiles);
+    this.resize(this.numberOfCandidates);
   }
 
   /** Add/ Remove candidates (called if the numberOfCandidates is changed)*/
