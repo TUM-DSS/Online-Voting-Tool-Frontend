@@ -29,7 +29,7 @@ export class AppComponent {
       }
 
       if(d.hasOwnProperty("profile")) {
-        this.model.setProfileString(d["profile"]);
+        this.model.setProfileString(d["profile"].trim());
       }
     });
   }
