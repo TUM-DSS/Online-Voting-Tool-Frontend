@@ -17,8 +17,8 @@ export class AppComponent {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     console.log(this.route.queryParams['profile']);
-    this.title = "Online Voting Tool";
     this.advancedMode = true; //Set to false if only the minimal voting tool is required
+    this.title = this.advancedMode?"Online Voting Tool":"Maximal Lotteries";
     this.model = new ProfileModel(1,router); // Initialize the preference profile
   }
 

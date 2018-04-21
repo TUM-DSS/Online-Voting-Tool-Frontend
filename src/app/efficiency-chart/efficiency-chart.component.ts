@@ -71,7 +71,7 @@ export class EfficiencyChartComponent implements OnInit {
   */
   getDomText(prob,index) {
     if(prob>0) {
-      let out = "Candidate "+String.fromCharCode(index+65)+': '+(Math.round(prob * 100)/100);
+      let out = "Alternative "+String.fromCharCode(index+65)+': '+(Math.round(prob * 100)/100);
       let frac = toFrac(prob);
       if(frac.length >1) {
         out+=" ("+toFrac(prob)+")";

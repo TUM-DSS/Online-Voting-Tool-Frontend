@@ -4,16 +4,17 @@
     type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"
     name="numberOfCandidates" [(ngModel)]="profileOptions.numberOfCandidates"
     style="width:6em;display: inline;"/> alternatives</h3>
-  <div class="row" style="overflow: scroll;">
+
+  <div #scrollContainer class="row" style="overflow:scroll; width:90%;">
     <div class="d-flex flex-row flex-nowrap" >
-      <app-profile-box class="card card-block bg-primary" style="width: 11.9rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>
-      <button (click) = "model.addProfile()" class="btn btn-success" [disabled]="model.majorityMatrixIsDirty">+</button>
+      <app-profile-box class="card card-block bg-primary" style="width: 10rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>
+      <button (click) = "onAddVoter()" class="btn btn-success" [disabled]="model.majorityMatrixIsDirty">+</button>
     </div>
   </div>
+
 </div>
 
 <hr class="my-4">
 <div style="margin: 2vw 1vw 1vw 2vw;">
-  <h3>Majority Matrix</h3>
   <app-majority-matrix [model] = "model"></app-majority-matrix>
 </div><br/>

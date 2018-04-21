@@ -1,31 +1,40 @@
-<div class="table-responsive">
-  <table class="table table-hover" style="max-width: 100%; margin: 0 0 0 0; table-layout: fixed;">
-    <thead>
-      <tr>
-        <th scope="col"></th>
-        <th scope="col" *ngFor="let can of getCandidateArray(model.numberOfCandidates);">{{model.getIdentifier(can)}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let canY of getCandidateArray(model.numberOfCandidates);">
-        <th scope="row">{{model.getIdentifier(canY)}}</th>
-        <td *ngFor="let canX of getCandidateArray(model.numberOfCandidates);">
-            <div *ngIf="editMode">
-              <input *ngIf="canX>canY" class="form-control" type="Number" style="width:100%" name="tempStaircase" [(ngModel)]="tempStaircase[canY][canX-(canY+1)]" (input)="closeInvalidMessage()"/>
-              <div *ngIf="canX<=canY">
-                {{canX == canY? 0 : -tempStaircase[canX][canY-(canX+1)] }}
+
+<span style="white-space: nowrap;">
+  <button (click)="toggleVisibility()" class="toggleButton">{{visible? "&#9660;":"&#9658;"}}</button>
+  <h3 style="display:inline;">Majority Matrix </h3>
+</span>
+<div [hidden] = "!visible">
+
+  <div class="table-responsive">
+    <table class="table table-hover" style="max-width: 100%; margin: 0 0 0 0; table-layout: fixed;">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" *ngFor="let can of getCandidateArray(model.numberOfCandidates);">{{model.getIdentifier(can)}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let canY of getCandidateArray(model.numberOfCandidates);">
+          <th scope="row">{{model.getIdentifier(canY)}}</th>
+          <td *ngFor="let canX of getCandidateArray(model.numberOfCandidates);">
+              <div *ngIf="editMode">
+                <input *ngIf="canX>canY" class="form-control" type="Number" style="width:100%" name="tempStaircase" [(ngModel)]="tempStaircase[canY][canX-(canY+1)]" (input)="closeInvalidMessage()"/>
+                <div *ngIf="canX<=canY">
+                  {{canX == canY? 0 : -tempStaircase[canX][canY-(canX+1)] }}
+                </div>
               </div>
-            </div>
-            <div *ngIf="!editMode">{{model.majorityMatrix.get(canY,canX)}}</div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+              <div *ngIf="!editMode">{{model.majorityMatrix.get(canY,canX)}}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-error-box *ngIf="showInvalidMessage" [title] = "errorBlock.title" [msg] = "errorBlock.msg" (close)="closeInvalidMessage()"></app-error-box>
+
+  <button class="btn btn-primary"(click) = "toggleMode()">{{editMode? "Save" : "Edit"}}</button>
+  <button class="btn btn-danger" (click) = "resetEdit()" [hidden]="!editMode">Reset</button>
+  <button class="btn btn-info" (click) = "doubleStaircase()" [hidden]="!editMode">Double Entries</button>
+  <button class="btn btn-info" (click) = "randomizeStaircase()">Randomize Entries</button>
+
 </div>
-
-<app-error-box *ngIf="showInvalidMessage" [title] = "errorBlock.title" [msg] = "errorBlock.msg" (close)="closeInvalidMessage()"></app-error-box>
-
-<button class="btn btn-primary"(click) = "toggleMode()">{{editMode? "Save" : "Edit"}}</button>
-<button class="btn btn-danger" (click) = "resetEdit()" [hidden]="!editMode">Reset</button>
-<button class="btn btn-info" (click) = "doubleStaircase()" [hidden]="!editMode">Double Entries</button>
-<button class="btn btn-info" (click) = "randomizeStaircase()" [hidden]="!editMode">Randomize Entries</button>

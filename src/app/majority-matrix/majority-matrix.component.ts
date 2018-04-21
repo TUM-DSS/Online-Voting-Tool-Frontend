@@ -14,6 +14,7 @@ import {ErrorBlock} from "../error-box/error-box.component";
 })
 export class MajorityMatrixComponent implements OnInit {
   @Input() model : ProfileModel;
+  visible: boolean;
   editMode:boolean;
   tempStaircase: number[][];
   showInvalidMessage:boolean;
@@ -30,9 +31,16 @@ export class MajorityMatrixComponent implements OnInit {
       title : "No Error",
       msg: "Default"
     }
+
+    this.visible = false;
   }
 
   ngOnInit() {
+  }
+
+  toggleVisibility() {
+    console.log("Toggle")
+    this.visible = !this.visible;
   }
 
   /**
@@ -107,12 +115,22 @@ export class MajorityMatrixComponent implements OnInit {
   * Generate a random staircase
   */
   randomizeStaircase() {
+    const mode = this.editMode;
+    if(!mode) {
+      this.toggleMode()
+    }
+
+
     let bound = Math.min(Math.max(2,this.model.numberOfCandidates-1),4);
     let min = -2*bound;
     let max = 2*bound-1;
     let isEven = Math.random() < 0.5;
+
     this.tempStaircase = this.tempStaircase.map(arr => arr.map(entry => this.getRandomWithParity(min,max,isEven)));
-    this.closeInvalidMessage();
+
+    if(!mode) {
+      this.toggleMode()
+    }
   }
 
   /**

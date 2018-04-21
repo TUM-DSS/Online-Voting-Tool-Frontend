@@ -1,0 +1,8 @@
+.toggleButton {
+    background:none;
+    border:none;
+}
+
+.toggleButton:active {
+  color:black
+}

@@ -4,7 +4,7 @@
       [chartType]="'horizontalBar'"
       [options]="chartOptions"
       [legend]="true"
-      style="min-heigth:200px;"
+      style="min-height:250px; max-height:350px;"
 >
   </canvas>
 
@@ -13,7 +13,7 @@
   </canvas>
 
   <br/>
-  <button class="btn btn-primary" (click)="runElection()">Run Election</button>
+  <button class="btn btn-primary" (click)="runElection()">Randomize</button>
 
   <div *ngIf="electionWinner.length > 0">
     <br/>

@@ -89,6 +89,10 @@ export class ProfileModel {
 
   /** Add/ Remove candidates (called if the numberOfCandidates is changed)*/
   resize(newSize : number) {
+    if(this.numberOfCandidates == newSize) {
+      return;
+    }
+
     //update the profile
     this.profiles.forEach(p => p.resize(newSize));
     //Make sure that dublicate preference relations get removed/ bundeled

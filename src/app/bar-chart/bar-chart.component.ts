@@ -2,6 +2,7 @@ import {Component,OnInit,Input,ViewChild,ElementRef,SimpleChanges} from '@angula
 import { ChartsModule,BaseChartDirective } from "ng2-charts/ng2-charts";
 import {Observable} from 'rxjs/Rx';
 import {toFrac} from "../frac";
+import {barColors} from "../barColors";
 
 /**
 * Component displaying a barchart for given barchart data
@@ -32,12 +33,17 @@ export class BarChartComponent implements OnInit {
 
   chartOptions = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,//true,
     cutoutPercentage: 60,
     layout: {
 			padding: {
-				right: 40
+				right: 40,
+        bottom: 40
 			}
+    },
+
+    legend: {
+      position:"right"
     },
     tooltips: {
       xPadding: 20,
@@ -81,17 +87,7 @@ export class BarChartComponent implements OnInit {
 
   constructor() {
     //Change the bar colors
-    BaseChartDirective.defaultColors = [
-    [230,23,23],
-    [23,106,230],
-    [23,230,106],
-    [188,23,230],
-    [230,147,23],
-    [23,230,230],
-    [64,230,23],
-    [230,23,147],
-    [64,23,230],
-    [188,230,23]]
+    BaseChartDirective.defaultColors = barColors.defaultColors;
   }
 
   updateSub : any;
@@ -200,6 +196,6 @@ export class BarChartComponent implements OnInit {
         winner.push(lottery.length-1);
       }
     }
-    this.electionWinner = winner.map((x,i)=> "Lottery "+(i+1)+": Candidate "+String.fromCharCode(x+65));
+    this.electionWinner = winner.map((x,i)=> "Lottery "+(i+1)+": Alternative "+String.fromCharCode(x+65));
   }
 }

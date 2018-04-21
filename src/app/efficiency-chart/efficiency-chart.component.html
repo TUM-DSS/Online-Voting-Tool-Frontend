@@ -1,5 +1,5 @@
 <div class="container">
-  <h4>Efficency</h4>
+  <h4>Efficiency</h4>
   <app-error-box *ngIf="showInvalidMessage" [title] = "'Efficency Test Failed: '" [msg] = "data.msg" (close)="closeInvalidMessage()"></app-error-box>
   <ul class="list-group" *ngIf="data.success">
     <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let sdRes of data.sdresult; let i = index;">

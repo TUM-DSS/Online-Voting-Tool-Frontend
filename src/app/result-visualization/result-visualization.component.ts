@@ -73,6 +73,8 @@ export class ResultVisualizationComponent implements OnInit {
   socialChoiceFunctions : string[];
   socialChoiceResults: string[];
 
+  tieWasBroken : boolean;
+
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
     /**
     * The menues that will be displayed. Note Social Choice Functions are defined seperately.
@@ -134,6 +136,8 @@ export class ResultVisualizationComponent implements OnInit {
       labels: [],
       data: []
     }
+
+    this.tieWasBroken = false;
   }
 
   closeInvalidMessage() {
@@ -190,6 +194,7 @@ export class ResultVisualizationComponent implements OnInit {
     }
 
     this.closeInvalidMessage();
+    this.tieWasBroken = false;
 
     let sendData:SendData  = {
       algorithm : this.menues[this.selectedItem.menu].list[this.selectedItem.item].name,
@@ -206,6 +211,10 @@ export class ResultVisualizationComponent implements OnInit {
     this.waitSub.push(this.fetcher.getVote(sendData).subscribe(data => this.updateVisualizationCallback(data)));
 
     //Request all Social Choice Functions
+    if(!this.advancedMode) {
+      return;
+    }
+
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
         this.socialChoiceResults[i] = "Loading";
         sendData.algorithm = this.socialChoiceFunctions[i];
@@ -213,7 +222,7 @@ export class ResultVisualizationComponent implements OnInit {
           if(data.success) {
             //Update the Social Choice Function Menu
             let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
-            let str = (rMap.length>1? "Candidates": "Candidate")+" "+rMap;
+            let str = (rMap.length>1? "Alternatives": "Alternative")+" "+rMap;
             this.socialChoiceResults[i] = str;
           } else {
             this.socialChoiceResults[i] = "Error";
@@ -234,6 +243,23 @@ export class ResultVisualizationComponent implements OnInit {
       let typeTemp = +ResultDataType[data.type];
       if(typeTemp == ResultDataType.Lotteries) {
         //Lotteries
+
+        const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
+        if(algName == "Maximal Lottery" && data.result.length > 1) {
+          //Use Tie Breaking
+          var len = data.result.length;
+          var tmp = Array.from(new Array(data.result[0].length), x=>0);
+          for(var i=0; i<len; i++) {
+            for(var j=0; j<data.result[i].length;j++) {
+              tmp[j]+=data.result[i][j];
+            }
+          }
+
+          tmp = tmp.map(d => d/len);
+          data.result = [tmp];
+          this.tieWasBroken = true;
+        }
+
         this.resultLotteries = data.result;
         this.resultBarData = this.getBarData(data.result);
         this.getBarData(data.result);
@@ -242,7 +268,10 @@ export class ResultVisualizationComponent implements OnInit {
         let profiles = this.model.profiles.map(p => p.relation);
 
         //console.log("Test Data", data.result, profiles);
-        this.tester.testLotteries(data.result,profiles).subscribe(data => this.updateEfficiencyCallback(data));
+        if(this.advancedMode) {
+          this.tester.testLotteries(data.result,profiles).subscribe(data => this.updateEfficiencyCallback(data));
+        }
+
       } else {
         //Profile
         this.resultProfile = data.result;
@@ -278,7 +307,7 @@ export class ResultVisualizationComponent implements OnInit {
       let candidateData = lotteries.map(arr => arr[i]);
 
       outData.push({
-        label: "Candidate "+this.model.getIdentifier(i),
+        label: "Alternative "+this.model.getIdentifier(i),
         data: candidateData,
         borderWidth: 3,
       });

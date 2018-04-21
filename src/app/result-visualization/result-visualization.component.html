@@ -1,12 +1,5 @@
 <div *ngIf="advancedMode" style="margin: 1vw 1vw 0vw 1vw;" (mouseleave) = "selectMenu(-1)">
   <ul class="nav nav-tabs">
-    <li class="nav-item dropdown" >
-      <a class="nav-link dropdown-toggle {{ (0 === selectedMenu)? '':'text-primary'}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" style="color:inherit;" (mouseenter) = "selectMenu(0)" (click)="toggleMenu(0)">Social Choice Functions</a>
-      <div class="dropdown-menu {{ (0 === selectedMenu)? 'show':''}}" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 42px, 0px); top: 0px; left: 0px; will-change: transform;">
-        <a class="dropdown-item" *ngFor="let item of socialChoiceFunctions; let itemIndex = index">{{socialChoiceFunctions[itemIndex]}}: {{socialChoiceResults[itemIndex]}}</a>
-      </div>
-    <li>
-
     <li class="nav-item dropdown" *ngFor="let menu of menues; let menuIndex = index">
       <a class="nav-link dropdown-toggle {{ ((menuIndex+1) === selectedMenu)? '':'text-primary'}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" style="color:inherit;" (mouseenter) = "selectMenu(menuIndex+1)" (click)="toggleMenu(menuIndex+1)">{{menues[menuIndex].name}}</a>
       <div class="dropdown-menu {{ ((menuIndex+1) === selectedMenu)? 'show':''}}" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 42px, 0px); top: 0px; left: 0px; will-change: transform;">
@@ -18,7 +11,7 @@
 
 <div class="jumbotron">
   <div class="container" style="min-height: 20em;">
-    <h3>{{menues[selectedItem.menu].list[selectedItem.item].name}}</h3>
+    <h3>{{menues[selectedItem.menu].list[selectedItem.item].name}} {{ tieWasBroken ? '(Tie Breaking)' : ''}}</h3>
 
     <div *ngIf="menues[selectedItem.menu].list[selectedItem.item].hasParameter" style="margin-bottom:1em;">
       <strong style="display:block">{{menues[selectedItem.menu].list[selectedItem.item].paraName}}: {{voteParameter}}</strong>
@@ -40,7 +33,7 @@
 
     <div class="progress" *ngIf="waiting">
       <br/>
-      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
     </div>
 
     <div [ngSwitch]="resultType" *ngIf="!waiting">
@@ -57,6 +50,10 @@
 
       </div>
     </div>
+  </div>
+  <div *ngIf="advancedMode">
+    <br/>
+    <a *ngFor="let item of socialChoiceFunctions; let itemIndex = index">{{socialChoiceFunctions[itemIndex]}}: {{socialChoiceResults[itemIndex]}}<br/></a>
   </div>
 </div>
 

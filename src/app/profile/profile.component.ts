@@ -1,4 +1,5 @@
 import { Component, OnInit, Input} from '@angular/core';
+import { AfterViewChecked, ElementRef, ViewChild} from '@angular/core'
 import { SortablejsModule } from 'angular-sortablejs';
 import { ProfileModel,Profile,Matrix } from "../model";
 
@@ -14,13 +15,16 @@ export class ProfileComponent implements OnInit {
   profileOptions : ProfileOptions
   @Input() model : ProfileModel
   @Input() advancedMode : boolean
+  @ViewChild('scrollContainer') private scrollContainer: ElementRef;
+  scrollRight : boolean;
 
   constructor() {
     this.profileOptions = {
-      numberOfCandidates:4,
+      numberOfCandidates:3,
       minNumber:2,
-      maxNumber: 6
+      maxNumber: 10
     }
+    this.scrollRight = true;
   }
 
   ngOnInit() {
@@ -33,6 +37,16 @@ export class ProfileComponent implements OnInit {
       this.onCandidateNumberUpdate();
     }
     this.model.resize(this.profileOptions.numberOfCandidates);
+  }
+
+
+  ngAfterViewChecked() {
+    if(this.scrollRight) {
+      try {
+        this.scrollContainer.nativeElement.scrollLeft = this.scrollContainer.nativeElement.scrollWidth;
+      } catch(err) {}
+      this.scrollRight = false;
+    }
   }
 
   /**
@@ -52,6 +66,11 @@ export class ProfileComponent implements OnInit {
     }
     this.model.allowStringUpdate = true;
     this.model.resize(this.profileOptions.numberOfCandidates);
+  }
+
+  onAddVoter() {
+    this.model.addProfile();
+    this.scrollRight = true;
   }
 
   /**

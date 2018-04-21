@@ -22,7 +22,7 @@ export function toFrac(x:number) {
 
   //Compute the order of magnitude of the number ~ This will be the limit of big the denominator can get
   const absLog	= Math.abs(Math.log10(x))+1;
-  const precFac = Math.pow(10, Math.ceil(absLog));
+  const precFac = 1000;//Math.min(Math.pow(10, Math.ceil(absLog)),1000);
 
   //We don't compute the fraction for really small values for performance reasons (also the denominators get to big)
   if(precFac >= 10000) {

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {barColors} from "../barColors";
 
 /**
 * Component for displaying and editing a preference relation using drag and drop.
@@ -34,5 +35,9 @@ export class ProfileBoxComponent implements OnInit {
     }
     this.model.allowStringUpdate = true;
     this.model.updateModel();
+  }
+
+  getColor(index) {
+    return barColors.getHTMLColor(index);
   }
 }
