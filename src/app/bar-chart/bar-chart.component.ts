@@ -43,7 +43,7 @@ export class BarChartComponent implements OnInit {
     },
 
     legend: {
-      position:"right"
+      position:"bottom"
     },
     tooltips: {
       xPadding: 20,
