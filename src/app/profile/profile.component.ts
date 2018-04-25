@@ -41,6 +41,7 @@ export class ProfileComponent implements OnInit {
 
 
   ngAfterViewChecked() {
+    //If a voter was added, scroll the profilelist fully to the right.
     if(this.scrollRight) {
       try {
         this.scrollContainer.nativeElement.scrollLeft = this.scrollContainer.nativeElement.scrollWidth;

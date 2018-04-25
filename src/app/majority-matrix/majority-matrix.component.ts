@@ -38,8 +38,10 @@ export class MajorityMatrixComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+  * Show / Hide the Majority Matrix.
+  */
   toggleVisibility() {
-    console.log("Toggle")
     this.visible = !this.visible;
   }
 

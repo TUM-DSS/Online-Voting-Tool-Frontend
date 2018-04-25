@@ -81,6 +81,9 @@ export class barColors {
   }
 
 
+  /**
+  * Returns a CSS RGB value. That is a desaturated Version of the Bar Chart Color.
+  */
   static getHTMLColor(index : number) {
     let color = barColors.defaultColors[index];
     let r = color[0];
