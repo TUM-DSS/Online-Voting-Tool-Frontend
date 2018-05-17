@@ -3,6 +3,7 @@ import { ChartsModule,BaseChartDirective } from "ng2-charts/ng2-charts";
 import {Observable} from 'rxjs/Rx';
 import {toFrac} from "../frac";
 import {barColors} from "../barColors";
+import {Globals} from "../globals";
 
 /**
 * Component displaying a barchart for given barchart data
@@ -15,7 +16,7 @@ import {barColors} from "../barColors";
 export class BarChartComponent implements OnInit {
   @Input() data: {labels:string[],data:any[]};
   @Input() lotteries : number[][];
-  @Input() fractions : string[][]
+  @Input() fractions : string[][];
 
   @ViewChild(BaseChartDirective) public chart: BaseChartDirective;
   barLabels : string[]
@@ -57,7 +58,7 @@ export class BarChartComponent implements OnInit {
                     }
                     label += Math.round(tooltipItem.xLabel * 100) / 100;
                     let frac = toFrac(tooltipItem.xLabel);
-                    if(frac.length>1) {
+                    if(frac.length>1 && Globals.advancedMode) {
                       label += " ("+toFrac(tooltipItem.xLabel)+ ")";
                     }
                     return label;

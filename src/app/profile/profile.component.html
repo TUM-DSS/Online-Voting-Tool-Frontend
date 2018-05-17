@@ -7,7 +7,7 @@
 
   <div #scrollContainer class="row" style="overflow:scroll; width:90%;">
     <div class="d-flex flex-row flex-nowrap" >
-      <app-profile-box class="card card-block bg-primary" style="width: 10rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>
+      <app-profile-box class="card card-block bg-primary" style="width: 10.8rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>
       <button (click) = "onAddVoter()" class="btn btn-success" [disabled]="model.majorityMatrixIsDirty">+</button>
     </div>
   </div>

@@ -208,7 +208,9 @@ export class ResultVisualizationComponent implements OnInit {
     this.waiting = true;
     this.waitSub = [];
     //Request the selected algorithm
-    this.waitSub.push(this.fetcher.getVote(sendData).subscribe(data => this.updateVisualizationCallback(data)));
+    this.waitSub.push(this.fetcher.getVote(sendData).subscribe(
+                                  data => this.updateVisualizationCallback(data),
+                                  error=> this.updateVisualizationCallback({success:false,msg:"Server Timeout. Reload to try again."})));
 
     //Request all Social Choice Functions
     if(!this.advancedMode) {
@@ -218,7 +220,7 @@ export class ResultVisualizationComponent implements OnInit {
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
         this.socialChoiceResults[i] = "Loading";
         sendData.algorithm = this.socialChoiceFunctions[i];
-        this.waitSub.push(this.fetcher.getVote(sendData).subscribe(data => {
+        this.waitSub.push(this.fetcher.getVote(sendData,100000).subscribe(data => {
           if(data.success) {
             //Update the Social Choice Function Menu
             let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
@@ -227,7 +229,7 @@ export class ResultVisualizationComponent implements OnInit {
           } else {
             this.socialChoiceResults[i] = "Error";
           }
-        }));
+        }, error => {this.socialChoiceResults[i] = "Error"}));
     }
   }
 

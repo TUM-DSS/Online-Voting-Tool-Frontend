@@ -2,6 +2,7 @@ import { Component, OnInit, Input,ChangeDetectorRef,ChangeDetectionStrategy} fro
 import { ProfileExtractionService } from "../services/profile-extraction/profile-extraction.service";
 import { ProfileModel,Profile,Matrix } from "../model";
 import {ErrorBlock} from "../error-box/error-box.component";
+import {Globals} from "../globals";
 
 /**
 * Component that displays and edits the majority matrix.
@@ -19,6 +20,7 @@ export class MajorityMatrixComponent implements OnInit {
   tempStaircase: number[][];
   showInvalidMessage:boolean;
   errorBlock: ErrorBlock;
+  advancedMode : boolean;
 
   constructor(private ref:ChangeDetectorRef, private extract:ProfileExtractionService) {
     setInterval(() => {
@@ -33,6 +35,7 @@ export class MajorityMatrixComponent implements OnInit {
     }
 
     this.visible = false;
+    this.advancedMode = Globals.advancedMode;
   }
 
   ngOnInit() {
@@ -117,43 +120,7 @@ export class MajorityMatrixComponent implements OnInit {
   * Generate a random staircase
   */
   randomizeStaircase() {
-    const mode = this.editMode;
-    if(!mode) {
-      this.toggleMode()
-    }
-
-
-    let bound = Math.min(Math.max(2,this.model.numberOfCandidates-1),4);
-    let min = -2*bound;
-    let max = 2*bound-1;
-    let isEven = Math.random() < 0.5;
-
-    this.tempStaircase = this.tempStaircase.map(arr => arr.map(entry => this.getRandomWithParity(min,max,isEven)));
-
-    if(!mode) {
-      this.toggleMode()
-    }
-  }
-
-  /**
-  * Generates a random integer min<=x<=max
-  */
-  getRandomInt(min, max) {
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  /**
-  * Generates a number min<=x<=max with a given parity (even/odd)
-  */
-  getRandomWithParity(min,max,isEven) {
-    let rnd = this.getRandomInt(min,max);
-    if((isEven && rnd%2 === 0)||(!isEven && rnd%2 !== 0)) {
-      return rnd;
-    }
-    return rnd+1;
+    this.model.randomize();
   }
 
   /**

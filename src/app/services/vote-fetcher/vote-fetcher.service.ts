@@ -30,11 +30,12 @@ export class VoteFetcherService {
   * }
   *
   */
-  getVote(voteData) {
+  getVote(voteData,timeout = 5000) {
     let headers = new Headers();
     headers.append("Content-Type","application/json");
     return this.http.post(this.url+"/vote",voteData,{headers:headers})
-      .map(res => res.json());
+                            .map(res => res.json())
+                            .timeout(timeout);
   }
 
 }

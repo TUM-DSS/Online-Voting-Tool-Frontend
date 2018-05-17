@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ProfileModel,Profile,Matrix } from "./model";
 import { Router, ActivatedRoute } from '@angular/router';
+import { Globals} from './globals';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class AppComponent {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     console.log(this.route.queryParams['profile']);
-    this.advancedMode = true; //Set to false if only the minimal voting tool is required
+    this.advancedMode = Globals.advancedMode;
     this.title = this.advancedMode?"Online Voting Tool":"Maximal Lotteries";
     this.model = new ProfileModel(1,router); // Initialize the preference profile
   }

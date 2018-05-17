@@ -95,7 +95,15 @@ export class ProfileModel {
 
     //update the profile
     this.profiles.forEach(p => p.resize(newSize));
+
+    this.numberOfCandidates = newSize;
     //Make sure that dublicate preference relations get removed/ bundeled
+    this.removeDublicates();
+    //Update the Matrix
+    this.updateModel();
+  }
+
+  removeDublicates() {
     let pdic = {};
 
     for (let profile of this.profiles) {
@@ -110,15 +118,11 @@ export class ProfileModel {
 
     for (var profile in pdic) {
       if (pdic.hasOwnProperty(profile)) {
-        let prof = new Profile(newSize,pdic[profile]);
+        let prof = new Profile(this.numberOfCandidates,pdic[profile]);
         prof.relation = JSON.parse('['+profile+']')
         this.profiles.push(prof);
       }
     }
-
-    this.numberOfCandidates = newSize;
-    //Update the Matrix
-    this.updateModel();
   }
 
   /** Add an new Voter to the Profile */
@@ -191,6 +195,29 @@ export class ProfileModel {
       this.updateListener();
     }
   }
+
+  randomize() {
+    var voterCount = 0;
+    for (let prof of this.profiles) {
+        voterCount+=prof.numberOfVoters;
+    }
+
+    this.profiles = Array.from(new Array(voterCount), n => this.generateRandomPreference());
+    this.removeDublicates();
+    this.updateModel();
+  }
+
+  generateRandomPreference() {
+    var out = new Profile(this.numberOfCandidates,1);
+
+    var pref = [];
+    for(var i = 0; i < this.numberOfCandidates;i++) {
+      var index = Math.floor(Math.random() * (pref.length+1));
+      pref.splice(index,0,i);
+    }
+    out.relation = pref;
+    return out;
+  }
 }
 
 
@@ -198,7 +225,6 @@ export class ProfileModel {
 * Represents a preference Profile
 */
 export class Profile {
-
   relation: number[]
   numberOfVoters: number
 
