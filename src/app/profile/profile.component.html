@@ -1,5 +1,5 @@
 <div style="margin: 2vw 1vw 1vw 2vw;">
-  <h3>Profile with <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
+  <h3>Preferences with <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
     (input)="onCandidateNumberUpdate()" id="numberOfCandidates"
     type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"
     name="numberOfCandidates" [(ngModel)]="profileOptions.numberOfCandidates"
