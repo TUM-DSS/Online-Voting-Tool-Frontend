@@ -34,4 +34,18 @@ export class AppComponent {
       }
     });
   }
+
+  /* Open */
+  openNav() {
+    // document.getElementById("myNav").style.display = "block";
+    document.getElementById("infoScreen").style.width = "100%";
+  }
+
+  /* Close */
+  closeNav() {
+    // document.getElementById("myNav").style.display = "none";
+    document.getElementById("infoScreen").style.width = "0%";
+  }
 }
+
+

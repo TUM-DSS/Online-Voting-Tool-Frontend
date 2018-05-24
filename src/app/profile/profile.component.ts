@@ -80,6 +80,13 @@ export class ProfileComponent implements OnInit {
   printProfile() {
     this.model.profiles.forEach(p => console.log(p.numberOfVoters,p.relation))
   }
+
+  /**
+   * Generate random preferences
+   */
+  randomizePreferences() {
+    this.model.randomize();
+  }
 }
 
 /**
