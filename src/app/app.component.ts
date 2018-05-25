@@ -36,13 +36,13 @@ export class AppComponent {
   }
 
   /* Open */
-  openNav() {
+  static openNav() {
     // document.getElementById("myNav").style.display = "block";
     document.getElementById("infoScreen").style.width = "100%";
   }
 
   /* Close */
-  closeNav() {
+  static closeNav() {
     // document.getElementById("myNav").style.display = "none";
     document.getElementById("infoScreen").style.width = "0%";
   }

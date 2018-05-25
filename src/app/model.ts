@@ -2,6 +2,8 @@
 * Helper Classes
 */
 
+import {Globals} from "./globals";
+
 /**
 * ProfileModel contains the preference profile and the related majority matrix
 */
@@ -187,20 +189,26 @@ export class ProfileModel {
     this.majorityMatrix = mat;
 
     this.callListener();
+    Globals.globalNumberOfVoters = this.getNumberOfVoters();
   }
 
-  /** Call the update callback if one exitsts */
+  /** Call the update callback if one exists */
   callListener() {
     if( typeof this.updateListener != "undefined" && this.updateListener!== null) {
       this.updateListener();
     }
   }
 
-  randomize() {
+  getNumberOfVoters() {
     var voterCount = 0;
     for (let prof of this.profiles) {
-        voterCount+=prof.numberOfVoters;
+      voterCount+=prof.numberOfVoters;
     }
+    return voterCount;
+  }
+
+  randomize() {
+    var voterCount = this.getNumberOfVoters();
 
     this.profiles = Array.from(new Array(voterCount), n => this.generateRandomPreference());
     this.removeDublicates();

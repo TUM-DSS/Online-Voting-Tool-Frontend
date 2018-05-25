@@ -2,6 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import { AfterViewChecked, ElementRef, ViewChild} from '@angular/core'
 import { SortablejsModule } from 'angular-sortablejs';
 import { ProfileModel,Profile,Matrix } from "../model";
+import { Globals} from '../globals';
 
 /**
 * Component for displaying the preference profile.
@@ -72,6 +73,8 @@ export class ProfileComponent implements OnInit {
   onAddVoter() {
     this.model.addProfile();
     this.scrollRight = true;
+    // Update the total number of voters
+    Globals.globalNumberOfVoters = this.model.getNumberOfVoters();
   }
 
   /**
@@ -86,6 +89,13 @@ export class ProfileComponent implements OnInit {
    */
   randomizePreferences() {
     this.model.randomize();
+  }
+
+  /**
+   * Get number of voters
+   */
+  getNumberOfVoters() {
+    return Globals.globalNumberOfVoters;
   }
 }
 
