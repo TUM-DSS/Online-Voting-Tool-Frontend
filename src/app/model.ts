@@ -19,12 +19,14 @@ export class ProfileModel {
 
   constructor(size : number, private router) {
     this.numberOfCandidates = size;
-    this.profiles = [new Profile(size,1)];
+    this.profiles = [new Profile(size,3)];
     this.majorityMatrix = new Matrix(size);
     this.majorityMatrixIsDirty = false;
     this.allowStringUpdate = false;
 
     this.updateModel();
+    // Start with the Condorcet profile
+    this.setProfileString("1ABC-1CAB-1BCA");
   }
 
   /**

@@ -26,6 +26,7 @@ export class ProfileComponent implements OnInit {
       maxNumber: 10
     }
     this.scrollRight = true;
+
   }
 
   ngOnInit() {
@@ -36,8 +37,10 @@ export class ProfileComponent implements OnInit {
     this.model.setProfileStringListener = () => {
       this.profileOptions.numberOfCandidates = this.model.numberOfCandidates;
       this.onCandidateNumberUpdate();
+
     }
     this.model.resize(this.profileOptions.numberOfCandidates);
+
   }
 
 

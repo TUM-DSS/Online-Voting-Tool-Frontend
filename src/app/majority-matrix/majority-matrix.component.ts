@@ -45,7 +45,20 @@ export class MajorityMatrixComponent implements OnInit {
   * Show / Hide the Majority Matrix.
   */
   toggleVisibility() {
-    this.visible = !this.visible;
+    if (this.editMode) {
+      // If the user tries to hide the majority matrix while editing, switch to view mode.
+      this.toggleMode();
+    }
+    if (!this.showInvalidMessage) {
+      this.visible = !this.visible;
+    }
+    else {
+      // If there is still an invalid message shown, then only hide the majority matrix if in view mode.
+      if (!this.editMode) {
+        this.closeInvalidMessage();
+        this.visible = !this.visible;
+      }
+    }
   }
 
   /**
@@ -114,6 +127,7 @@ export class MajorityMatrixComponent implements OnInit {
   */
   resetEdit() {
     this.tempStaircase = this.copy2D(this.model.majorityMatrix.staircase);
+    this.closeInvalidMessage();
   }
 
   /**

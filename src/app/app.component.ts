@@ -20,7 +20,7 @@ export class AppComponent {
     console.log(this.route.queryParams['profile']);
     this.advancedMode = Globals.advancedMode;
     this.title = this.advancedMode?"Online Voting Tool":"Maximal Lotteries";
-    this.model = new ProfileModel(1,router); // Initialize the preference profile
+    this.model = new ProfileModel(3,router); // Initialize the preference profile
   }
 
   ngOnInit() {
@@ -36,15 +36,15 @@ export class AppComponent {
   }
 
   /* Open */
-  static openNav() {
-    // document.getElementById("myNav").style.display = "block";
-    document.getElementById("infoScreen").style.width = "100%";
+  openNav() {
+    document.getElementById("infoScreen").style.display = "block";
+    // document.getElementById("infoScreen").style.width = "100%";
   }
 
   /* Close */
-  static closeNav() {
-    // document.getElementById("myNav").style.display = "none";
-    document.getElementById("infoScreen").style.width = "0%";
+  closeNav() {
+    document.getElementById("infoScreen").style.display = "none";
+    // document.getElementById("infoScreen").style.width = "0%";
   }
 }
 

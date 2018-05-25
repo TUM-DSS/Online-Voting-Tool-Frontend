@@ -11,7 +11,10 @@
 
 <div class="jumbotron">
   <div class="container" style="min-height: 20em;">
-    <h3>{{menues[selectedItem.menu].list[selectedItem.item].name}} {{ tieWasBroken ? '(Tie Breaking)' : ''}}</h3>
+    <h3>{{menues[selectedItem.menu].list[selectedItem.item].name}}</h3>
+    <div *ngIf="tieWasBroken">
+      There are multiple maximal lotteries. Showing the average of the extremal lotteries.
+    </div>
 
     <div *ngIf="menues[selectedItem.menu].list[selectedItem.item].hasParameter" style="margin-bottom:1em;">
       <strong style="display:block">{{menues[selectedItem.menu].list[selectedItem.item].paraName}}: {{voteParameter}}</strong>
