@@ -17,27 +17,27 @@
 /* Position the content inside the overlay */
 .overlay-content {
   position: relative;
-  top: 10%; /* 25% from the top */
+  top: 10%;
   left: 30%;
-  width: 40%; /* 100% width */
+  width: 40%;
   text-align: center; /* Centered text/links */
   margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
-  font-size: 36px;
+  font-size: 2vw;
 }
 
 /* The navigation links inside the overlay */
 .overlay a {
-  /*padding: 8px;*/
-  text-decoration: none;
-  /*font-size: 36px;*/
-  color: #818181;
-  /*display: block; !* Display block instead of inline *!*/
+  color: #a0a0a0;
   transition: 0.3s; /* Transition effects on hover (color) */
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #808080;
 }
 
 /* When you mouse over the navigation links, change their color */
 .overlay a:hover, .overlay a:focus {
-  color: #f1f1f1;
+  color: #94b5ce;
+  text-decoration: underline;
 }
 
 /* Position the close button (top right corner) */
@@ -46,6 +46,12 @@
   top: 20px;
   right: 45px;
   font-size: 60px;
+  text-decoration: none;
+}
+
+.overlay .closebtn:hover, .overlay .closebtn:focus {
+  color: #8f1418;
+  text-decoration: none;
 }
 
 /* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
@@ -55,5 +61,15 @@
     font-size: 40px;
     top: 15px;
     right: 35px;
+  }
+}
+
+/* If the screen size is 800px wide or less, set the font-size of the the overlay content to constant 16px and decrease the borders on the left and right*/
+@media screen and (max-width: 800px) {
+  .overlay-content {
+    font-size: 16px;
+    top: 20%;
+    left: 10%;
+    width: 80%;
   }
 }

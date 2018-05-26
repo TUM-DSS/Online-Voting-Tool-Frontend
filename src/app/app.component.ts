@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ProfileModel,Profile,Matrix } from "./model";
 import { Router, ActivatedRoute } from '@angular/router';
 import { Globals} from './globals';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -16,10 +17,11 @@ export class AppComponent {
 
   paramSub : any;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute, private titleService: Title ) {
     console.log(this.route.queryParams['profile']);
     this.advancedMode = Globals.advancedMode;
     this.title = this.advancedMode?"Online Voting Tool":"Maximal Lotteries";
+    this.titleService.setTitle( this.title );
     this.model = new ProfileModel(3,router); // Initialize the preference profile
   }
 
