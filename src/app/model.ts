@@ -19,14 +19,27 @@ export class ProfileModel {
 
   constructor(size : number, private router) {
     this.numberOfCandidates = size;
-    this.profiles = [new Profile(size,3)];
+    if (size === 3) {
+      let CondorcetProfile = [];
+      let voter1 = new Profile(3,1);
+      voter1.relation = JSON.parse('[0,1,2]');
+      CondorcetProfile.push(voter1);
+      let voter2 = new Profile(3,1);
+      voter2.relation = JSON.parse('[2,0,1]');
+      CondorcetProfile.push(voter2);
+      let voter3 = new Profile(3,1);
+      voter3.relation = JSON.parse('[1,2,0]');
+      CondorcetProfile.push(voter3);
+      this.profiles = CondorcetProfile;
+    }
+    else {
+      this.profiles = [new Profile(size,1)];
+    }
     this.majorityMatrix = new Matrix(size);
     this.majorityMatrixIsDirty = false;
     this.allowStringUpdate = false;
 
     this.updateModel();
-    // Start with the Condorcet profile
-    this.setProfileString("1ABC-1CAB-1BCA");
   }
 
   /**
