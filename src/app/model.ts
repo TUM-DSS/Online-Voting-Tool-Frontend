@@ -225,6 +225,7 @@ export class ProfileModel {
   randomize() {
     var voterCount = this.getNumberOfVoters();
 
+    this.allowStringUpdate = true;
     this.profiles = Array.from(new Array(voterCount), n => this.generateRandomPreference());
     this.removeDublicates();
     this.updateModel();

@@ -176,7 +176,7 @@ export class ResultVisualizationComponent implements OnInit {
     }
 
     if(this.menues[menuIndex].list[itemIndex].hasParameter) {
-      this.voteParameter = this.menues[menuIndex].list[itemIndex].paraMin;
+      this.voteParameter = this.menues[menuIndex].list[itemIndex].paraMin + (this.menues[menuIndex].list[itemIndex].paraMin + 1 <= this.menues[menuIndex].list[itemIndex].paraMax) ?  1 : 0;
     }
 
     this.selectedMenu = -1;
@@ -224,8 +224,8 @@ export class ResultVisualizationComponent implements OnInit {
           if(data.success) {
             //Update the Social Choice Function Menu
             let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
-            let str = (rMap.length>1? "Alternatives": "Alternative")+" "+rMap;
-            this.socialChoiceResults[i] = str;
+            // let str = (rMap.length>1? "Alternatives": "Alternative")+" "+rMap;
+            this.socialChoiceResults[i] = rMap;
           } else {
             this.socialChoiceResults[i] = "Error";
           }

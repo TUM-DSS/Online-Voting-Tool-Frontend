@@ -54,10 +54,26 @@
       </div>
     </div>
   </div>
+  <!--<div *ngIf="advancedMode">-->
+    <!--<br/>-->
+    <!--<a *ngFor="let item of socialChoiceFunctions; let itemIndex = index">{{socialChoiceFunctions[itemIndex]}}: &nbsp;&nbsp; {{socialChoiceResults[itemIndex]}}<br/></a>-->
+  <!--</div>-->
+
   <div *ngIf="advancedMode">
     <br/>
-    <a *ngFor="let item of socialChoiceFunctions; let itemIndex = index">{{socialChoiceFunctions[itemIndex]}}: {{socialChoiceResults[itemIndex]}}<br/></a>
+    <table style="width:10%" align="center">
+      <tr>
+        <th>SCF</th>
+        <th style="text-align:center">Result</th>
+      </tr>
+      <tr *ngFor="let item of socialChoiceFunctions; let itemIndex = index">
+        <td>{{socialChoiceFunctions[itemIndex]}}</td>
+        <td style="text-align:center">{{socialChoiceResults[itemIndex]}}</td>
+      </tr>
+    </table>
   </div>
+
+
 </div>
 
 <app-efficiency-chart *ngIf="(resultType == resultDataType.Lotteries) && advancedMode && !waiting" [data]="efficencyData"></app-efficiency-chart>
