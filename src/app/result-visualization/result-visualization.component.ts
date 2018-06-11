@@ -77,12 +77,12 @@ export class ResultVisualizationComponent implements OnInit {
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
     /**
-    * The menues that will be displayed. Note Social Choice Functions are defined seperately.
-    * Since they are handeled in a different way.
+    * The menues that will be displayed. Note Social Choice Functions are defined separately.
+    * Since they are handled in a different way.
     */
 
     this.waitSub = [];
-    this.socialChoiceFunctions = ["Borda","Minimax","Nanson","Black","Tideman","Essential Set"]
+    this.socialChoiceFunctions = ["Borda","Minimax","Nanson","Black","Tideman","Essential Set"];
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
     this.menues = [
