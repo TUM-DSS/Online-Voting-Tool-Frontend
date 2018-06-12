@@ -182,7 +182,7 @@ export class ProfileModel {
   }
 
   /**
-  * Updates the majority matrix and notifies the components that need to react to the change
+  * Updates the model and notifies the components that need to react to the change
   */
   updateModel() {
     if(this.allowStringUpdate) {
@@ -190,7 +190,16 @@ export class ProfileModel {
       this.router.navigate(['/'],{ queryParams: { profile:this.getProfileString()}})
     }
 
+    this.updateMatrix()
 
+    this.callListener();
+    Globals.globalNumberOfVoters = this.getNumberOfVoters();
+  }
+
+  /**
+   * Updates the majority matrix
+   */
+  updateMatrix() {
     //UpdateMatrix
     let mat = new Matrix(this.numberOfCandidates);
 
@@ -202,9 +211,6 @@ export class ProfileModel {
       }
     });
     this.majorityMatrix = mat;
-
-    this.callListener();
-    Globals.globalNumberOfVoters = this.getNumberOfVoters();
   }
 
   /** Call the update callback if one exists */
@@ -223,10 +229,52 @@ export class ProfileModel {
   }
 
   randomize() {
-    var voterCount = this.getNumberOfVoters();
+    const voterCount = this.getNumberOfVoters();
 
     this.allowStringUpdate = true;
     this.profiles = Array.from(new Array(voterCount), n => this.generateRandomPreference());
+    this.removeDublicates();
+    this.updateModel();
+  }
+
+  randomizeWithoutCondorcet() {
+    const voterCount = this.getNumberOfVoters();
+
+    this.allowStringUpdate = true;
+    let Condorcet = true;
+    // Loop until there is no (weak) Condorcet winner
+    while (Condorcet) {
+      this.profiles = Array.from(new Array(voterCount), n => this.generateRandomPreference());
+      this.updateMatrix();
+
+      // Test if there is a (weak) Condorcet winner
+      let potentialCondorcetWinners = new Array(this.numberOfCandidates).fill(true);
+
+      for (let i = 0; i < this.numberOfCandidates; i++) {
+        for (let j = i + 1; j < this.numberOfCandidates; j++) {
+          let si = i;
+          let sj = j - (i + 1);
+
+          if (this.majorityMatrix.staircase[si][sj] > 0) {
+            potentialCondorcetWinners[j] = false;
+          }
+          if (this.majorityMatrix.staircase[si][sj] < 0) {
+            potentialCondorcetWinners[i] = false;
+          }
+          if (this.majorityMatrix.staircase[si][sj] === 0)  {
+            potentialCondorcetWinners[i] = false;
+            potentialCondorcetWinners[j] = false;
+          }
+        }
+      }
+      Condorcet = false;
+      for (let i = 0; i < this.numberOfCandidates; i++) {
+        if (potentialCondorcetWinners[i]) {
+          Condorcet = true;
+        }
+      }
+    }
+
     this.removeDublicates();
     this.updateModel();
   }

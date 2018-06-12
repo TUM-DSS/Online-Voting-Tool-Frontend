@@ -90,8 +90,12 @@ export class ProfileComponent implements OnInit {
   /**
    * Generate random preferences
    */
-  randomizePreferences() {
-    this.model.randomize();
+  randomizePreferences(event) {
+    if (event.shiftKey && this.profileOptions.numberOfCandidates > 2) {
+      this.model.randomizeWithoutCondorcet();
+    } else {
+      this.model.randomize();
+    }
   }
 
   /**

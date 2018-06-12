@@ -1,5 +1,5 @@
 <div style="margin: 2vw 1vw 1vw 2vw;">
-  <h3><button class="btn btn-primary  btn-sm" (click) = "randomizePreferences()">Random</button> Preferences of {{getNumberOfVoters()}} voters over <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
+  <h3><button class="btn btn-primary  btn-sm" title="Pro tip: Hold SHIFT to get a random profile without Condorcet winner!" (click) = "randomizePreferences($event)">Random</button> Preferences of {{getNumberOfVoters()}} voters over <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
     (input)="onCandidateNumberUpdate()" id="numberOfCandidates"
     type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"
     name="numberOfCandidates" [(ngModel)]="profileOptions.numberOfCandidates"
