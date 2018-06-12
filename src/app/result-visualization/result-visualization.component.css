@@ -1,0 +1,12 @@
+.center-div
+{
+  margin: 0 auto;
+  width: 500px;
+  /*height: 100px;*/
+  /*background-color: #ccc;*/
+  /*border-radius: 3px;*/
+}
+
+table td, table td * {
+  vertical-align: top;
+}

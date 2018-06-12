@@ -13,8 +13,17 @@ import {toFrac} from "../frac";
 export class EfficiencyChartComponent implements OnInit {
   @Input() data:any;
   showInvalidMessage = false;
+  visible: boolean;
 
   constructor() {
+    this.visible = false;
+  }
+
+  /**
+   * Show / Hide the efficiency results.
+   */
+  toggleVisibility() {
+    this.visible = !this.visible;
   }
 
   ngOnInit() {}

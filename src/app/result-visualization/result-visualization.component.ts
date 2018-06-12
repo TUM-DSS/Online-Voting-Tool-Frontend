@@ -74,6 +74,8 @@ export class ResultVisualizationComponent implements OnInit {
   socialChoiceResults: string[];
 
   tieWasBroken : boolean;
+  visibleSCF : boolean;
+  visibleSettings : boolean;
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
     /**
@@ -90,16 +92,17 @@ export class ResultVisualizationComponent implements OnInit {
         name:"Social Choice Polytopes",
         list: [
           {
-            name: "Maximal Lottery",
-            hasParameter : false
-          },
-          {
             name: "Homogeneous Maximal Lottery",
             hasParameter : true,
             paraMin : 0,
             paraMax : 5,
             paraName: "Signed exponent"
+          },
+          {
+            name: "Maximal Lottery",
+            hasParameter : false
           }
+
         ]
       },
       {
@@ -138,6 +141,24 @@ export class ResultVisualizationComponent implements OnInit {
     }
 
     this.tieWasBroken = false;
+    this.visibleSCF = true;
+    this.visibleSettings = false;
+    // The vote parameter is (only) the "signed exponent" at the moment. The default is hardcoded to 1 at the moment:
+    this.voteParameter = 1;
+  }
+
+  /**
+   * Show / Hide the SCF results.
+   */
+  toggleSCFVisibility() {
+    this.visibleSCF = !this.visibleSCF;
+  }
+
+  /**
+   * Show / Hide the ML settings.
+   */
+  toggleMLSettingsVisibility() {
+    this.visibleSettings = !this.visibleSettings;
   }
 
   closeInvalidMessage() {
@@ -173,7 +194,7 @@ export class ResultVisualizationComponent implements OnInit {
     this.selectedItem = {
       menu: menuIndex,
       item: itemIndex
-    }
+    };
 
     if(this.menues[menuIndex].list[itemIndex].hasParameter) {
       this.voteParameter = this.menues[menuIndex].list[itemIndex].paraMin + (this.menues[menuIndex].list[itemIndex].paraMin + 1 <= this.menues[menuIndex].list[itemIndex].paraMax) ?  1 : 0;

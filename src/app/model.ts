@@ -258,12 +258,8 @@ export class ProfileModel {
           if (this.majorityMatrix.staircase[si][sj] > 0) {
             potentialCondorcetWinners[j] = false;
           }
-          if (this.majorityMatrix.staircase[si][sj] < 0) {
+          else if (this.majorityMatrix.staircase[si][sj] < 0) {
             potentialCondorcetWinners[i] = false;
-          }
-          if (this.majorityMatrix.staircase[si][sj] === 0)  {
-            potentialCondorcetWinners[i] = false;
-            potentialCondorcetWinners[j] = false;
           }
         }
       }

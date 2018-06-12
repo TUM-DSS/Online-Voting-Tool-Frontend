@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   @Input() advancedMode : boolean
   @ViewChild('scrollContainer') private scrollContainer: ElementRef;
   scrollRight : boolean;
+  visible: boolean;
 
   constructor() {
     this.profileOptions = {
@@ -26,7 +27,7 @@ export class ProfileComponent implements OnInit {
       maxNumber: 10
     }
     this.scrollRight = true;
-
+    this.visible = true;
   }
 
   ngOnInit() {
@@ -41,6 +42,13 @@ export class ProfileComponent implements OnInit {
     }
     this.model.resize(this.profileOptions.numberOfCandidates);
 
+  }
+
+  /**
+   * Show / Hide the preference profile.
+   */
+  toggleVisibility() {
+    this.visible = !this.visible;
   }
 
 
