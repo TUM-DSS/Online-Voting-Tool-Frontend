@@ -3,7 +3,7 @@ import {toFrac} from "../frac";
 
 
 /**
-* Component for displaying the efficiency results of the diferent lotteries
+* Component for displaying the efficiency results of the different lotteries
 */
 @Component({
   selector: 'app-efficiency-chart',
@@ -17,13 +17,6 @@ export class EfficiencyChartComponent implements OnInit {
 
   constructor() {
     this.visible = false;
-  }
-
-  /**
-   * Show / Hide the efficiency results.
-   */
-  toggleVisibility() {
-    this.visible = !this.visible;
   }
 
   ngOnInit() {}
@@ -41,11 +34,14 @@ export class EfficiencyChartComponent implements OnInit {
   */
   getBadgeClass(res) {
     if(!res.success) {
+      this.visible = false;
       return "badge-warning";
     }
     if(res.efficient) {
+      this.visible = false;
       return "badge-success"
     }
+    this.visible = true;
     return "badge-danger";
   }
 

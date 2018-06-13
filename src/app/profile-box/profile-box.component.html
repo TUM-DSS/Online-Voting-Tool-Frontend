@@ -19,7 +19,7 @@
 </div>
 <ul [sortablejs]="model.profiles[index].relation" [sortablejsOptions]="sortableOptions" class="list-group list-group-flush" style="width:96%; display:table; margin:0 auto;">
     <li class="list-group-item"
-        style="text-align:center;"
+        style="text-align:center; size: 20px"
         *ngFor="let item of model.profiles[index].relation"
         [style.background]="getColor(item)"
         [class.draggable]="!model.majorityMatrixIsDirty"

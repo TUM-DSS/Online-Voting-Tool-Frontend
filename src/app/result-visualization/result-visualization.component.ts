@@ -3,6 +3,7 @@ import { ProfileModel,Profile,Matrix } from "../model";
 import { VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service";
 import { EfficencyTestService } from "../services/efficency-test/efficency-test.service"
 import {ErrorBlock} from "../error-box/error-box.component"
+import { Globals} from '../globals';
 
 /**
 * Types of the answers the vote server can give.
@@ -67,12 +68,13 @@ export class ResultVisualizationComponent implements OnInit {
   showInvalidMessage : boolean;
   errorBlock: ErrorBlock;
 
-  efficencyData : any = {success:false, msg:"No data."};
+  efficiencyData : any = {success:false, msg:"No data."};
   waitSub : any[];
   waiting : boolean = false;
   socialChoiceFunctions : string[];
   socialChoiceResults: string[];
 
+  tieBreakingActive : boolean;
   tieWasBroken : boolean;
   visibleSCF : boolean;
   visibleSettings : boolean;
@@ -92,14 +94,14 @@ export class ResultVisualizationComponent implements OnInit {
         name:"Social Choice Polytopes",
         list: [
           {
-            name: "Homogeneous Maximal Lottery",
+            name: "Maximal Lottery",
             hasParameter : true,
             paraMin : 0,
             paraMax : 5,
-            paraName: "Signed exponent"
+            paraName: "Power Function of degree"
           },
           {
-            name: "Maximal Lottery",
+            name: "C2-Maximal Lottery",
             hasParameter : false
           }
 
@@ -140,8 +142,9 @@ export class ResultVisualizationComponent implements OnInit {
       data: []
     }
 
+    this.tieBreakingActive = false;
     this.tieWasBroken = false;
-    this.visibleSCF = true;
+    this.visibleSCF = false;
     this.visibleSettings = false;
     // The vote parameter is (only) the "signed exponent" at the moment. The default is hardcoded to 1 at the moment:
     this.voteParameter = 1;
@@ -159,6 +162,14 @@ export class ResultVisualizationComponent implements OnInit {
    */
   toggleMLSettingsVisibility() {
     this.visibleSettings = !this.visibleSettings;
+  }
+
+  /**
+   * Active / Deactivate tie-breaking
+   */
+  toggleTieBreaking() {
+    this.tieBreakingActive = !this.tieBreakingActive;
+    this.updateVisualization();
   }
 
   closeInvalidMessage() {
@@ -234,9 +245,9 @@ export class ResultVisualizationComponent implements OnInit {
                                   error=> this.updateVisualizationCallback({success:false,msg:"Server Timeout. Reload to try again."})));
 
     //Request all Social Choice Functions
-    if(!this.advancedMode) {
-      return;
-    }
+    // if(!this.advancedMode) {
+    //   return;
+    // }
 
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
         this.socialChoiceResults[i] = "Loading";
@@ -267,8 +278,8 @@ export class ResultVisualizationComponent implements OnInit {
       if(typeTemp == ResultDataType.Lotteries) {
         //Lotteries
 
-        const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
-        if(algName == "Maximal Lottery" && data.result.length > 1) {
+        // const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
+        if(this.tieBreakingActive && data.result.length > 1) {
           //Use Tie Breaking
           var len = data.result.length;
           var tmp = Array.from(new Array(data.result[0].length), x=>0);
@@ -284,16 +295,15 @@ export class ResultVisualizationComponent implements OnInit {
         }
 
         this.resultLotteries = data.result;
+        Globals.resultLotteries = this.resultLotteries[0];
         this.resultBarData = this.getBarData(data.result);
         this.getBarData(data.result);
 
-        //Test for efficency
+        //Test for efficiency
         let profiles = this.model.profiles.map(p => p.relation);
 
         //console.log("Test Data", data.result, profiles);
-        if(this.advancedMode) {
-          this.tester.testLotteries(data.result,profiles).subscribe(data => this.updateEfficiencyCallback(data));
-        }
+        this.tester.testLotteries(data.result,profiles).subscribe(data => this.updateEfficiencyCallback(data));
 
       } else {
         //Profile
@@ -312,7 +322,7 @@ export class ResultVisualizationComponent implements OnInit {
   }
 
   updateEfficiencyCallback(data) {
-    this.efficencyData = data;
+    this.efficiencyData = data;
   }
 
   /**

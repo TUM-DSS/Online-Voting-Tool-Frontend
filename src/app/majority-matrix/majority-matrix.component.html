@@ -23,7 +23,7 @@
                   {{canX == canY? 0 : -tempStaircase[canX][canY-(canX+1)] }}
                 </div>
               </div>
-              <div *ngIf="!editMode">{{model.majorityMatrix.get(canY,canX)}}</div>
+            <div *ngIf="!editMode"><a (click)="toggleMode()">{{model.majorityMatrix.get(canY,canX)}}</a></div>
           </td>
         </tr>
       </tbody>
