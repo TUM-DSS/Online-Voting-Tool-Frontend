@@ -1,12 +1,19 @@
 <div style="margin: 2vw 1vw 1vw 2vw;">
   <h3><button (click)="toggleVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visible? "&#9660;":"&#9658;"}}</button>
     <button class="btn btn-primary  btn-sm" title="Pro tip: Hold SHIFT to get a random profile without a Condorcet winner!" (click) = "randomizePreferences($event)">Random</button>
-    <a (click)="toggleVisibility()">Preferences of {{getNumberOfVoters()}} voters over </a>
+    <a (click)="toggleVisibility()">Preferences of</a>
+      <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
+             (input)="onVoterNumberInputFieldUpdate()" id="numberOfVoters"
+             type="Number" min=1 step="1" value="3"
+             name="numberOfVoters" [(ngModel)]="model.numberOfVoters"
+             style="width:4em;display: inline;"/>
+    <a (click)="toggleVisibility()">voters over </a>
     <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
     (input)="onCandidateNumberUpdate()" id="numberOfCandidates"
     type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"
     name="numberOfCandidates" [(ngModel)]="profileOptions.numberOfCandidates"
-    style="width:4em;display: inline;"/><a (click)="toggleVisibility()"> alternatives</a></h3>
+    style="width:4em;display: inline;"/>
+    <a (click)="toggleVisibility()"> alternatives</a></h3>
   <div #scrollContainer class="row" style="overflow:scroll; width:90%;" [hidden] = "!visible">
     <div class="d-flex flex-row flex-nowrap" >
       <app-profile-box class="card card-block bg-primary" style="width: 10.8rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>

@@ -49,7 +49,7 @@ export class BarChartComponent implements OnInit {
     tooltips: {
       xPadding: 20,
       callbacks: {
-                // Set a custum label function to change the text of the barchart tooltips
+                // Set a custom label function to change the text of the barchart tooltips
                 label: function(tooltipItem, data) {
                     var label = data.datasets[tooltipItem.datasetIndex].label || '';
 

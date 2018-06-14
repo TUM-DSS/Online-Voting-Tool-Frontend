@@ -1,7 +1,6 @@
-import { Globals} from './globals';
-
 //Default color for each alternative
 export class barColors {
+  static resultLotteryForColoring: number[];
   static defaultColors = [
   [230,23,23],
   [23,106,230],
@@ -92,13 +91,13 @@ export class barColors {
     let g = color[1];
     let b = color[2];
     let hsv = barColors.rgbToHsv(r,g,b);
-    hsv[1] = 0.01
     try{
-      hsv[1] = 0.015 + (Globals.resultLotteries[index] > 0.01 ? 0.1 : 0) + 0.2*Globals.resultLotteries[index];
+      hsv[1] = 0.03 + (this.resultLotteryForColoring[index] > 0.001 ? 0.2 : 0) + 0.2*this.resultLotteryForColoring[index];
     }
     catch(err) {
+      hsv[1] = 0;
     }
-    // hsv[1] = 0.05;
+    hsv[2] = 1;
     let rgb = barColors.hsvToRgb(hsv[0],hsv[1],hsv[2]);
     r = rgb[0];
     g = rgb[1];

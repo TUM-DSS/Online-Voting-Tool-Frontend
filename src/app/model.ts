@@ -3,6 +3,7 @@
 */
 
 import {Globals} from "./globals";
+import {Input} from "@angular/core";
 
 /**
 * ProfileModel contains the preference profile and the related majority matrix
@@ -12,6 +13,7 @@ export class ProfileModel {
   majorityMatrix : Matrix
   majorityMatrixIsDirty : boolean
   numberOfCandidates : number
+  numberOfVoters : number;
   changeRef: any
   updateListener : () => any
   setProfileStringListener : () => any
@@ -190,10 +192,11 @@ export class ProfileModel {
       this.router.navigate(['/'],{ queryParams: { profile:this.getProfileString()}})
     }
 
-    this.updateMatrix()
+    this.updateMatrix();
 
     this.callListener();
-    Globals.globalNumberOfVoters = this.getNumberOfVoters();
+    // Update the total number of voters in the profile component
+    this.numberOfVoters = this.getNumberOfVoters();
   }
 
   /**
@@ -221,9 +224,9 @@ export class ProfileModel {
   }
 
   getNumberOfVoters() {
-    var voterCount = 0;
+    let voterCount = 0;
     for (let prof of this.profiles) {
-      voterCount+=prof.numberOfVoters;
+      voterCount += prof.numberOfVoters;
     }
     return voterCount;
   }

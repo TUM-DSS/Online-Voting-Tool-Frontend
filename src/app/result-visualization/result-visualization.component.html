@@ -88,11 +88,7 @@
         <td style="vertical-align: top">
 
           <table style="width:200px;">
-            <tr>
-              <th>SCF</th>
-              <th style="text-align:center">Result</th>
-            </tr>
-            <tr *ngFor="let item of [1,2,3,4,5]; let itemIndex = index">
+            <tr *ngFor="let item of firstColumn; let itemIndex = index">
               <td>{{socialChoiceFunctions[itemIndex]}}</td>
               <td style="text-align:center">{{socialChoiceResults[itemIndex]}}</td>
             </tr>
@@ -103,13 +99,9 @@
         <td style="vertical-align: top">
 
           <table style="width:200px;">
-            <tr>
-              <th>SCF</th>
-              <th style="text-align:center">Result</th>
-            </tr>
-            <tr *ngFor="let item of [6]; let itemIndex = index">
-              <td>{{socialChoiceFunctions[itemIndex+5]}}</td>
-              <td style="text-align:center">{{socialChoiceResults[itemIndex+5]}}</td>
+            <tr *ngFor="let item of secondColumn; let itemIndex = index">
+              <td>{{socialChoiceFunctions[itemIndex+firstColumn.length]}}</td>
+              <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length]}}</td>
             </tr>
           </table>
 

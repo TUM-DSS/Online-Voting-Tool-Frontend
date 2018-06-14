@@ -2,7 +2,6 @@ import { Component, OnInit, Input} from '@angular/core';
 import { AfterViewChecked, ElementRef, ViewChild} from '@angular/core'
 import { SortablejsModule } from 'angular-sortablejs';
 import { ProfileModel,Profile,Matrix } from "../model";
-import { Globals} from '../globals';
 
 /**
 * Component for displaying the preference profile.
@@ -25,7 +24,7 @@ export class ProfileComponent implements OnInit {
       numberOfCandidates:3,
       minNumber:2,
       maxNumber: 10
-    }
+    };
     this.scrollRight = true;
     this.visible = true;
   }
@@ -81,11 +80,38 @@ export class ProfileComponent implements OnInit {
     this.model.resize(this.profileOptions.numberOfCandidates);
   }
 
+  /**
+   * The number of voters in the input field has changed. Resize & Update the model.
+   */
+  onVoterNumberInputFieldUpdate() {
+    let votersBefore = this.model.getNumberOfVoters();
+    let votersAfter = this.model.numberOfVoters;
+
+    // If there are too many voters, iteratively remove voters in the respectively last column
+    while (votersAfter < votersBefore) {
+      let lastVoters = this.model.profiles[this.model.profiles.length-1].numberOfVoters;
+      if(lastVoters >= votersBefore - votersAfter) {
+        this.model.profiles[this.model.profiles.length-1].numberOfVoters = lastVoters - votersBefore + votersAfter;
+      }
+      else {
+        this.model.profiles.splice(this.model.profiles.length-1,1);
+      }
+      votersBefore = this.model.getNumberOfVoters();
+    }
+    // If there are too few voters replicate the last voter's preference (once)
+    if (votersAfter > votersBefore) {
+      let lastVoters = this.model.profiles[this.model.profiles.length-1].numberOfVoters;
+      this.model.profiles[this.model.profiles.length-1].numberOfVoters = lastVoters - votersBefore + votersAfter;
+    }
+
+    this.model.allowStringUpdate = true;
+    this.model.removeDublicates();
+    this.model.updateModel();
+  }
+
   onAddVoter() {
     this.model.addProfile();
     this.scrollRight = true;
-    // Update the total number of voters
-    Globals.globalNumberOfVoters = this.model.getNumberOfVoters();
   }
 
   /**
@@ -106,12 +132,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  /**
-   * Get number of voters
-   */
-  getNumberOfVoters() {
-    return Globals.globalNumberOfVoters;
-  }
 }
 
 /**

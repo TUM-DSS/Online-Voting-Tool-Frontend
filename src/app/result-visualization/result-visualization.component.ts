@@ -3,7 +3,7 @@ import { ProfileModel,Profile,Matrix } from "../model";
 import { VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service";
 import { EfficencyTestService } from "../services/efficency-test/efficency-test.service"
 import {ErrorBlock} from "../error-box/error-box.component"
-import { Globals} from '../globals';
+import {barColors} from "../barColors";
 
 /**
 * Types of the answers the vote server can give.
@@ -71,6 +71,8 @@ export class ResultVisualizationComponent implements OnInit {
   efficiencyData : any = {success:false, msg:"No data."};
   waitSub : any[];
   waiting : boolean = false;
+  firstColumn : string[];
+  secondColumn : string[];
   socialChoiceFunctions : string[];
   socialChoiceResults: string[];
 
@@ -86,7 +88,9 @@ export class ResultVisualizationComponent implements OnInit {
     */
 
     this.waitSub = [];
-    this.socialChoiceFunctions = ["Borda","Minimax","Nanson","Black","Tideman","Essential Set"];
+    this.firstColumn = ["Borda","Minimax","Nanson","Black","Tideman"];
+    this.secondColumn = ["Essential Set"];
+    this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
     this.menues = [
@@ -279,23 +283,25 @@ export class ResultVisualizationComponent implements OnInit {
         //Lotteries
 
         // const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
-        if(this.tieBreakingActive && data.result.length > 1) {
-          //Use Tie Breaking
-          var len = data.result.length;
-          var tmp = Array.from(new Array(data.result[0].length), x=>0);
-          for(var i=0; i<len; i++) {
-            for(var j=0; j<data.result[i].length;j++) {
+
+        //Compute Tie Breaking
+        const len = data.result.length;
+        let tmp = Array.from(new Array(data.result[0].length), x => 0);
+        for(let i=0; i<len; i++) {
+            for(let j=0; j<data.result[i].length; j++) {
               tmp[j]+=data.result[i][j];
             }
           }
+        tmp = tmp.map(d => d/len);
+        barColors.resultLotteryForColoring = tmp;
 
-          tmp = tmp.map(d => d/len);
+        // Use Tie-breaking if desired
+        if(this.tieBreakingActive && data.result.length > 1) {
           data.result = [tmp];
           this.tieWasBroken = true;
         }
 
         this.resultLotteries = data.result;
-        Globals.resultLotteries = this.resultLotteries[0];
         this.resultBarData = this.getBarData(data.result);
         this.getBarData(data.result);
 
@@ -340,7 +346,7 @@ export class ResultVisualizationComponent implements OnInit {
       let candidateData = lotteries.map(arr => arr[i]);
 
       outData.push({
-        label: "Alternative "+this.model.getIdentifier(i),
+        label: this.model.getIdentifier(i), // "Alternative "+
         data: candidateData,
         borderWidth: 3,
       });
