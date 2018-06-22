@@ -21,7 +21,8 @@
         "styles.css"
       ],
       "scripts": [
-        "../node_modules/chart.js/dist/Chart.min.js"
+        "../node_modules/chart.js/dist/Chart.min.js",
+        "./assets/javascript-winwheel-2.7.0/Winwheel.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
