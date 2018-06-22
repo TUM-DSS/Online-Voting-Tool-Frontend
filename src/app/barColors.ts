@@ -13,6 +13,19 @@ export class barColors {
   [64,23,230],
   [188,230,23]];
 
+  static defaultHexColors = [
+    "#e61717",
+    "#176ae6",
+    "#17e66a",
+    "#bc17e6",
+    "#e69317",
+    "#17e6e6",
+    "#40e617",
+    "#e61793",
+    "#4017e6",
+    "#bce617",
+  ];
+
   //Source: https://gist.github.com/mjackson/5311256
   /**
    * Converts an RGB color value to HSV. Conversion formula
@@ -104,5 +117,18 @@ export class barColors {
     b = rgb[2];
 
     return "rgb("+r+","+g+","+b+")";
+  }
+
+  static componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+  static rgbToHex(r, g, b) {
+    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+  }
+
+  static rgbArrayToHex(input) {
+    return (this.rgbToHex(input[0],input[1],input[2]));
   }
 }

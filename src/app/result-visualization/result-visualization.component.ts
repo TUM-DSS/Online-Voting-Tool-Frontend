@@ -4,6 +4,9 @@ import { VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service
 import { EfficencyTestService } from "../services/efficency-test/efficency-test.service"
 import {ErrorBlock} from "../error-box/error-box.component"
 import {barColors} from "../barColors";
+import "assets/javascript-winwheel-2.7.0/Winwheel.min";
+declare var Winwheel: any;
+declare var winwheelPercentToDegrees: any;
 
 /**
 * Types of the answers the vote server can give.
@@ -18,7 +21,8 @@ enum ResultDataType {
 interface SendData {
   algorithm:string,
   staircase:number[][],
-  parameter?:number
+  parameter?:number,
+  profile: Profile[],
 }
 
 /**
@@ -55,7 +59,7 @@ export class ResultVisualizationComponent implements OnInit {
   @Input() advancedMode: boolean;
   voteParameter : number;
 
-  menues: {name:string, list:any[]}[]
+  menues: {name:string, list:any[]}[];
   selectedMenu:number;
   selectedItem:{menu:number,item:number};
 
@@ -80,6 +84,7 @@ export class ResultVisualizationComponent implements OnInit {
   tieWasBroken : boolean;
   visibleSCF : boolean;
   visibleSettings : boolean;
+  theWheel;
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
     /**
@@ -89,7 +94,7 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.waitSub = [];
     this.firstColumn = ["Borda","Minimax","Nanson","Black","Tideman"];
-    this.secondColumn = ["Essential Set"];
+    this.secondColumn = ["Plurality","Essential Set"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
@@ -137,14 +142,14 @@ export class ResultVisualizationComponent implements OnInit {
     this.errorBlock = {
       title:"No Error:",
       msg:"Default"
-    }
+    };
     //Init
     this.resultType = ResultDataType.None;
     this.resultProfile = [];
     this.resultBarData = {
       labels: [],
       data: []
-    }
+    };
 
     this.tieBreakingActive = false;
     this.tieWasBroken = false;
@@ -152,6 +157,85 @@ export class ResultVisualizationComponent implements OnInit {
     this.visibleSettings = false;
     // The vote parameter is (only) the "signed exponent" at the moment. The default is hardcoded to 1 at the moment:
     this.voteParameter = 1;
+  }
+
+  showWheel() {
+    try {
+      // Setup the segments array;
+      let lotterySegments = [];
+      let numberOfSegmentsShown = 0;
+      for (let i = 0; i < this.model.numberOfCandidates; i++) {
+        if (this.resultLotteries[0][i] > 0) {
+          numberOfSegmentsShown++;
+          lotterySegments.push({
+            'fillStyle': barColors.defaultHexColors[i],
+            'text': this.model.getIdentifier(i),
+            'size': winwheelPercentToDegrees(this.resultLotteries[0][i]*100)
+          });
+        }
+      }
+
+      this.theWheel = new Winwheel({
+        'canvasId': 'wheel',
+        'numSegments': numberOfSegmentsShown,
+        // 'fillStyle': '#e7706f',
+        'lineWidth': 1,
+        'textOrientation' : 'vertical',
+        'segments': lotterySegments,
+        'animation' :                   // Note animation properties passed in constructor parameters.
+          {
+            'type'     : 'spinToStop',  // Type of animation.
+            'duration' : 2,             // How long the animation is to take in seconds.
+            'spins'    : 4,              // The number of complete 360 degree rotations the wheel is to do.
+            // 'callbackBefore' : this.drawTriangle,
+            'callbackFinished' : this.alertPrize,
+            // 'yoyo': true, // Seems not to work!
+          },
+      });
+
+      // TODO: Fix Triangle during animation
+     this.drawTriangle(this.theWheel.ctx);
+
+    } catch (e) {
+      // console.log(e);
+    }
+    console.log(this.theWheel);
+  }
+
+  drawTriangle(ctx) {
+    ctx.strokeStyle = '#000000';     // Set line colour.
+    // ctx.fillStyle   = '#000000';        // Set fill colour.
+    ctx.lineWidth   = 2;
+    ctx.beginPath();                 // Begin path.
+    ctx.moveTo(420, 1);             // Move to initial position.
+    ctx.lineTo(460, 1);             // Draw lines to make the shape.
+    ctx.lineTo(440, 60);
+    ctx.lineTo(419, 1);
+    ctx.stroke();                    // Complete the path by stroking (draw lines).
+    // ctx.fill();                      // Then fill with colour.
+  }
+
+
+  alertPrize(indicatedSegment) {
+    alert("And the winner is: " + indicatedSegment.text);
+  }
+
+  startWheelAnimation() {
+    try {
+      if (this.theWheel === undefined || this.theWheel.canvas === null) {
+        this.showWheel();
+      }
+      else {
+        // Reset the WinWheel, i.e., remove multiples of 360 degree
+        this.theWheel.rotationAngle = this.theWheel.getRotationPosition();
+        this.theWheel.draw();
+        // Start the animation
+        this.theWheel.startAnimation();
+      }
+    }
+    catch (e) {
+      // console.log(e);
+    }
   }
 
   /**
@@ -234,7 +318,8 @@ export class ResultVisualizationComponent implements OnInit {
 
     let sendData:SendData  = {
       algorithm : this.menues[this.selectedItem.menu].list[this.selectedItem.item].name,
-      staircase : this.model.majorityMatrix.staircase
+      staircase : this.model.majorityMatrix.staircase,
+      profile   : this.model.profiles,
     };
 
     if(this.menues[this.selectedItem.menu].list[this.selectedItem.item].hasParameter) {
@@ -252,6 +337,7 @@ export class ResultVisualizationComponent implements OnInit {
     // if(!this.advancedMode) {
     //   return;
     // }
+
 
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
         this.socialChoiceResults[i] = "Loading";
@@ -305,6 +391,10 @@ export class ResultVisualizationComponent implements OnInit {
         this.resultBarData = this.getBarData(data.result);
         this.getBarData(data.result);
 
+        if(this.tieBreakingActive) {
+          this.showWheel();
+        }
+
         //Test for efficiency
         let profiles = this.model.profiles.map(p => p.relation);
 
@@ -322,7 +412,7 @@ export class ResultVisualizationComponent implements OnInit {
       this.errorBlock = {
         title:"Request Error:",
         msg: data.msg
-      }
+      };
       this.resultType = ResultDataType.None;
     }
   }
