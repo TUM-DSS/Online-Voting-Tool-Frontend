@@ -85,6 +85,8 @@ export class ResultVisualizationComponent implements OnInit {
   visibleSCF : boolean;
   visibleSettings : boolean;
   theWheel;
+  static wheelWinner : string;
+  static animationRunning : boolean;
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
     /**
@@ -157,6 +159,12 @@ export class ResultVisualizationComponent implements OnInit {
     this.visibleSettings = false;
     // The vote parameter is (only) the "signed exponent" at the moment. The default is hardcoded to 1 at the moment:
     this.voteParameter = 1;
+    ResultVisualizationComponent.wheelWinner = "none";
+    ResultVisualizationComponent.animationRunning = false;
+  }
+
+  get getWheelWinner() {
+    return ResultVisualizationComponent.wheelWinner;
   }
 
   showWheel() {
@@ -168,7 +176,8 @@ export class ResultVisualizationComponent implements OnInit {
         if (this.resultLotteries[0][i] > 0) {
           numberOfSegmentsShown++;
           lotterySegments.push({
-            'fillStyle': barColors.defaultHexColors[i],
+            'strokeStyle' : null,
+            'fillStyle': barColors.getHTMLColorWithFixedSaturation(i),
             'text': this.model.getIdentifier(i),
             'size': winwheelPercentToDegrees(this.resultLotteries[0][i]*100)
           });
@@ -179,12 +188,13 @@ export class ResultVisualizationComponent implements OnInit {
         'canvasId': 'wheel',
         'numSegments': numberOfSegmentsShown,
         // 'fillStyle': '#e7706f',
-        'lineWidth': 1,
+        'lineWidth': 0.00001, // Zero apparently does not work
         'outerRadius'   : 145,
         // 'innerRadius'   : 20,  // Set inner radius to make wheel hollow.
         'textOrientation' : 'curved',
         'textAlignment' : 'center',
         'segments': lotterySegments,
+        'rotationAngle': 180,
         'animation' :                   // Note animation properties passed in constructor parameters.
           {
             'type'     : 'spinToStop',  // Type of animation.
@@ -204,14 +214,18 @@ export class ResultVisualizationComponent implements OnInit {
 
 
   alertPrize(indicatedSegment) {
-    alert("And the winner is: " + indicatedSegment.text);
+    // alert("And the winner is: " + indicatedSegment.text);
+   ResultVisualizationComponent.wheelWinner = indicatedSegment.text;
+   ResultVisualizationComponent.animationRunning = false;
   }
 
   startWheelAnimation() {
-    // Maybe this can help to stop the wheel without showing a prize:
-    // this.theWheel.stopAnimation(false);
     try {
-      if (this.theWheel === undefined || this.theWheel.canvas === null) {
+      if (ResultVisualizationComponent.animationRunning) {
+        this.theWheel.stopAnimation(false);
+        ResultVisualizationComponent.animationRunning = false;
+      }
+      else if (this.theWheel === undefined || this.theWheel.canvas === null) {
         this.showWheel();
       }
       else {
@@ -220,6 +234,8 @@ export class ResultVisualizationComponent implements OnInit {
         this.theWheel.draw();
         // Start the animation
         this.theWheel.startAnimation();
+        ResultVisualizationComponent.animationRunning = true;
+        ResultVisualizationComponent.wheelWinner = "none";
       }
     }
     catch (e) {

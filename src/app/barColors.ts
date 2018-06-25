@@ -119,6 +119,30 @@ export class barColors {
     return "rgb("+r+","+g+","+b+")";
   }
 
+  /**
+   * Returns a CSS RGB value. That is a desaturated Version of the Bar Chart Color.
+   */
+  static getHTMLColorWithFixedSaturation(index : number) {
+    let color = barColors.defaultColors[index];
+    let r = color[0];
+    let g = color[1];
+    let b = color[2];
+    let hsv = barColors.rgbToHsv(r,g,b);
+    try{
+      hsv[1] = 0.4;
+    }
+    catch(err) {
+      hsv[1] = 0;
+    }
+    hsv[2] = 1;
+    let rgb = barColors.hsvToRgb(hsv[0],hsv[1],hsv[2]);
+    r = rgb[0];
+    g = rgb[1];
+    b = rgb[2];
+
+    return "rgb("+r+","+g+","+b+")";
+  }
+
   static componentToHex(c) {
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;

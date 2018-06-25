@@ -26,14 +26,20 @@
     </div>
 
     <div [hidden]="!tieBreakingActive || waiting || (resultType != resultDataType.Lotteries)" (click)="startWheelAnimation()">
-      <div style="text-align: center; margin: 0; padding: 0; color: black; font-size: 30px">
+      <div [ngSwitch]="getWheelWinner">
+      <div *ngSwitchCase="'none'" style="text-align: center; margin: 0; padding: 0; color: black; font-size: 30px">
         ↓
+      </div>
+        <div *ngSwitchDefault style="text-align: center; margin: 0; padding: 0; font-size: 30px">
+          The winner is {{getWheelWinner}}.
+        </div>
       </div>
       <!--▼-->
       <canvas id='wheel' height='300'>
         <!--width='880' height='300'-->
         Canvas not supported, use another browser.
       </canvas>
+
     </div>
 
     <div [ngSwitch]="resultType" *ngIf="!waiting">
