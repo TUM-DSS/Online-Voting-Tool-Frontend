@@ -1,6 +1,6 @@
 <div style="margin: 2vw 1vw 1vw 2vw;">
   <h3><button (click)="toggleVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visible? "&#9660;":"&#9658;"}}</button>
-    <button class="btn btn-primary  btn-sm" title="Pro tip: Hold SHIFT to get a random profile without a Condorcet winner!" (click) = "randomizePreferences($event)">Random</button>
+    <button class="btn btn-primary  btn-sm" title="Pro tip: Hold SHIFT or double-click to get a random profile without a Condorcet winner!" (click) = "randomizePreferences($event)" (dblclick)= "randomizePreferencesDoubleClick()">Random</button>
     <a (click)="toggleVisibility()">Preferences of</a>
       <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
              (input)="onVoterNumberInputFieldUpdate()" id="numberOfVoters"

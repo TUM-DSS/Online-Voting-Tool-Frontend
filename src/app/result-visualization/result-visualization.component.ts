@@ -84,9 +84,14 @@ export class ResultVisualizationComponent implements OnInit {
   tieWasBroken : boolean;
   visibleSCF : boolean;
   visibleSettings : boolean;
+  soundActive : boolean;
+
   theWheel;
   static wheelWinner : string;
   static animationRunning : boolean;
+  static staticSoundActive : boolean;
+  static tick;
+  static ding;
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
     /**
@@ -159,8 +164,11 @@ export class ResultVisualizationComponent implements OnInit {
     this.visibleSettings = false;
     // The vote parameter is (only) the "signed exponent" at the moment. The default is hardcoded to 1 at the moment:
     this.voteParameter = 1;
+    this.soundActive = true;
     ResultVisualizationComponent.wheelWinner = "none";
     ResultVisualizationComponent.animationRunning = false;
+    ResultVisualizationComponent.tick = new Audio('assets/javascript-winwheel-2.7.0/tick.mp3');
+    ResultVisualizationComponent.ding = new Audio('assets/javascript-winwheel-2.7.0/ding.mp3');
   }
 
   get getWheelWinner() {
@@ -169,6 +177,8 @@ export class ResultVisualizationComponent implements OnInit {
 
   showWheel() {
     try {
+      ResultVisualizationComponent.staticSoundActive = this.soundActive;
+
       // Setup the segments array;
       let lotterySegments = [];
       let numberOfSegmentsShown = 0;
@@ -195,12 +205,14 @@ export class ResultVisualizationComponent implements OnInit {
         'textAlignment' : 'center',
         'segments': lotterySegments,
         'rotationAngle': 180,
+
         'animation' :                   // Note animation properties passed in constructor parameters.
           {
             'type'     : 'spinToStop',  // Type of animation.
             'duration' : 2,             // How long the animation is to take in seconds.
             'spins'    : 4,              // The number of complete 360 degree rotations the wheel is to do.
             // 'callbackBefore' : this.drawTriangle,
+            'callbackSound' : this.playSound,
             'callbackFinished' : this.alertPrize,
             // 'yoyo': true, // Seems not to work!
           },
@@ -212,11 +224,40 @@ export class ResultVisualizationComponent implements OnInit {
     // console.log(this.theWheel);
   }
 
+  toggleSound() {
+    this.soundActive = !this.soundActive;
+    ResultVisualizationComponent.staticSoundActive = this.soundActive;
+  }
+
+  playSound() {
+    if(ResultVisualizationComponent.staticSoundActive) {
+      // Stop and rewind the sound (stops it if already playing).
+      ResultVisualizationComponent.tick.pause();
+      ResultVisualizationComponent.tick.currentTime = 0;
+
+      // Play the sound.
+      ResultVisualizationComponent.tick.play();
+    }
+  }
+
 
   alertPrize(indicatedSegment) {
     // alert("And the winner is: " + indicatedSegment.text);
    ResultVisualizationComponent.wheelWinner = indicatedSegment.text;
    ResultVisualizationComponent.animationRunning = false;
+
+   if (ResultVisualizationComponent.staticSoundActive) {
+     // Stop and rewind the tick sound (stops it if already playing).
+     ResultVisualizationComponent.tick.pause();
+     ResultVisualizationComponent.tick.currentTime = 0;
+
+     // Stop and rewind the ding sound (stops it if already playing).
+     ResultVisualizationComponent.ding.pause();
+     ResultVisualizationComponent.ding.currentTime = 0;
+
+     // Play the sound.
+     ResultVisualizationComponent.ding.play();
+   }
   }
 
   startWheelAnimation() {
@@ -232,6 +273,11 @@ export class ResultVisualizationComponent implements OnInit {
         // Reset the WinWheel, i.e., remove multiples of 360 degree
         this.theWheel.rotationAngle = this.theWheel.getRotationPosition();
         this.theWheel.draw();
+
+        // Stop and rewind the ding sound (stops it if already playing).
+        ResultVisualizationComponent.ding.pause();
+        ResultVisualizationComponent.ding.currentTime = 0;
+
         // Start the animation
         this.theWheel.startAnimation();
         ResultVisualizationComponent.animationRunning = true;
@@ -317,6 +363,12 @@ export class ResultVisualizationComponent implements OnInit {
     for (let sub of this.waitSub) {
         sub.unsubscribe();
     }
+
+    // Delete old winner, so the text can be hidden
+    ResultVisualizationComponent.wheelWinner = "none";
+
+    // Prevent wrong colors, e.g., if ML times out
+    barColors.resultLotteryForColoring = [];
 
     this.closeInvalidMessage();
     this.tieWasBroken = false;

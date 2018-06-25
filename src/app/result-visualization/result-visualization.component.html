@@ -13,10 +13,8 @@
   <div class="container" style="min-height: 20em;">
     <h3>{{menues[selectedItem.menu].list[selectedItem.item].name}}</h3>
     <div *ngIf="tieWasBroken">
-      There are multiple maximal lotteries. Showing the average of the extremal lotteries.
+      There are multiple maximal lotteries. Thus, the average of the extremal lotteries is shown.
     </div>
-
-
 
     <app-error-box *ngIf="showInvalidMessage" [title] = "errorBlock.title" [msg] = "errorBlock.msg" (close)="closeInvalidMessage()"></app-error-box>
 
@@ -64,9 +62,8 @@
     <div *ngIf="menues[selectedItem.menu].list[selectedItem.item].hasParameter" style="margin-bottom:1em;">
       <h4><button (click)="toggleMLSettingsVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visible? "&#9660;":"&#9658;"}}</button>
         <a (click)="toggleMLSettingsVisibility()">Settings</a></h4>
-    <div style="position: relative;" [hidden] = "!visibleSettings">
-
-      <table style="vertical-align: top; width: 100%">
+    <div style="position: relative; overflow-x: auto" [hidden] = "!visibleSettings">
+      <table style="vertical-align: top; width: 800px; margin: auto;">
         <tr>
           <td style="vertical-align: center; text-align: center">
             <strong style="display:block">{{menues[selectedItem.menu].list[selectedItem.item].paraName}} {{voteParameter}}</strong>
@@ -84,12 +81,21 @@
           </td>
           <td style="width:10%; vertical-align: center"></td>
           <td style="vertical-align: center; text-align: center">
-            <strong style="display:block;">Show {{tieBreakingActive?"the average of the":"all"}} extremal lotteries.</strong>
+            <strong style="display:block;" (click)="toggleTieBreaking()">Extremal lotteries: {{tieBreakingActive?"Show the average":"Show all"}}</strong>
             <label class="switch">
               <input type="checkbox" (click)="toggleTieBreaking()">
               <span class="toggleslider round"></span>
             </label>
             </td>
+
+          <td style="width:10%; vertical-align: center"></td>
+          <td style="vertical-align: center; text-align: center">
+            <strong style="display:block;" (click)="toggleSound()"> Sound: {{soundActive ?"on":"off"}}</strong>
+            <!--<label class="switch">-->
+              <!--<input type="checkbox" (click)="toggleTieBreaking()">-->
+              <!--<span class="toggleslider round"></span>-->
+            <!--</label>-->
+          </td>
         </tr>
       </table>
 

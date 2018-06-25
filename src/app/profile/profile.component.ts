@@ -125,7 +125,18 @@ export class ProfileComponent implements OnInit {
    * Generate random preferences
    */
   randomizePreferences(event) {
-    if (event.shiftKey && this.profileOptions.numberOfCandidates > 2) {
+    if (event.shiftKey && this.profileOptions.numberOfCandidates > 2 && (this.profileOptions.numberOfCandidates != 3 || this.model.numberOfVoters != 4)) {
+      this.model.randomizeWithoutCondorcet();
+    } else {
+      this.model.randomize();
+    }
+  }
+
+  /**
+   * Generate random preferences
+   */
+  randomizePreferencesDoubleClick() {
+    if (this.profileOptions.numberOfCandidates > 2 && (this.profileOptions.numberOfCandidates != 3 || this.model.numberOfVoters != 4)) {
       this.model.randomizeWithoutCondorcet();
     } else {
       this.model.randomize();
