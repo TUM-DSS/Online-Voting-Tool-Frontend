@@ -105,3 +105,8 @@ input:checked + .toggleslider:before {
 .toggleslider.round:before {
   border-radius: 50%;
 }
+
+canvas {
+  margin: auto;
+  display: block;
+}

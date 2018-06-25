@@ -151,7 +151,7 @@ export class ResultVisualizationComponent implements OnInit {
       data: []
     };
 
-    this.tieBreakingActive = false;
+    this.tieBreakingActive = true;
     this.tieWasBroken = false;
     this.visibleSCF = false;
     this.visibleSettings = false;
@@ -180,7 +180,10 @@ export class ResultVisualizationComponent implements OnInit {
         'numSegments': numberOfSegmentsShown,
         // 'fillStyle': '#e7706f',
         'lineWidth': 1,
-        'textOrientation' : 'vertical',
+        'outerRadius'   : 145,
+        // 'innerRadius'   : 20,  // Set inner radius to make wheel hollow.
+        'textOrientation' : 'curved',
+        'textAlignment' : 'center',
         'segments': lotterySegments,
         'animation' :                   // Note animation properties passed in constructor parameters.
           {
@@ -193,26 +196,10 @@ export class ResultVisualizationComponent implements OnInit {
           },
       });
 
-      // TODO: Fix Triangle during animation
-     this.drawTriangle(this.theWheel.ctx);
-
     } catch (e) {
       // console.log(e);
     }
-    console.log(this.theWheel);
-  }
-
-  drawTriangle(ctx) {
-    ctx.strokeStyle = '#000000';     // Set line colour.
-    // ctx.fillStyle   = '#000000';        // Set fill colour.
-    ctx.lineWidth   = 2;
-    ctx.beginPath();                 // Begin path.
-    ctx.moveTo(420, 1);             // Move to initial position.
-    ctx.lineTo(460, 1);             // Draw lines to make the shape.
-    ctx.lineTo(440, 60);
-    ctx.lineTo(419, 1);
-    ctx.stroke();                    // Complete the path by stroking (draw lines).
-    // ctx.fill();                      // Then fill with colour.
+    // console.log(this.theWheel);
   }
 
 
@@ -221,6 +208,8 @@ export class ResultVisualizationComponent implements OnInit {
   }
 
   startWheelAnimation() {
+    // Maybe this can help to stop the wheel without showing a prize:
+    // this.theWheel.stopAnimation(false);
     try {
       if (this.theWheel === undefined || this.theWheel.canvas === null) {
         this.showWheel();
