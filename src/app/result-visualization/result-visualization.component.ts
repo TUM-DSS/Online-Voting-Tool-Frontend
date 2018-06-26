@@ -102,8 +102,8 @@ export class ResultVisualizationComponent implements OnInit {
     */
 
     this.waitSub = [];
-    this.firstColumn = ["Borda","Minimax","Nanson","Black","Tideman"];
-    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Essential Set"];
+    this.firstColumn = ["Borda","Nanson","Baldwin","Black","Minimax","Tideman"];
+    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Copeland","Essential Set"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
@@ -173,7 +173,7 @@ export class ResultVisualizationComponent implements OnInit {
     // ResultVisualizationComponent.ding = new Audio('assets/javascript-winwheel-2.7.0/ding.mp3');
 
     // Make the ding less noisy
-    ResultVisualizationComponent.props = new createjs.PlayPropsConfig().set({volume: 0.1});
+    ResultVisualizationComponent.props = new createjs.PlayPropsConfig().set({volume: 0.2});
     createjs.Sound.registerSound('assets/javascript-winwheel-2.7.0/tick.mp3',"tickID");
     createjs.Sound.registerSound('assets/javascript-winwheel-2.7.0/ding.mp3',"dingID");
   }
