@@ -7,6 +7,7 @@ import {barColors} from "../barColors";
 import "assets/javascript-winwheel-2.7.0/Winwheel.min";
 declare var Winwheel: any;
 declare var winwheelPercentToDegrees: any;
+declare var createjs: any;
 
 /**
 * Types of the answers the vote server can give.
@@ -167,8 +168,11 @@ export class ResultVisualizationComponent implements OnInit {
     this.soundActive = true;
     ResultVisualizationComponent.wheelWinner = "none";
     ResultVisualizationComponent.animationRunning = false;
-    ResultVisualizationComponent.tick = new Audio('assets/javascript-winwheel-2.7.0/tick.mp3');
-    ResultVisualizationComponent.ding = new Audio('assets/javascript-winwheel-2.7.0/ding.mp3');
+    // ResultVisualizationComponent.tick = new Audio('assets/javascript-winwheel-2.7.0/tick.mp3');
+    // ResultVisualizationComponent.ding = new Audio('assets/javascript-winwheel-2.7.0/ding.mp3');
+
+    createjs.Sound.registerSound('assets/javascript-winwheel-2.7.0/tick.mp3',"tickID");
+    createjs.Sound.registerSound('assets/javascript-winwheel-2.7.0/ding.mp3',"dingID");
   }
 
   get getWheelWinner() {
@@ -232,11 +236,13 @@ export class ResultVisualizationComponent implements OnInit {
   playSound() {
     if(ResultVisualizationComponent.staticSoundActive) {
       // Stop and rewind the sound (stops it if already playing).
-      ResultVisualizationComponent.tick.pause();
-      ResultVisualizationComponent.tick.currentTime = 0;
+      // ResultVisualizationComponent.tick.pause();
+      // ResultVisualizationComponent.tick.currentTime = 0;
+      createjs.Sound.stop("tickID");
 
       // Play the sound.
-      ResultVisualizationComponent.tick.play();
+      // ResultVisualizationComponent.tick.play();
+      createjs.Sound.play("tickID");
     }
   }
 
@@ -248,15 +254,18 @@ export class ResultVisualizationComponent implements OnInit {
 
    if (ResultVisualizationComponent.staticSoundActive) {
      // Stop and rewind the tick sound (stops it if already playing).
-     ResultVisualizationComponent.tick.pause();
-     ResultVisualizationComponent.tick.currentTime = 0;
+     // ResultVisualizationComponent.tick.pause();
+     // ResultVisualizationComponent.tick.currentTime = 0;
+     createjs.Sound.stop("tickID");
 
      // Stop and rewind the ding sound (stops it if already playing).
-     ResultVisualizationComponent.ding.pause();
-     ResultVisualizationComponent.ding.currentTime = 0;
+     // ResultVisualizationComponent.ding.pause();
+     // ResultVisualizationComponent.ding.currentTime = 0;
+     createjs.Sound.stop("dingID");
 
      // Play the sound.
-     ResultVisualizationComponent.ding.play();
+     // ResultVisualizationComponent.ding.play();
+     createjs.Sound.play("dingID");
    }
   }
 
@@ -275,8 +284,9 @@ export class ResultVisualizationComponent implements OnInit {
         this.theWheel.draw();
 
         // Stop and rewind the ding sound (stops it if already playing).
-        ResultVisualizationComponent.ding.pause();
-        ResultVisualizationComponent.ding.currentTime = 0;
+        // ResultVisualizationComponent.ding.pause();
+        // ResultVisualizationComponent.ding.currentTime = 0;
+        createjs.Sound.stop("dingID");
 
         // Start the animation
         this.theWheel.startAnimation();
