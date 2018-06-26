@@ -93,6 +93,7 @@ export class ResultVisualizationComponent implements OnInit {
   static staticSoundActive : boolean;
   static tick;
   static ding;
+  static props;
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
     /**
@@ -102,7 +103,7 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.waitSub = [];
     this.firstColumn = ["Borda","Minimax","Nanson","Black","Tideman"];
-    this.secondColumn = ["Plurality","Essential Set"];
+    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Essential Set"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
@@ -171,6 +172,8 @@ export class ResultVisualizationComponent implements OnInit {
     // ResultVisualizationComponent.tick = new Audio('assets/javascript-winwheel-2.7.0/tick.mp3');
     // ResultVisualizationComponent.ding = new Audio('assets/javascript-winwheel-2.7.0/ding.mp3');
 
+    // Make the ding less noisy
+    ResultVisualizationComponent.props = new createjs.PlayPropsConfig().set({volume: 0.1});
     createjs.Sound.registerSound('assets/javascript-winwheel-2.7.0/tick.mp3',"tickID");
     createjs.Sound.registerSound('assets/javascript-winwheel-2.7.0/ding.mp3',"dingID");
   }
@@ -265,7 +268,7 @@ export class ResultVisualizationComponent implements OnInit {
 
      // Play the sound.
      // ResultVisualizationComponent.ding.play();
-     createjs.Sound.play("dingID");
+     createjs.Sound.play("dingID", ResultVisualizationComponent.props);
    }
   }
 
