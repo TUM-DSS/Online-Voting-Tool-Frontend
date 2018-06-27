@@ -11,10 +11,11 @@
 
 <div class="jumbotron">
   <div class="container" style="min-height: 20em;">
-    <h3>{{menues[selectedItem.menu].list[selectedItem.item].name}}</h3>
+    <h3 class="headlinetooltip">{{menues[selectedItem.menu].list[selectedItem.item].name}}<span *ngIf="tieBreakingActive" class="headlinetooltiptext" [innerHTML]=getLotteryForTooltip()></span></h3>
     <div *ngIf="tieWasBroken">
-      There are multiple maximal lotteries. Thus, the average of the extremal lotteries is shown.
+      There are multiple maximal lotteries; showing the average of the extremal lotteries.
     </div>
+
 
     <app-error-box *ngIf="showInvalidMessage" [title] = "errorBlock.title" [msg] = "errorBlock.msg" (close)="closeInvalidMessage()"></app-error-box>
 
@@ -66,7 +67,7 @@
       <table style="vertical-align: top; width: 800px; margin: auto;">
         <tr>
           <td style="vertical-align: center; text-align: center">
-            <strong style="display:block">{{menues[selectedItem.menu].list[selectedItem.item].paraName}} {{voteParameter}}</strong>
+            <strong style="display:block; white-space: nowrap">{{menues[selectedItem.menu].list[selectedItem.item].paraName}}</strong>
             <span style="white-space: nowrap">
             {{menues[selectedItem.menu].list[selectedItem.item].paraMin}}
              <input type = "range" class="slider"
@@ -78,10 +79,11 @@
                step="1"/>
              {{menues[selectedItem.menu].list[selectedItem.item].paraMax}}
             </span>
+            <strong style="display:block">{{voteParameter}}</strong>
           </td>
           <td style="width:10%; vertical-align: center"></td>
           <td style="vertical-align: center; text-align: center">
-            <strong style="display:block;" (click)="toggleTieBreaking()">Show the average of extremal lotteries:</strong>
+            <strong style="display:block; white-space: nowrap" (click)="toggleTieBreaking()">Tie-breaking (average of extremal lotteries):</strong>
             <label class="switch">
               <input type="checkbox" (click)="toggleTieBreaking()" checked>
               <span class="toggleslider round"></span>
@@ -121,7 +123,7 @@
           </table>
 
         </td>
-        <td style="width:100px"> &nbsp; </td>
+        <td style="width:50px"> &nbsp; </td>
         <td style="vertical-align: top">
 
           <table style="width:250px;">
@@ -132,10 +134,10 @@
           </table>
 
         </td>
-        <td style="width:100px"> &nbsp; </td>
+        <td style="width:50px"> &nbsp; </td>
         <td style="vertical-align: top">
 
-          <table style="width:200px;">
+          <table style="width:250px;">
             <tr *ngFor="let item of thirdColumn; let itemIndex = index">
               <td>{{socialChoiceFunctions[itemIndex+firstColumn.length+secondColumn.length]}}</td>
               <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length+secondColumn.length]}}</td>
@@ -143,6 +145,18 @@
           </table>
 
         </td>
+        <td style="width:50px"> &nbsp; </td>
+        <td style="vertical-align: top">
+
+          <table style="width:200px;">
+            <tr *ngFor="let item of forthColumn; let itemIndex = index">
+              <td>{{socialChoiceFunctions[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}</td>
+              <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}</td>
+            </tr>
+          </table>
+
+        </td>
+
       </tr>
     </table>
 

@@ -79,6 +79,7 @@ export class ResultVisualizationComponent implements OnInit {
   firstColumn : string[];
   secondColumn : string[];
   thirdColumn : string[];
+  forthColumn : string[];
   socialChoiceFunctions : string[];
   socialChoiceResults: string[];
 
@@ -92,8 +93,8 @@ export class ResultVisualizationComponent implements OnInit {
   static wheelWinner : string;
   static animationRunning : boolean;
   static staticSoundActive : boolean;
-  static tick;
-  static ding;
+  // static tick;
+  // static ding;
   static props;
 
   constructor(private fetcher: VoteFetcherService,private tester: EfficencyTestService) {
@@ -103,10 +104,11 @@ export class ResultVisualizationComponent implements OnInit {
     */
 
     this.waitSub = [];
-    this.firstColumn = ["Borda","Nanson","Baldwin","Black","Minimax","Tideman"];
+    this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
     this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality"];
-    this.thirdColumn = ["Condorcet","Copeland","Uncovered Set","Essential Set","Pareto"];
-    this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn);
+    this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set"];
+    this.forthColumn = ["Condorcet","Pareto"];
+    this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn).concat(this.forthColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
     this.menues = [
@@ -118,7 +120,7 @@ export class ResultVisualizationComponent implements OnInit {
             hasParameter : true,
             paraMin : 0,
             paraMax : 5,
-            paraName: "Power Function of degree"
+            paraName: "Majority margin exponent (default: 1)"
           },
           {
             name: "C2-Maximal Lottery",
@@ -215,18 +217,23 @@ export class ResultVisualizationComponent implements OnInit {
         'segments': lotterySegments,
         'rotationAngle': 180,
 
-        'animation' :                   // Note animation properties passed in constructor parameters.
-          {
-            'type'     : 'spinToStop',  // Type of animation.
-            'duration' : 2,             // How long the animation is to take in seconds.
-            'spins'    : 4,              // The number of complete 360 degree rotations the wheel is to do.
-            // 'callbackBefore' : this.drawTriangle,
-            'callbackSound' : this.playSound,
-            'callbackFinished' : this.alertPrize,
-            // 'yoyo': true, // Seems not to work!
+        'animation' :
+          { // These are the properties for the initial animation for motivating the user to spin the wheel
+            'type'     : 'spinAndBack',  // Type of animation.
+            'stopAngle': 185,
+            // 'direction': 'anti-clockwise',
+            'duration' : 2.5,             // How long the animation is to take in seconds.
+            'spins'    : 0,              // The number of complete 360 degree rotations the wheel is to do.
+            'repeat'   : -1,
+            'easing'       : 'Power1.easeInOut',
+            // 'callbackSound' : this.playSound,
+            // 'callbackFinished' : this.alertPrize,
+            'yoyo': true,
           },
       });
 
+      // Start the (small) motivating animation
+      this.theWheel.startAnimation();
     } catch (e) {
       // console.log(e);
     }
@@ -284,8 +291,17 @@ export class ResultVisualizationComponent implements OnInit {
         this.showWheel();
       }
       else {
-        // Reset the WinWheel, i.e., remove multiples of 360 degree
+        // Reset the WinWheel, i.e., remove multiples of 360 degree and the initial animation
         this.theWheel.rotationAngle = this.theWheel.getRotationPosition();
+        // These are the properties for the spinning animation
+        this.theWheel.stopAnimation(false);
+        this.theWheel.animation = {
+          'type'     : 'spinToStop',  // Type of animation.
+          'duration' : 2,             // How long the animation is to take in seconds.
+          'spins'    : 4,              // The number of complete 360 degree rotations the wheel is to do.
+          'callbackSound' : this.playSound,
+          'callbackFinished' : this.alertPrize,
+        };
         this.theWheel.draw();
 
         // Stop and rewind the ding sound (stops it if already playing).
@@ -294,6 +310,7 @@ export class ResultVisualizationComponent implements OnInit {
         createjs.Sound.stop("dingID");
 
         // Start the animation
+
         this.theWheel.startAnimation();
         ResultVisualizationComponent.animationRunning = true;
         ResultVisualizationComponent.wheelWinner = "none";
@@ -518,5 +535,22 @@ export class ResultVisualizationComponent implements OnInit {
       labels: candidateLabels,
       data: outData
     }
+  }
+
+
+  getLotteryForTooltip() {
+    try {
+      let label = "";
+      for (let x = 0; x < this.model.numberOfCandidates; x++) {
+        if (this.resultLotteries[0][x] > 0.001) {
+          label = label.concat(this.model.getIdentifier(x) + ": " + Math.round(this.resultLotteries[0][x]*100)/100 + '<br />');
+        }
+      }
+      return label;
+    }
+    catch (e) {
+      return "Loading...";
+    }
+
   }
 }
