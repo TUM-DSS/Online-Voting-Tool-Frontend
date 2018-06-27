@@ -81,20 +81,20 @@
           </td>
           <td style="width:10%; vertical-align: center"></td>
           <td style="vertical-align: center; text-align: center">
-            <strong style="display:block;" (click)="toggleTieBreaking()">Extremal lotteries: {{tieBreakingActive?"Show the average":"Show all"}}</strong>
+            <strong style="display:block;" (click)="toggleTieBreaking()">Show the average of extremal lotteries:</strong>
             <label class="switch">
-              <input type="checkbox" (click)="toggleTieBreaking()">
+              <input type="checkbox" (click)="toggleTieBreaking()" checked>
               <span class="toggleslider round"></span>
             </label>
             </td>
 
           <td style="width:10%; vertical-align: center"></td>
           <td style="vertical-align: center; text-align: center">
-            <strong style="display:block;" (click)="toggleSound()"> Sound: {{soundActive ?"on":"off"}}</strong>
-            <!--<label class="switch">-->
-              <!--<input type="checkbox" (click)="toggleTieBreaking()">-->
-              <!--<span class="toggleslider round"></span>-->
-            <!--</label>-->
+            <strong style="display:block;" (click)="toggleSound()"> Sound:</strong>
+            <label class="switch">
+              <input type="checkbox" (click)="toggleSound()" checked>
+              <span class="toggleslider round"></span>
+            </label>
           </td>
         </tr>
       </table>
@@ -121,13 +121,24 @@
           </table>
 
         </td>
-        <td style="width:100px"></td>
+        <td style="width:100px"> &nbsp; </td>
         <td style="vertical-align: top">
 
           <table style="width:250px;">
             <tr *ngFor="let item of secondColumn; let itemIndex = index">
               <td>{{socialChoiceFunctions[itemIndex+firstColumn.length]}}</td>
               <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length]}}</td>
+            </tr>
+          </table>
+
+        </td>
+        <td style="width:100px"> &nbsp; </td>
+        <td style="vertical-align: top">
+
+          <table style="width:200px;">
+            <tr *ngFor="let item of thirdColumn; let itemIndex = index">
+              <td>{{socialChoiceFunctions[itemIndex+firstColumn.length+secondColumn.length]}}</td>
+              <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length+secondColumn.length]}}</td>
             </tr>
           </table>
 

@@ -78,6 +78,7 @@ export class ResultVisualizationComponent implements OnInit {
   waiting : boolean = false;
   firstColumn : string[];
   secondColumn : string[];
+  thirdColumn : string[];
   socialChoiceFunctions : string[];
   socialChoiceResults: string[];
 
@@ -103,8 +104,9 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.waitSub = [];
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","Minimax","Tideman"];
-    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Copeland","Essential Set"];
-    this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn);
+    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality"];
+    this.thirdColumn = ["Condorcet","Copeland","Uncovered Set","Essential Set","Pareto"];
+    this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
 
     this.menues = [
