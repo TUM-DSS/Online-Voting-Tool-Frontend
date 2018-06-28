@@ -120,7 +120,7 @@ export class ResultVisualizationComponent implements OnInit {
             hasParameter : true,
             paraMin : 0,
             paraMax : 5,
-            paraName: "Majority margin exponent (default: 1)"
+            paraName: "Majority margin exponent"
           },
           {
             name: "C2-Maximal Lottery",

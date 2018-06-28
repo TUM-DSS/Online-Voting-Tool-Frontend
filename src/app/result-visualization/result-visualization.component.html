@@ -10,7 +10,7 @@
 </div>
 
 <div class="jumbotron">
-  <div class="container" style="min-height: 20em;">
+  <div style="min-height: 20em;"> <!-- class="container" -->
     <h3 class="headlinetooltip">{{menues[selectedItem.menu].list[selectedItem.item].name}}<span *ngIf="tieBreakingActive" class="headlinetooltiptext" [innerHTML]=getLotteryForTooltip()></span></h3>
     <div *ngIf="tieWasBroken">
       There are multiple maximal lotteries; showing the average of the extremal lotteries.
@@ -63,10 +63,11 @@
     <div *ngIf="menues[selectedItem.menu].list[selectedItem.item].hasParameter" style="margin-bottom:1em;">
       <h4><button (click)="toggleMLSettingsVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visibleSettings? "&#9660;":"&#9654;"}}</button>
         <a (click)="toggleMLSettingsVisibility()">Settings</a></h4>
-    <div style="position: relative; overflow-x: auto" [hidden] = "!visibleSettings">
-      <table style="vertical-align: top; width: 800px; margin: auto;">
+    <div style="position: relative;" [hidden] = "!visibleSettings">
+      <table id="settings" style="vertical-align: top; margin: 0 auto;">
         <tr>
-          <td style="vertical-align: center; text-align: center">
+          <td>
+            <div class="headlinetooltip">
             <strong style="display:block; white-space: nowrap">{{menues[selectedItem.menu].list[selectedItem.item].paraName}}</strong>
             <span style="white-space: nowrap">
             {{menues[selectedItem.menu].list[selectedItem.item].paraMin}}
@@ -80,19 +81,25 @@
              {{menues[selectedItem.menu].list[selectedItem.item].paraMax}}
             </span>
             <strong style="display:block">{{voteParameter}}</strong>
+            <span style="width: 250px; left: 20%" class="headlinetooltiptext"> Exponent 0 corresponds to C1-ML and<br />Exponent 1 to C2-ML which is the default</span>
+            </div>
           </td>
-          <td style="width:10%; vertical-align: center"></td>
-          <td style="vertical-align: center; text-align: center">
-            <strong style="display:block; white-space: nowrap" (click)="toggleTieBreaking()">Tie-breaking (average of extremal lotteries):</strong>
+
+
+          <td>
+            <div class="headlinetooltip">
+            <strong style="display:block;">Tie-breaking:</strong>
             <label class="switch">
               <input type="checkbox" (click)="toggleTieBreaking()" checked>
               <span class="toggleslider round"></span>
             </label>
+            <span style="width: 250px; left: -50%; margin-left: 0;" class="headlinetooltiptext"> Tie-breaking by computing the average of the extremal lotteries</span>
+            </div>
             </td>
 
-          <td style="width:10%; vertical-align: center"></td>
-          <td style="vertical-align: center; text-align: center">
-            <strong style="display:block;" (click)="toggleSound()"> Sound:</strong>
+
+          <td>
+            <strong style="display:block;">Sound:</strong>
             <label class="switch">
               <input type="checkbox" (click)="toggleSound()" checked>
               <span class="toggleslider round"></span>

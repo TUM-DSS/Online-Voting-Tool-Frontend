@@ -7,14 +7,16 @@
              type="Number" min=1 step="1" value="3"
              name="numberOfVoters" [(ngModel)]="model.numberOfVoters"
              style="width:4em;display: inline;"
-             (click)="selectEverything()"/>
+             (click)="selectEverything()"
+             pattern="[0-9]*"/>
     <a (click)="toggleVisibility()">voters over </a>
     <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
     (input)="onCandidateNumberUpdate()" id="numberOfCandidates"
     type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"
     name="numberOfCandidates" [(ngModel)]="profileOptions.numberOfCandidates"
     style="width:4em;display: inline;"
-    (click)="selectEverything()"/>
+    (click)="selectEverything()"
+    pattern="[0-9]*"/>
     <a (click)="toggleVisibility()"> alternatives</a></h3>
   <div #scrollContainer class="row" style="overflow:scroll; width:90%;" [hidden] = "!visible">
     <div class="d-flex flex-row flex-nowrap" >

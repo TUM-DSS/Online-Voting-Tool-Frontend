@@ -18,7 +18,7 @@
           <th scope="row">{{model.getIdentifier(canY)}}</th>
           <td *ngFor="let canX of getCandidateArray(model.numberOfCandidates);">
               <div *ngIf="editMode">
-                <input *ngIf="canX>canY" class="form-control" type="Number" style="width:100%" name="tempStaircase" [(ngModel)]="tempStaircase[canY][canX-(canY+1)]" (input)="closeInvalidMessage()" (click)="selectEverything()"/>
+                <input *ngIf="canX>canY" class="form-control" type="Number" style="width:100%" name="tempStaircase" [(ngModel)]="tempStaircase[canY][canX-(canY+1)]" (input)="closeInvalidMessage()" (click)="selectEverything()" pattern="[0-9]*"/>
                 <div *ngIf="canX<=canY">
                   {{canX == canY? 0 : -tempStaircase[canX][canY-(canX+1)] }}
                 </div>

@@ -7,6 +7,13 @@
   /*border-radius: 3px;*/
 }
 
+#settings td {
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  padding:0 25px 0 25px;
+}
+
 /* (Range) Slider CSS */
 /* The (range) slider itself */
 .slider {
