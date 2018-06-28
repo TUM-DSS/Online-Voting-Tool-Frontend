@@ -61,7 +61,7 @@
     <app-efficiency-chart *ngIf="(resultType == resultDataType.Lotteries) && !waiting" [data]="efficiencyData"></app-efficiency-chart>
 
     <div *ngIf="menues[selectedItem.menu].list[selectedItem.item].hasParameter" style="margin-bottom:1em;">
-      <h4><button (click)="toggleMLSettingsVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visible? "&#9660;":"&#9658;"}}</button>
+      <h4><button (click)="toggleMLSettingsVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visibleSettings? "&#9660;":"&#9654;"}}</button>
         <a (click)="toggleMLSettingsVisibility()">Settings</a></h4>
     <div style="position: relative; overflow-x: auto" [hidden] = "!visibleSettings">
       <table style="vertical-align: top; width: 800px; margin: auto;">
@@ -107,7 +107,7 @@
 </div>
 
 <div style="margin: 2vw 1vw 1vw 2vw;">  <!--*ngIf="advancedMode"-->
-  <h3><button (click)="toggleSCFVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visible? "&#9660;":"&#9658;"}}</button>
+  <h3><button (click)="toggleSCFVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visibleSCF? "&#9660;":"&#9654;"}}</button>
     <a (click)="toggleSCFVisibility()">Other rules</a></h3>
   <div style="overflow-x: auto">
   <div class="center-div" [hidden] = "!visibleSCF">

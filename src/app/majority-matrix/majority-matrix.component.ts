@@ -122,6 +122,13 @@ export class MajorityMatrixComponent implements OnInit {
     }
   }
 
+  /*
+* Selects all text in the currently focused element.
+* Source: https://stackoverflow.com/a/34849300/4050546
+ */
+  selectEverything() {
+    document.execCommand("selectall",null,false);
+  }
   /**
   * Revert all edits done by the user and resets the matrix.
   */

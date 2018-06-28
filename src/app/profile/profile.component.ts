@@ -50,6 +50,13 @@ export class ProfileComponent implements OnInit {
     this.visible = !this.visible;
   }
 
+  /*
+  * Selects all text in the currently focused element.
+  * Source: https://stackoverflow.com/a/34849300/4050546
+   */
+  selectEverything() {
+    document.execCommand("selectall",null,false);
+  }
 
   ngAfterViewChecked() {
     //If a voter was added, scroll the profilelist fully to the right.
