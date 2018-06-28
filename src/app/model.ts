@@ -161,6 +161,9 @@ export class ProfileModel {
 
   /** Gets the Candidate Name (0->A , 1->B, ...) */
   getIdentifier(x:number) {
+    if (x === -1) {
+      return "-";
+    }
     return String.fromCharCode(x+65);
   }
 

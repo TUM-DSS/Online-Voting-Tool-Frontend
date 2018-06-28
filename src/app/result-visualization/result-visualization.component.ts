@@ -105,7 +105,7 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.waitSub = [];
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
-    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality"];
+    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin"];
     this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set"];
     this.forthColumn = ["Condorcet","Pareto"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn).concat(this.forthColumn);
