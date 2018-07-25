@@ -5,6 +5,7 @@ import { EfficencyTestService } from "../services/efficency-test/efficency-test.
 import {ErrorBlock} from "../error-box/error-box.component"
 import {barColors} from "../barColors";
 import "assets/javascript-winwheel-2.7.0/Winwheel.min";
+import {Globals} from "../globals";
 declare var Winwheel: any;
 declare var winwheelPercentToDegrees: any;
 declare var createjs: any;
@@ -170,7 +171,7 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.tieBreakingActive = true;
     this.tieWasBroken = false;
-    this.visibleSCF = false;
+    this.visibleSCF = Globals.advancedMode;
     this.visibleSettings = false;
     // The vote parameter is (only) the "signed exponent" at the moment. The default is hardcoded to 1 at the moment:
     this.voteParameter = 1;
@@ -443,7 +444,7 @@ export class ResultVisualizationComponent implements OnInit {
             this.socialChoiceResults[i] = rMap;
             try{
               if (data.tooltip != undefined && data.tooltip.length > 0) {
-                this.socialChoiceTooltipsActive[i] = this.advancedMode;
+                this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
                 this.socialChoiceTooltips[i] = data.tooltip;
 
                 // Adjust Condorcet SCF name to "weak" version if needed
