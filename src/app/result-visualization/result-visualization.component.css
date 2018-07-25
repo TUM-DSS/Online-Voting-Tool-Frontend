@@ -170,3 +170,27 @@ canvas {
 .angular-with-newlines {
   white-space: pre;
 }
+
+.CellWithComment{
+  position:relative;
+}
+
+.CellComment{
+  width: 200px;
+  text-align:center;
+  display:none;
+  position:absolute;
+  z-index:100;
+  background-color: #555;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  border-top-color: #555;
+  padding:3px;
+  color: #fff;
+  top:20px;
+  left:20px;
+}
+
+.CellWithComment:hover span.CellComment{
+  display:block;
+}

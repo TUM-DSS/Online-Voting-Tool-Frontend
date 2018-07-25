@@ -82,6 +82,8 @@ export class ResultVisualizationComponent implements OnInit {
   forthColumn : string[];
   socialChoiceFunctions : string[];
   socialChoiceResults: string[];
+  socialChoiceTooltips: string[];
+  socialChoiceTooltipsActive: boolean[];
 
   tieBreakingActive : boolean;
   tieWasBroken : boolean;
@@ -105,11 +107,13 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.waitSub = [];
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
-    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin"];
+    this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin","Coombs"];
     this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set"];
     this.forthColumn = ["Condorcet","Pareto"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn).concat(this.forthColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
+    this.socialChoiceTooltips = [];
+    this.socialChoiceTooltipsActive = [];
 
     this.menues = [
       {
@@ -437,6 +441,26 @@ export class ResultVisualizationComponent implements OnInit {
             let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
             // let str = (rMap.length>1? "Alternatives": "Alternative")+" "+rMap;
             this.socialChoiceResults[i] = rMap;
+            try{
+              if (data.tooltip != undefined && data.tooltip.length > 0) {
+                this.socialChoiceTooltipsActive[i] = this.advancedMode;
+                this.socialChoiceTooltips[i] = data.tooltip;
+
+                // Adjust Condorcet SCF name to "weak" version if needed
+                if(data.tooltip.includes("Weak Condorcet")) {
+                  this.socialChoiceFunctions[i] = "Weak Condorcet";
+                }
+                else if(data.tooltip.includes("Condorcet")) {
+                  this.socialChoiceFunctions[i] = "Condorcet";
+                }
+              }
+              else {
+                this.socialChoiceTooltipsActive[i] = false;
+              }
+            }
+            catch (e) {
+              this.socialChoiceTooltipsActive[i] = false;
+            }
           } else {
             this.socialChoiceResults[i] = "Error";
           }

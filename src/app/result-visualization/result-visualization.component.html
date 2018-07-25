@@ -124,8 +124,18 @@
 
           <table style="width:200px;">
             <tr *ngFor="let item of firstColumn; let itemIndex = index">
-              <td>{{socialChoiceFunctions[itemIndex]}}</td>
-              <td style="text-align:center">{{socialChoiceResults[itemIndex]}}</td>
+              <td class="CellWithComment">
+                {{socialChoiceFunctions[itemIndex]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex]" class="CellComment">
+                  {{socialChoiceTooltips[itemIndex]}}
+                </span>
+              </td>
+              <td   class="CellWithComment" style="text-align:center">
+                {{socialChoiceResults[itemIndex]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex]" class="CellComment">
+                  {{socialChoiceTooltips[itemIndex]}}
+                </span>
+              </td>
             </tr>
           </table>
 
@@ -135,8 +145,18 @@
 
           <table style="width:250px;">
             <tr *ngFor="let item of secondColumn; let itemIndex = index">
-              <td>{{socialChoiceFunctions[itemIndex+firstColumn.length]}}</td>
-              <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length]}}</td>
+              <td class="CellWithComment">
+                {{socialChoiceFunctions[itemIndex+firstColumn.length]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex+firstColumn.length]" class="CellComment">
+                  {{socialChoiceTooltips[itemIndex+firstColumn.length]}}
+                </span>
+              </td>
+              <td  class="CellWithComment" style="text-align:center">
+                {{socialChoiceResults[itemIndex+firstColumn.length]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex+firstColumn.length]" class="CellComment" [innerHTML]="socialChoiceTooltips[itemIndex+firstColumn.length]">
+                  <!--{{socialChoiceTooltips[itemIndex+firstColumn.length]}}-->
+                </span>
+              </td>
             </tr>
           </table>
 
@@ -146,8 +166,18 @@
 
           <table style="width:250px;">
             <tr *ngFor="let item of thirdColumn; let itemIndex = index">
-              <td>{{socialChoiceFunctions[itemIndex+firstColumn.length+secondColumn.length]}}</td>
-              <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length+secondColumn.length]}}</td>
+              <td class="CellWithComment">
+                {{socialChoiceFunctions[itemIndex+firstColumn.length+secondColumn.length]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex+firstColumn.length+secondColumn.length]" class="CellComment">
+                  {{socialChoiceTooltips[itemIndex+firstColumn.length+secondColumn.length]}}
+                </span>
+              </td>
+              <td  class="CellWithComment" style="text-align:center">
+                {{socialChoiceResults[itemIndex+firstColumn.length+secondColumn.length]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex+firstColumn.length+secondColumn.length]" class="CellComment">
+                  {{socialChoiceTooltips[itemIndex+firstColumn.length+secondColumn.length]}}
+                </span>
+              </td>
             </tr>
           </table>
 
@@ -157,8 +187,18 @@
 
           <table style="width:200px;">
             <tr *ngFor="let item of forthColumn; let itemIndex = index">
-              <td>{{socialChoiceFunctions[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}</td>
-              <td style="text-align:center">{{socialChoiceResults[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}</td>
+              <td class="CellWithComment">
+                {{socialChoiceFunctions[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]" class="CellComment">
+                  {{socialChoiceTooltips[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}
+                </span>
+              </td>
+              <td  class="CellWithComment" style="text-align:center">
+                {{socialChoiceResults[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}
+                <span *ngIf="socialChoiceTooltipsActive[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]" class="CellComment">
+                  {{socialChoiceTooltips[itemIndex+firstColumn.length+secondColumn.length+thirdColumn.length]}}
+                </span>
+              </td>
             </tr>
           </table>
 
