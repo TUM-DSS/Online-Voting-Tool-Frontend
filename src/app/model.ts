@@ -63,7 +63,7 @@ export class ProfileModel {
         inpString = inpString.toUpperCase();
 
         let len = -1
-        if(inpString.match(/\d+[A-Z]+/)){
+        if(inpString.match(/\d+[A-Z]+/) && !inpString.includes(".")){
           let match = /(\d+)([A-Z]+)/.exec(inpString);
           let num = +match[1];
           let profString = match[2];
@@ -93,8 +93,54 @@ export class ProfileModel {
 
           newProfiles.push(p);
         } else {
+          // Try it with renamed candidates
+          console.log("Second: "+inpString);
+          let match = /(\d+)([A-Z,.]+)/.exec(inpString);
+          let num = +match[1];
+          let profString = match[2];
+
+          if(len == -1) {
+            len = profString.length;
+          } else if (len != profString.length) {
+            //Invalid Profile length
+            return;
+          }
+
+          let profArray = [];
+          for(let i = 0; i < len;i++) {
+            let variable;
+            if (profString.charCodeAt(i)==".".charCodeAt(0)) {
+              i++;
+              variable = profString.charCodeAt(i)-"A".charCodeAt(0);
+              i++;
+              i++;
+              let name = "";
+              while (profString.charCodeAt(i) != ".".charCodeAt(0)) {
+                name += profString.charAt(i);
+                i++;
+              }
+              this.nameOfCandidates[variable] = name;
+            }
+            else {
+              variable = profString.charCodeAt(i)-"A".charCodeAt(0);
+            }
+            if(variable>=0 && variable < len && profArray.indexOf(variable)==-1) {
+              profArray.push(variable);
+            } else {
+              //Invalid Format
+              return
+            }
+          }
+
+          let p = {
+            relation:profArray,
+            numberOfVoters: num
+          }
+
+          newProfiles.push(p);
+
           //Invalid Format
-          return;
+          // return;
         }
     }
 
@@ -169,6 +215,19 @@ export class ProfileModel {
     return this.nameOfCandidates[x];
   }
 
+  /** Gets the Candidate Name (0->A , 1->B, ...) */
+  getIdentifierWithPoints(x:number) {
+    if (x === -1) {
+      return "-";
+    }
+    if(String.fromCharCode(x+65) === this.nameOfCandidates[x]) {
+      return this.nameOfCandidates[x];
+    }
+    else {
+      return "."+String.fromCharCode(x+65)+"."+this.nameOfCandidates[x]+".";
+    }
+  }
+
   /** Called when the preference relations change */
   updateProfiles(profiles) {
     //Create new Profile objects.
@@ -184,7 +243,7 @@ export class ProfileModel {
 
   getProfileString() {
     return this.profiles.reduce( (acc,val) => {
-      return acc + "-" + val.numberOfVoters + val.relation.reduce((acc,val) => acc+this.getIdentifier(val),"");
+      return acc + "-" + val.numberOfVoters + val.relation.reduce((acc,val) => acc+this.getIdentifierWithPoints(val),"");
     },"").slice(1);
   }
 

@@ -89,6 +89,7 @@ export class MajorityMatrixComponent implements OnInit {
   toggleMode() {
     if(!this.editMode) {
       this.resetEdit();
+      this.nameOfCandidates = this.model.nameOfCandidates;
       this.editMode = true;
       this.model.majorityMatrixIsDirty = true;
     } else {
