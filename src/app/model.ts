@@ -14,6 +14,7 @@ export class ProfileModel {
   majorityMatrixIsDirty : boolean
   numberOfCandidates : number
   numberOfVoters : number;
+  nameOfCandidates = ["A","B","C","D","E","F","G","H","I"];
   changeRef: any
   updateListener : () => any
   setProfileStringListener : () => any
@@ -164,7 +165,8 @@ export class ProfileModel {
     if (x === -1) {
       return "-";
     }
-    return String.fromCharCode(x+65);
+    // return String.fromCharCode(x+65);
+    return this.nameOfCandidates[x];
   }
 
   /** Called when the preference relations change */

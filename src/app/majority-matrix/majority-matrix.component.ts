@@ -18,6 +18,7 @@ export class MajorityMatrixComponent implements OnInit {
   visible: boolean;
   editMode:boolean;
   tempStaircase: number[][];
+  nameOfCandidates = ["A","B","C","D","E","F","G","H","I"];
   showInvalidMessage:boolean;
   errorBlock: ErrorBlock;
   advancedMode : boolean;
@@ -102,7 +103,8 @@ export class MajorityMatrixComponent implements OnInit {
         }
 
       } else {
-        // Valid Staircase & Request profile
+        // Valid Staircase: Rename the candidates & Request profile
+        this.model.nameOfCandidates = this.nameOfCandidates;
         this.extract.getProfiles(this.tempStaircase).subscribe(data => {
           if(data.success) {
             //console.log("Success");
@@ -135,6 +137,9 @@ export class MajorityMatrixComponent implements OnInit {
   resetEdit() {
     this.tempStaircase = this.copy2D(this.model.majorityMatrix.staircase);
     this.closeInvalidMessage();
+    if(this.editMode) {
+      this.toggleMode();
+    }
   }
 
   /**

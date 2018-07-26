@@ -110,6 +110,11 @@ export class ResultVisualizationComponent implements OnInit {
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
     this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin","Coombs"];
     this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set"];
+    // SWFs use fixed tie-breaking and are thus only displayed in the advanced mode
+    if (Globals.advancedMode) {
+      this.thirdColumn.push("Schulze");
+      this.thirdColumn.push("Ranked Pairs");
+    }
     this.forthColumn = ["Condorcet","Pareto"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn).concat(this.forthColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
@@ -121,7 +126,7 @@ export class ResultVisualizationComponent implements OnInit {
         name:"Social Choice Polytopes",
         list: [
           {
-            name: "Maximal Lottery",
+            name: "Maximal lottery",
             hasParameter : true,
             paraMin : 0,
             paraMax : 5,
@@ -198,13 +203,18 @@ export class ResultVisualizationComponent implements OnInit {
       // Setup the segments array;
       let lotterySegments = [];
       let numberOfSegmentsShown = 0;
+      let monospacedFontNecessary = false;
       for (let i = 0; i < this.model.numberOfCandidates; i++) {
         if (this.resultLotteries[0][i] > 0) {
           numberOfSegmentsShown++;
+          let text = this.model.getIdentifier(i);
+          if (text != String.fromCharCode(i+65)) {
+            monospacedFontNecessary = true;
+          }
           lotterySegments.push({
             'strokeStyle' : null,
             'fillStyle': barColors.getHTMLColorWithFixedSaturation(i),
-            'text': this.model.getIdentifier(i),
+            'text': text,
             'size': winwheelPercentToDegrees(this.resultLotteries[0][i]*100)
           });
         }
@@ -218,6 +228,7 @@ export class ResultVisualizationComponent implements OnInit {
         'outerRadius'   : 145,
         // 'innerRadius'   : 20,  // Set inner radius to make wheel hollow.
         'textOrientation' : 'curved',
+        'textFontFamily'  : monospacedFontNecessary ? 'Courier' : "Arial",     // Monospace font best for vertical and curved.
         'textAlignment' : 'center',
         'segments': lotterySegments,
         'rotationAngle': 180,
@@ -438,10 +449,23 @@ export class ResultVisualizationComponent implements OnInit {
         sendData.algorithm = this.socialChoiceFunctions[i];
         this.waitSub.push(this.fetcher.getVote(sendData,100000).subscribe(data => {
           if(data.success) {
-            //Update the Social Choice Function Menu
-            let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
-            // let str = (rMap.length>1? "Alternatives": "Alternative")+" "+rMap;
-            this.socialChoiceResults[i] = rMap;
+            //Update the Social Choice Function results section
+            if (data.type === "Lotteries") { // Classical SCF
+              let rMap = data.result.map(array => this.model.getIdentifier(array.findIndex(x=>x>0)));
+              // let str = (rMap.length>1? "Alternatives": "Alternative")+" "+rMap;
+              this.socialChoiceResults[i] = rMap;
+            }
+            if (data.type === "Profile") { // SWF and we show the top-rank only
+              let socialWelfareRanking = data.result;
+              this.socialChoiceResults[i] = this.model.getIdentifier(socialWelfareRanking[0]);
+              data.tooltip = this.socialChoiceResults[i];
+              for (let j = 1; j < socialWelfareRanking.length; j++) {
+                data.tooltip += " > " + this.model.getIdentifier(socialWelfareRanking[j]);
+              }
+            }
+
+
+            // (Try to) Add Tooltips
             try{
               if (data.tooltip != undefined && data.tooltip.length > 0) {
                 this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
