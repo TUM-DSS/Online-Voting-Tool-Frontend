@@ -62,7 +62,7 @@ export class ProfileModel {
     for (let inpString of profs) {
         inpString = inpString.toUpperCase();
 
-        let len = -1
+        let len = -1;
         if(inpString.match(/\d+[A-Z]+/) && !inpString.includes(".")){
           let match = /(\d+)([A-Z]+)/.exec(inpString);
           let num = +match[1];
@@ -89,13 +89,15 @@ export class ProfileModel {
           let p = {
             relation:profArray,
             numberOfVoters: num
-          }
+          };
 
           newProfiles.push(p);
-        } else {
+        } else if(inpString.match(/\d+[A-Z,.+ &]+/)) {
           // Try it with renamed candidates
-          console.log("Second: "+inpString);
-          let match = /(\d+)([A-Z,.]+)/.exec(inpString);
+          let match = /(\d+)([A-Z,.+ &]+)/.exec(inpString);
+          if (match[1].length + match[2].length != inpString.length) {
+            return;
+          }
           let num = +match[1];
           let profString = match[2];
 
@@ -135,17 +137,17 @@ export class ProfileModel {
           let p = {
             relation:profArray,
             numberOfVoters: num
-          }
+          };
 
           newProfiles.push(p);
-
+        }
+        else {
           //Invalid Format
-          // return;
+          return;
         }
     }
 
     this.numberOfCandidates = newProfiles[0].relation.length;
-    console.log("Candidates",this.numberOfCandidates);
     if( typeof this.updateListener != "undefined" && this.updateListener!== null) {
       this.setProfileStringListener();
     }
