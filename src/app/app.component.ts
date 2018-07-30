@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ProfileModel,Profile,Matrix } from "./model";
 import { Router, ActivatedRoute } from '@angular/router';
 import { Globals} from './globals';
@@ -47,6 +47,18 @@ export class AppComponent {
   closeNav() {
     document.getElementById("infoScreen").style.display = "none";
     // document.getElementById("infoScreen").style.width = "0%";
+  }
+
+  // Source: https://stackoverflow.com/a/43356977/4050546
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    try {
+      const profileString = (new URL(window.location.href)).search.split("=")[1];
+      this.model.setProfileString(profileString);
+    }
+    catch (e) {
+    }
+
   }
 }
 

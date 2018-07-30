@@ -92,6 +92,8 @@ export class ProfileModel {
           };
 
           newProfiles.push(p);
+          // We have to reset the names of the candidates, e.g. for the case if a navigation button was pressed.
+          this.nameOfCandidates = ["A","B","C","D","E","F","G","H","I"];
         } else if(inpString.match(/\d+[A-Z,.+ &]+/)) {
           // Try it with renamed candidates
           let match = /(\d+)([A-Z,.+ &]+)/.exec(inpString);
