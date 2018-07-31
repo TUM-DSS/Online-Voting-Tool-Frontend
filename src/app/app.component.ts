@@ -57,6 +57,8 @@ export class AppComponent {
       this.model.setProfileString(profileString);
     }
     catch (e) {
+      // Redirect to standard profile if no valid profile string found
+      this.model.setProfileString("1ABC-1CAB-1BCA");
     }
 
   }
