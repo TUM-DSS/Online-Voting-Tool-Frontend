@@ -123,7 +123,7 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.menues = [
       {
-        name:"Social Choice Polytopes",
+        name:"Social Decision Schemes",
         list: [
           {
             name: "Maximal lottery",
@@ -133,9 +133,18 @@ export class ResultVisualizationComponent implements OnInit {
             paraName: "Majority margin exponent"
           },
           {
-            name: "C2-Maximal Lottery",
+            name: "Random Dictatorship",
+            hasParameter : false
+          },
+          {
+            name: "Proportional Borda",
             hasParameter : false
           }
+          // ,
+          // {
+          //   name: "C2-Maximal Lottery",
+          //   hasParameter : false
+          // }
 
         ]
       },
