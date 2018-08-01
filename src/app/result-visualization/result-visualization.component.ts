@@ -156,6 +156,10 @@ export class ResultVisualizationComponent implements OnInit {
             hasParameter : false
           },
           {
+            name: "KemenyILP",
+            hasParameter : false
+          },
+          {
             name: "Schulze",
             hasParameter : false
           },
