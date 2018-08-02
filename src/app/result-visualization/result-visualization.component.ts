@@ -109,7 +109,7 @@ export class ResultVisualizationComponent implements OnInit {
     this.waitSub = [];
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
     this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin","Coombs"];
-    this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set"];
+    this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set","Kemeny Winners"];
     // SWFs use fixed tie-breaking and are thus only displayed in the advanced mode
     if (Globals.advancedMode) {
       this.thirdColumn.push("Schulze");
@@ -480,7 +480,23 @@ export class ResultVisualizationComponent implements OnInit {
 
             // (Try to) Add Tooltips
             try{
-              if (data.tooltip != undefined && data.tooltip.length > 0) {
+              if (this.socialChoiceFunctions[i] == "Kemeny Winners") {
+                this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
+                let socialWelfareRankings = data.tooltip;
+                this.socialChoiceTooltips[i] = "";
+                for (let j = 0; j < socialWelfareRankings.length; j++) {
+                  let socialWelfareRanking = socialWelfareRankings[j];
+                  if (socialWelfareRankings.length > 1) {
+                    this.socialChoiceTooltips[i] += " Ranking "+(j+1)+": ";
+                  }
+                  this.socialChoiceTooltips[i] += this.model.getIdentifier(socialWelfareRanking[0]);
+                  for (let k = 1; k < socialWelfareRanking.length; k++) {
+                    this.socialChoiceTooltips[i] += " > " + this.model.getIdentifier(socialWelfareRanking[k]);
+                  }
+                }
+
+              }
+              else if (data.tooltip != undefined && data.tooltip.length > 0) {
                 this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
                 this.socialChoiceTooltips[i] = data.tooltip;
 
