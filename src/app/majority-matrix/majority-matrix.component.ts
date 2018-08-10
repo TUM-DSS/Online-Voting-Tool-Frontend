@@ -18,7 +18,7 @@ export class MajorityMatrixComponent implements OnInit {
   visible: boolean;
   editMode:boolean;
   tempStaircase: number[][];
-  nameOfCandidates = ["A","B","C","D","E","F","G","H","I"];
+  nameOfCandidates = ["A","B","C","D","E","F","G","H","I","J"];
   showInvalidMessage:boolean;
   errorBlock: ErrorBlock;
   advancedMode : boolean;
