@@ -37,6 +37,7 @@
 
   <app-error-box *ngIf="showInvalidMessage" [title] = "errorBlock.title" [msg] = "errorBlock.msg" (close)="closeInvalidMessage()"></app-error-box>
 
+  <div id="minimalID" [hidden]="!showMinimality" class="alert alert-dismissible alert-success" style="width: 300px; text-align: center">The profile is minimal!</div>
   <button class="btn btn-primary"(click) = "toggleMode()">{{editMode? "Save" : "Edit"}}</button>
   <button class="btn btn-danger" (click) = "resetEdit()" [hidden]="!editMode">Reset</button>
   <button class="btn btn-info" (click) = "doubleStaircase()" [hidden]="!editMode">Double Entries</button>

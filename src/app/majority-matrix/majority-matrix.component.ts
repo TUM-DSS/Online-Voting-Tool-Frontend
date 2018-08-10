@@ -112,6 +112,11 @@ export class MajorityMatrixComponent implements OnInit {
             this.editMode = false;
             this.model.majorityMatrixIsDirty = false;
             this.model.updateProfiles(data.profiles);
+            if(data.minimal) {
+              // this.showMinimality = true;
+              document.getElementById("minimalID").hidden = false;
+              setTimeout(function () {document.getElementById("minimalID").hidden = true;},4000);
+            }
           } else {
             //console.log("Fail");
             this.showInvalidMessage = true;
