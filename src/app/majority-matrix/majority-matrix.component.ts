@@ -17,6 +17,7 @@ export class MajorityMatrixComponent implements OnInit {
   @Input() model : ProfileModel;
   visible: boolean;
   editMode:boolean;
+  profileComputationRunning: boolean;
   tempStaircase: number[][];
   nameOfCandidates = ["A","B","C","D","E","F","G","H","I","J"];
   showInvalidMessage:boolean;
@@ -28,6 +29,7 @@ export class MajorityMatrixComponent implements OnInit {
       this.ref.markForCheck();
     }, 500);
     this.editMode = false;
+    this.profileComputationRunning = false;
     this.showInvalidMessage = false;
 
     this.errorBlock = {
@@ -106,26 +108,29 @@ export class MajorityMatrixComponent implements OnInit {
       } else {
         // Valid Staircase: Rename the candidates & Request profile
         this.model.nameOfCandidates = this.nameOfCandidates;
+        this.profileComputationRunning = true;
         this.extract.getProfiles(this.tempStaircase).subscribe(data => {
           if(data.success) {
             //console.log("Success");
             this.editMode = false;
+            this.profileComputationRunning = false;
             this.model.majorityMatrixIsDirty = false;
             this.model.updateProfiles(data.profiles);
             if(data.minimal) {
-              // this.showMinimality = true;
               document.getElementById("minimalID").hidden = false;
               setTimeout(function () {document.getElementById("minimalID").hidden = true;},4000);
             }
           } else {
             //console.log("Fail");
             this.showInvalidMessage = true;
+            this.profileComputationRunning = false;
             this.errorBlock = {
               title : "Server Error:",
               msg: data.msg
             }
           }
         });
+
       }
     }
   }
