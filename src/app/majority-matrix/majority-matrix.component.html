@@ -20,7 +20,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let canY of getCandidateArray(model.numberOfCandidates);">
-          <th scope="row">{{model.getIdentifier(canY)}}</th>
+          <th scope="row"><a (click)="toggleMode()">{{model.getIdentifier(canY)}}</a></th>
           <td *ngFor="let canX of getCandidateArray(model.numberOfCandidates);">
               <div *ngIf="editMode">
                 <input *ngIf="canX>canY" class="form-control" type="Number" style="width:100%" name="tempStaircase" [(ngModel)]="tempStaircase[canY][canX-(canY+1)]" (input)="closeInvalidMessage()" (click)="selectEverything()" (keydown.enter)="toggleMode()" pattern="[0-9]*"/>
@@ -37,10 +37,20 @@
 
   <app-error-box *ngIf="showInvalidMessage" [title] = "errorBlock.title" [msg] = "errorBlock.msg" (close)="closeInvalidMessage()"></app-error-box>
 
-  <div id="minimalID" [hidden]="!showMinimality" class="alert alert-dismissible alert-success" style="width: 300px; text-align: center">The profile is minimal!</div>
-  <button class="btn btn-primary"  (click) = "toggleMode()">{{editMode? (profileComputationRunning ? "Computing ..." : "Save") : "Edit"}}</button>
+
+  <button class="btn btn-primary"  (click) = "toggleMode()">{{profileComputationRunning ? "Computing ..." : (editMode ? "Save" : "Edit") }}</button>
   <button class="btn btn-danger" (click) = "resetEdit()" [hidden]="!editMode || profileComputationRunning">Reset</button>
   <button class="btn btn-info" (click) = "doubleStaircase()" [hidden]="!editMode || profileComputationRunning">Double Entries</button>
-  <!--<button class="btn btn-info" (click) = "randomizeStaircase()" [hidden]="!advancedMode">Randomize Preferences</button>-->
+  <button class="btn btn-info" (click) = "randomizeStaircase()" [hidden]="profileComputationRunning">Randomize</button>
+  <span [hidden]="profileComputationRunning"> with weights up to
+    <input class="form-control"
+           id="weightLimit"
+           type="Number" min="1" max="999" step="1" value="5"
+           name="weightLimit" [(ngModel)]="weightLimit"
+           style="width:4em; display: inline;"
+           (click)="selectEverything()"
+           pattern="[0-9]*"/>
+  </span>
+  <div id="minimalID" [hidden]="!showMinimality" class="alert alert-dismissible alert-success" style="width: 300px; text-align: center">The profile is minimal!</div>
 
 </div>

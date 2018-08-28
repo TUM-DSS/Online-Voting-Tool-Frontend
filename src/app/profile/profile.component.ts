@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
     // If there are too many voters, iteratively remove voters in the respectively last column
     while (votersAfter < votersBefore) {
       let lastVoters = this.model.profiles[this.model.profiles.length-1].numberOfVoters;
-      if(lastVoters >= votersBefore - votersAfter) {
+      if(lastVoters > votersBefore - votersAfter) {
         this.model.profiles[this.model.profiles.length-1].numberOfVoters = lastVoters - votersBefore + votersAfter;
       }
       else {
@@ -143,7 +143,7 @@ export class ProfileComponent implements OnInit {
    * Generate random preferences
    */
   randomizePreferencesDoubleClick() {
-    if (this.profileOptions.numberOfCandidates > 2 && (this.profileOptions.numberOfCandidates != 3 || this.model.numberOfVoters != 4)) {
+    if (this.profileOptions.numberOfCandidates > 2 && this.model.numberOfVoters > 2 && (this.profileOptions.numberOfCandidates != 3 || this.model.numberOfVoters != 4)) {
       this.model.randomizeWithoutCondorcet();
     } else {
       this.model.randomize();

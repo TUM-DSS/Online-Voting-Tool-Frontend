@@ -4,7 +4,7 @@
     <a (click)="toggleVisibility()">Preferences of</a>
       <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
              (input)="onVoterNumberInputFieldUpdate()" id="numberOfVoters"
-             type="Number" min=1 step="1" value="3"
+             type="Number" min="1" step="1" value="3"
              name="numberOfVoters" [(ngModel)]="model.numberOfVoters"
              style="width:4em;display: inline;"
              (click)="selectEverything()"

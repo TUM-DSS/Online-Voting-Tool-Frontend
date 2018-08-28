@@ -23,6 +23,7 @@ export class MajorityMatrixComponent implements OnInit {
   showInvalidMessage:boolean;
   errorBlock: ErrorBlock;
   advancedMode : boolean;
+  weightLimit: number;
 
   constructor(private ref:ChangeDetectorRef, private extract:ProfileExtractionService) {
     setInterval(() => {
@@ -39,6 +40,7 @@ export class MajorityMatrixComponent implements OnInit {
 
     this.visible = false;
     this.advancedMode = Globals.advancedMode;
+    this.weightLimit = 5;
   }
 
   ngOnInit() {
@@ -108,31 +110,38 @@ export class MajorityMatrixComponent implements OnInit {
       } else {
         // Valid Staircase: Rename the candidates & Request profile
         this.model.nameOfCandidates = this.nameOfCandidates;
-        this.profileComputationRunning = true;
-        this.extract.getProfiles(this.tempStaircase).subscribe(data => {
-          if(data.success) {
-            //console.log("Success");
-            this.editMode = false;
-            this.profileComputationRunning = false;
-            this.model.majorityMatrixIsDirty = false;
-            this.model.updateProfiles(data.profiles);
-            if(data.minimal) {
-              document.getElementById("minimalID").hidden = false;
-              setTimeout(function () {document.getElementById("minimalID").hidden = true;},4000);
-            }
-          } else {
-            //console.log("Fail");
-            this.showInvalidMessage = true;
-            this.profileComputationRunning = false;
-            this.errorBlock = {
-              title : "Server Error:",
-              msg: data.msg
-            }
-          }
-        });
+        this.computeMinimalProfile(this.tempStaircase);
 
       }
     }
+  }
+
+  /**
+   * Compute minimal profile for new matrix
+   */
+  computeMinimalProfile(staircase) {
+    this.profileComputationRunning = true;
+    this.extract.getProfiles(staircase).subscribe(data => {
+      if(data.success) {
+        //console.log("Success");
+        this.editMode = false;
+        this.profileComputationRunning = false;
+        this.model.majorityMatrixIsDirty = false;
+        this.model.updateProfiles(data.profiles);
+        if(data.minimal) {
+          document.getElementById("minimalID").hidden = false;
+          setTimeout(function () {document.getElementById("minimalID").hidden = true;},4000);
+        }
+      } else {
+        //console.log("Fail");
+        this.showInvalidMessage = true;
+        this.profileComputationRunning = false;
+        this.errorBlock = {
+          title : "Server Error:",
+          msg: data.msg
+        }
+      }
+    });
   }
 
   /*
@@ -157,7 +166,29 @@ export class MajorityMatrixComponent implements OnInit {
   * Generate a random staircase
   */
   randomizeStaircase() {
-    this.model.randomize();
+    // Close minimality notifications first
+    document.getElementById("minimalID").hidden = true;
+
+    let newStaircase = this.copy2D(this.model.majorityMatrix.staircase);
+
+    // Ensure that the entries are all odd or all even. Otherwise no corresponding profile exists!
+    let even = this.weightLimit % 2 === 0;
+    let basis = (this.weightLimit - (even ? 0 : 1)) / 2;
+
+    // Iterate over all entries in the staircase and randomly draw a new entry
+    for (let canY of this.getCandidateArray(this.model.numberOfCandidates)) {
+      for (let canX of this.getCandidateArray(this.model.numberOfCandidates)) {
+        if (canX > canY) {
+          let sign = Math.random() > 0.5 ? 1 : -1;
+          let absoluteValue = 2 * Math.floor(Math.random() * (basis+1));
+          newStaircase[canY][canX-(canY+1)] =  sign * (absoluteValue + (even ? 0 : 1));
+        }
+      }
+    }
+    // console.log("New Staircase: "+newStaircase);
+
+    this.tempStaircase = newStaircase;
+    this.computeMinimalProfile(newStaircase);
   }
 
   /**
