@@ -34,11 +34,12 @@ export class EfficencyTestService {
   * }
   *
   */
-  testLotteries(lotteries, profiles) {
+  testLotteries(lotteries, exact, profiles) {
     let headers = new Headers();
     headers.append("Content-Type","application/json");
     let data = {
       lotteries: lotteries,
+      exact: exact,
       profile: profiles
     };
 

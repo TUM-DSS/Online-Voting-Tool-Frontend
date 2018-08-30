@@ -1,11 +1,14 @@
-import { Component, OnInit, Input} from '@angular/core';
-import { ProfileModel,Profile,Matrix } from "../model";
-import { VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service";
-import { EfficencyTestService } from "../services/efficency-test/efficency-test.service"
+import {Component, Input, OnInit} from '@angular/core';
+import {Profile, ProfileModel} from "../model";
+import {VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service";
+import {EfficencyTestService} from "../services/efficency-test/efficency-test.service"
 import {ErrorBlock} from "../error-box/error-box.component"
 import {barColors} from "../barColors";
 import "assets/javascript-winwheel-2.7.0/Winwheel.min";
 import {Globals} from "../globals";
+import {approximate} from "../frac";
+
+declare var math: any;
 declare var Winwheel: any;
 declare var winwheelPercentToDegrees: any;
 declare var createjs: any;
@@ -69,6 +72,7 @@ export class ResultVisualizationComponent implements OnInit {
   resultType : ResultDataType;
   resultProfile: number[];
   resultLotteries: number[][];
+  exactResultLotteries: number[][][];
   resultBarData: BarChartData;
 
   showInvalidMessage : boolean;
@@ -535,28 +539,62 @@ export class ResultVisualizationComponent implements OnInit {
       if(typeTemp == ResultDataType.Lotteries) {
         //Lotteries
 
-        // const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
+        const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
+        if (algName === "Random Dictatorship" || algName === "Proportional Borda") {
+          this.tieBreakingActive = true;
+        }
 
         //Compute Tie Breaking
-        const len = data.result.length;
+        const numberOfLotteries = data.result.length;
         let tmp = Array.from(new Array(data.result[0].length), x => 0);
-        for(let i=0; i<len; i++) {
-            for(let j=0; j<data.result[i].length; j++) {
-              tmp[j]+=data.result[i][j];
+        for(let i=0; i < numberOfLotteries; i++) {
+          for(let j=0; j < data.result[i].length; j++) {
+            tmp[j]+=data.result[i][j];
+          }
+        }
+        tmp = tmp.map(d => d/numberOfLotteries);
+        barColors.resultLotteryForColoring = tmp;
+
+        let exactTemp;
+        if (data.exact !== undefined) {
+          exactTemp = Array.from(new Array(data.exact[0].length), x => math.fraction(0,1));
+          for(let i=0; i < numberOfLotteries; i++) {
+            for (let j = 0; j < data.exact[i].length; j++) {
+              exactTemp[j] = exactTemp[j].add(math.fraction(data.exact[i][j][0],data.exact[i][j][1]));
             }
           }
-        tmp = tmp.map(d => d/len);
-        barColors.resultLotteryForColoring = tmp;
+          exactTemp = exactTemp.map(d => [math.divide(d,numberOfLotteries).n, math.divide(d,numberOfLotteries).d] );
+        }
+        else {
+          // Fill with zero fractions
+          exactTemp = Array.from(new Array(data.result[0].length), x => [0,1]);
+          // Approximate the tie-breaked lottery
+          for(let j=0; j < data.result[0].length; j++) {
+            exactTemp[j] = approximate(tmp[j]);
+          }
+          // Fill with zero fractions
+          data.exact = Array.from(new Array(numberOfLotteries), x => Array.from(new Array(data.result[0].length), x => [0,1]));
+          // Approximate all lotteries
+          for(let i=0; i < numberOfLotteries; i++) {
+            for(let j=0; j < data.result[i].length; j++) {
+              data.exact[i][j] = approximate(data.result[i][j]);
+            }
+          }
+        }
+
 
         // Use Tie-breaking if desired
         if(this.tieBreakingActive && data.result.length > 1) {
           data.result = [tmp];
+          data.exact = [exactTemp];
           this.tieWasBroken = true;
         }
 
+
+        this.exactResultLotteries = data.exact;
         this.resultLotteries = data.result;
         this.resultBarData = this.getBarData(data.result);
-        this.getBarData(data.result);
+        // this.getBarData(data.result);
 
         if(this.tieBreakingActive) {
           this.showWheel();
@@ -566,7 +604,7 @@ export class ResultVisualizationComponent implements OnInit {
         let profiles = this.model.profiles.map(p => p.relation);
 
         //console.log("Test Data", data.result, profiles);
-        this.tester.testLotteries(data.result,profiles).subscribe(data => this.updateEfficiencyCallback(data));
+        this.tester.testLotteries(data.result, data.exact, profiles).subscribe(data => this.updateEfficiencyCallback(data));
 
       } else {
         //Profile
@@ -620,14 +658,15 @@ export class ResultVisualizationComponent implements OnInit {
     try {
       let label = "";
       for (let x = 0; x < this.model.numberOfCandidates; x++) {
-        if (this.resultLotteries[0][x] > 0.001) {
-          label = label.concat(this.model.getIdentifier(x) + ": " + Math.round(this.resultLotteries[0][x]*100)/100 + '<br />');
+        if (this.exactResultLotteries[0][x][0] !== 0) {
+          let gcd = math.gcd(this.exactResultLotteries[0][x][0], this.exactResultLotteries[0][x][1]);
+          label = label.concat(this.model.getIdentifier(x) + ": " + this.exactResultLotteries[0][x][0]/gcd + "/" + this.exactResultLotteries[0][x][1]/gcd + '<br />');
         }
       }
       return label;
     }
     catch (e) {
-      return "Loading...";
+      return "Loading..."+e;
     }
 
   }

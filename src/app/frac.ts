@@ -43,20 +43,25 @@ export function toFrac(x:number) {
     out+=l;
     x-=l;
   }
-  let error = Math.abs(x);
+  // let error = Math.abs(x);
   let bestDenominator = 1;
 
   //Iterate through all denominators and keep the one with the smallest error
-  for(let i=2; i<=precFac ;i++) {
-    let error2 = Math.abs(x - (Math.round(x * i) / i));
-  	if (error2 < error) {
-  		error = error2;
-  		bestDenominator = i;
-  	}
-  }
+  // for(let i=2; i<=precFac ;i++) {
+  //   let error2 = Math.abs(x - (Math.round(x * i) / i));
+  // 	if (error2 < error) {
+  // 		error = error2;
+  // 		bestDenominator = i;
+  // 	}
+  // }
+
+  // Use the mediant algorithm instead of testing all denominators
+  let mediantApproximation = approximate(x);
+  bestDenominator = mediantApproximation[1];
 
   if (bestDenominator > 1) {
-    out+=" "+ Math.round(x * bestDenominator)+"/"+bestDenominator;
+    // out+=" "+ Math.round(x * bestDenominator)+"/"+bestDenominator;
+    out+=" "+ mediantApproximation[0]+"/"+bestDenominator;
   }
   if(out.length == 0){
     out = "0";
@@ -73,5 +78,38 @@ export function toFrac(x:number) {
 	}
   out = out.trim();
   fracMap[x] = out;
+
   return out;
+}
+
+export function approximate(x) {
+  let a = 0;
+  let b = 1;
+  let c = 1;
+  let d = 1;
+  let N = 1e7;
+  while (b <= N && d <= N) {
+    let mediant = (a + c)/(b+d);
+    if (x === mediant){
+      if (b + d <= N)
+        return [a+c, b+d];
+      else if (d > b)
+        return [c, d];
+      else
+        return [a, b];
+    }
+    else if (x > mediant) {
+      a = a+c;
+      b = b+d;
+    }
+    else {
+      c = a+c;
+      d = b+d;
+    }
+  }
+  if (b > N){
+    return [c, d];
+  }
+  else
+    return [a, b]
 }
