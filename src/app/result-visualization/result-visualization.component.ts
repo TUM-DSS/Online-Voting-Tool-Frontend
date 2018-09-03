@@ -248,16 +248,16 @@ export class ResultVisualizationComponent implements OnInit {
         'textFontFamily'  : monospacedFontNecessary ? 'Courier' : "Arial",     // Monospace font best for vertical and curved.
         'textAlignment' : 'center',
         'segments': lotterySegments,
-        'rotationAngle': 180,
+        'rotationAngle': 175,
 
         'animation' :
           { // These are the properties for the initial animation for motivating the user to spin the wheel
             'type'     : 'spinAndBack',  // Type of animation.
-            'stopAngle': 185,
+            'stopAngle': 180,
             // 'direction': 'anti-clockwise',
             'duration' : 2.5,             // How long the animation is to take in seconds.
             'spins'    : 0,              // The number of complete 360 degree rotations the wheel is to do.
-            'repeat'   : -1,
+            'repeat'   : 2,             // -1 for infinite loop would be nicer but takes too much energy
             'easing'       : 'Power1.easeInOut',
             // 'callbackSound' : this.playSound,
             // 'callbackFinished' : this.alertPrize,
@@ -660,7 +660,9 @@ export class ResultVisualizationComponent implements OnInit {
       for (let x = 0; x < this.model.numberOfCandidates; x++) {
         if (this.exactResultLotteries[0][x][0] !== 0) {
           let gcd = math.gcd(this.exactResultLotteries[0][x][0], this.exactResultLotteries[0][x][1]);
-          label = label.concat(this.model.getIdentifier(x) + ": " + this.exactResultLotteries[0][x][0]/gcd + "/" + this.exactResultLotteries[0][x][1]/gcd + '<br />');
+          let numericString = Math.round(100 * this.exactResultLotteries[0][x][0] /  this.exactResultLotteries[0][x][1])/100;
+          let exactString = " (" + this.exactResultLotteries[0][x][0]/gcd + "/" + this.exactResultLotteries[0][x][1]/gcd + ")";
+          label = label.concat(this.model.getIdentifier(x) + ": " + numericString + exactString + '<br />');
         }
       }
       return label;

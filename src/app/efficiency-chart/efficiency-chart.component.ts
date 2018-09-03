@@ -75,14 +75,31 @@ export class EfficiencyChartComponent implements OnInit {
   * Helper function for text inside the tooltip of the info pills
   */
   getDomText(prob,index) {
-    if(prob>0) {
-      let out = String.fromCharCode(index+65)+': '+(Math.round(prob * 100)/100); // "Alternative "+
-      let frac = toFrac(prob);
-      if(frac.length >1) {
-        out+=" ("+toFrac(prob)+")";
-      }
+    if (prob[0] !== undefined) {
+      // Try to use exact lotteries
+      if(prob[0] !== 0) {
+        let out = String.fromCharCode(index+65) +': '+ (Math.round((prob[0]/prob[1]) * 100)/100) ; // "Alternative "+
+        if(prob[1] !== 1) {
+          out+=" ("+ prob[0] + "/" + prob[1] +")";
+        }
+        else {
+          out = String.fromCharCode(index+65) +': 1';
+        }
 
-      return out;
+        return out;
+      }
+    }
+    else {
+      // If there is no exact arithmetic dominator, then use the numerical one
+      if(prob>0) {
+        let out = String.fromCharCode(index+65)+': '+(Math.round(prob * 100)/100); // "Alternative "+
+        let fraction = toFrac(prob);
+        if(fraction.length >1) {
+          out+=" ("+ fraction +")";
+        }
+
+        return out;
+      }
     }
     return "";
   }
