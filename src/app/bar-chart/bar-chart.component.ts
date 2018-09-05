@@ -3,7 +3,6 @@ import { ChartsModule,BaseChartDirective } from "ng2-charts/ng2-charts";
 import {Observable} from 'rxjs/Rx';
 import {toFrac} from "../frac";
 import {barColors} from "../barColors";
-import {Globals} from "../globals";
 
 /**
 * Component displaying a barchart for given barchart data
@@ -51,17 +50,18 @@ export class BarChartComponent implements OnInit {
       callbacks: {
                 // Set a custom label function to change the text of the barchart tooltips
                 label: function(tooltipItem, data) {
-                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  let label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  let rounded = Math.round(tooltipItem.xLabel * 100) / 100;
 
                     if (label) {
                         label += ': ';
                     }
-                    label += Math.round(tooltipItem.xLabel * 100) / 100;
+                    label += rounded;
                     let frac = toFrac(tooltipItem.xLabel);
-                    if(frac.length>1 && Globals.advancedMode) {
-                      label += " ("+toFrac(tooltipItem.xLabel)+ ")";
+                    if(frac.length>1) {
+                      label += " ("+frac+ ")";
                     }
-                    return label;
+                    return rounded === 0 ? null : label;
                 }
             }
       //mode:"index",

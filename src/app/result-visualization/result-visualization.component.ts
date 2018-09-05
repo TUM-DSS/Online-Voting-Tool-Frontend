@@ -74,6 +74,8 @@ export class ResultVisualizationComponent implements OnInit {
   resultLotteries: number[][];
   exactResultLotteries: number[][][];
   resultBarData: BarChartData;
+  resultCount: number;
+  maximalResultCount: number;
 
   showInvalidMessage : boolean;
   errorBlock: ErrorBlock;
@@ -113,7 +115,7 @@ export class ResultVisualizationComponent implements OnInit {
     this.waitSub = [];
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
     this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin","Coombs"];
-    this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set","Kemeny Winners"];
+    this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set","Kemeny"];
     // SWFs use fixed tie-breaking and are thus only displayed in the advanced mode
     if (Globals.advancedMode) {
       this.thirdColumn.push("Schulze");
@@ -124,6 +126,8 @@ export class ResultVisualizationComponent implements OnInit {
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
     this.socialChoiceTooltips = [];
     this.socialChoiceTooltipsActive = [];
+    this.resultCount = 0;
+    this.maximalResultCount = 0;
 
     this.menues = [
       {
@@ -156,11 +160,7 @@ export class ResultVisualizationComponent implements OnInit {
         name:"Social Welfare Functions",
         list: [
           {
-            name: "Kemeny",
-            hasParameter : false
-          },
-          {
-            name: "KemenyILP",
+            name: "Kemeny Ranking",
             hasParameter : false
           },
           {
@@ -450,16 +450,12 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.waiting = true;
     this.waitSub = [];
-    //Request the selected algorithm
+    // Request the selected algorithm
     this.waitSub.push(this.fetcher.getVote(sendData).subscribe(
                                   data => this.updateVisualizationCallback(data),
                                   error=> this.updateVisualizationCallback({success:false,msg:"Server Timeout. Reload to try again."})));
 
-    //Request all Social Choice Functions
-    // if(!this.advancedMode) {
-    //   return;
-    // }
-
+    // Request all Social Choice Functions
 
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
         this.socialChoiceResults[i] = "Loading";
@@ -484,7 +480,7 @@ export class ResultVisualizationComponent implements OnInit {
 
             // (Try to) Add Tooltips
             try{
-              if (this.socialChoiceFunctions[i] == "Kemeny Winners") {
+              if (this.socialChoiceFunctions[i] == "Kemeny") {
                 this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
                 let socialWelfareRankings = data.tooltip;
                 this.socialChoiceTooltips[i] = "";
@@ -532,14 +528,15 @@ export class ResultVisualizationComponent implements OnInit {
   updateVisualizationCallback(data) {
     //console.log("Received",data)
     this.waiting = false;
+    this.resultCount = 0;
+    this.maximalResultCount = 0;
+    const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
     if(data.success) {
       this.resultType = ResultDataType.None;
 
       let typeTemp = +ResultDataType[data.type];
-      if(typeTemp == ResultDataType.Lotteries) {
-        //Lotteries
+      if(typeTemp == ResultDataType.Lotteries) { //Lotteries
 
-        const algName = this.menues[this.selectedItem.menu].list[this.selectedItem.item].name;
         if (algName === "Random Dictatorship" || algName === "Proportional Borda") {
           this.tieBreakingActive = true;
         }
@@ -599,6 +596,9 @@ export class ResultVisualizationComponent implements OnInit {
         if(this.tieBreakingActive) {
           this.showWheel();
         }
+        else {
+          this.theWheel = null;
+        }
 
         //Test for efficiency
         let profiles = this.model.profiles.map(p => p.relation);
@@ -609,6 +609,10 @@ export class ResultVisualizationComponent implements OnInit {
       } else {
         //Profile
         this.resultProfile = data.result;
+        if (data.count !== undefined && data.maximumCount !== undefined) {
+          this.resultCount = data.count;
+          this.maximalResultCount = data.maximumCount;
+        }
       }
 
       this.resultType = typeTemp;

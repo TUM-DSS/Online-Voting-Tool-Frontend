@@ -45,10 +45,15 @@
       <div *ngIf="!tieBreakingActive">
       <app-bar-chart *ngSwitchCase="resultDataType.Lotteries" [data] = "resultBarData" [lotteries]="resultLotteries"></app-bar-chart>
       </div>
+      <div *ngSwitchCase="resultDataType.Profile">
+        <div *ngIf="resultCount > 1 && resultCount < maximalResultCount">There are a total of {{resultCount}} SWF rankings. One example is:</div>
+        <div *ngIf="resultCount > 1 && resultCount >= maximalResultCount && maximalResultCount > 1">There are more than {{maximalResultCount}} SWF rankings. One example is:</div>
+        <div *ngIf="resultCount > 1 && maximalResultCount == 1">There might be several SWF rankings. One example is:</div>
+      </div>
       <div *ngSwitchCase="resultDataType.Profile" class="card card-block bg-primary" style="width: 13rem; margin-right:5px; display:inline-block">
-        <div class="card-header text-white d-flex w-100">
-          Group Profile
-        </div>
+        <!--<div class="card-header text-white d-flex w-100">-->
+          <!--SWF ranking-->
+        <!--</div>-->
         <ul class="list-group list-group-flush">
             <li class="list-group-item"
                 style="text-align:center"
