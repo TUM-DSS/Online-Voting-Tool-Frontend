@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
   profileOptions : ProfileOptions
   @Input() model : ProfileModel
   @Input() advancedMode : boolean
-  @ViewChild('scrollContainer') private scrollContainer: ElementRef;
+  @ViewChild('scrollContainer')  scrollContainer: ElementRef; //private
   scrollRight : boolean;
   visible: boolean;
 

@@ -21,7 +21,7 @@ export class EfficiencyChartComponent implements OnInit {
 
   ngOnInit() {}
 
-  ngOnChanges() {
+  ngOnChanges(...args: any[]) {
     this.showInvalidMessage = !this.data.success;
   }
 
