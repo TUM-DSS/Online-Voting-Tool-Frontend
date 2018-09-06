@@ -666,7 +666,7 @@ export class ResultVisualizationComponent implements OnInit {
           let gcd = math.gcd(this.exactResultLotteries[0][x][0], this.exactResultLotteries[0][x][1]);
           let numericString = Math.round(100 * this.exactResultLotteries[0][x][0] /  this.exactResultLotteries[0][x][1])/100;
           let exactString = " (" + this.exactResultLotteries[0][x][0]/gcd + "/" + this.exactResultLotteries[0][x][1]/gcd + ")";
-          label = label.concat(this.model.getIdentifier(x) + ": " + numericString + exactString + '<br />');
+          label = label.concat(this.model.getIdentifier(x) + ": " + numericString + (this.exactResultLotteries[0][x][0] /  this.exactResultLotteries[0][x][1] != 1 ? exactString:"") + '<br />');
         }
       }
       return label;
