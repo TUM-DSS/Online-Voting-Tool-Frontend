@@ -491,14 +491,16 @@ export class ResultVisualizationComponent implements OnInit {
                   }
                   this.socialChoiceTooltips[i] += this.model.getIdentifier(socialWelfareRanking[0]);
                   for (let k = 1; k < socialWelfareRanking.length; k++) {
-                    this.socialChoiceTooltips[i] += " > " + this.model.getIdentifier(socialWelfareRanking[k]);
+                    this.socialChoiceTooltips[i] += "&nbsp;>&nbsp;" + this.model.getIdentifier(socialWelfareRanking[k]);
                   }
+                  this.socialChoiceTooltips[i] +=  '<br />';
                 }
 
               }
               else if (data.tooltip != undefined && data.tooltip.length > 0) {
                 this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
-                this.socialChoiceTooltips[i] = data.tooltip;
+                console.log(data.tooltip);
+                this.socialChoiceTooltips[i] = data.tooltip.replace(/ /g,'&nbsp;').replace(/\/n/g,'<br />');
 
                 // Adjust Condorcet SCF name to "weak" version if needed
                 if(data.tooltip.includes("Weak Condorcet")) {
@@ -666,7 +668,7 @@ export class ResultVisualizationComponent implements OnInit {
           let gcd = math.gcd(this.exactResultLotteries[0][x][0], this.exactResultLotteries[0][x][1]);
           let numericString = Math.round(100 * this.exactResultLotteries[0][x][0] /  this.exactResultLotteries[0][x][1])/100;
           let exactString = " (" + this.exactResultLotteries[0][x][0]/gcd + "/" + this.exactResultLotteries[0][x][1]/gcd + ")";
-          label = label.concat(this.model.getIdentifier(x) + ": " + numericString + (this.exactResultLotteries[0][x][0] /  this.exactResultLotteries[0][x][1] != 1 ? exactString:"") + '<br />');
+          label = label.concat("&nbsp;&nbsp;"+this.model.getIdentifier(x) + ": " + numericString + (this.exactResultLotteries[0][x][0] /  this.exactResultLotteries[0][x][1] != 1 ? exactString:"") + '&nbsp;&nbsp;<br />');
         }
       }
       return label;

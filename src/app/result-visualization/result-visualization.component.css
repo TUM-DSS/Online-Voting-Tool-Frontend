@@ -130,7 +130,7 @@ canvas {
 .headlinetooltip .headlinetooltiptext {
   visibility: hidden;
   font-size: 12px;
-  width: 100px;
+  /*width: 100px;*/
   background-color: #555;
   color: #fff;
   text-align: center;
@@ -176,9 +176,11 @@ canvas {
 }
 
 .CellComment{
-  width: 200px;
+  /*width: 200px;*/
   text-align:center;
-  display:none;
+  /*display:none;*/
+  display:inline-block;
+  visibility: hidden;
   position:absolute;
   z-index:100;
   background-color: #555;
@@ -189,8 +191,14 @@ canvas {
   color: #fff;
   top:20px;
   left:20px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .CellWithComment:hover span.CellComment{
-  display:block;
+  display:inline-block;
+  visibility: visible;
+  opacity: 1;
 }
