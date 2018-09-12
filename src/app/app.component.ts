@@ -39,6 +39,7 @@ export class AppComponent {
 
   /* Open */
   openNav() {
+    this.closeNav();
     document.getElementById("infoScreen").style.display = "block";
     // document.getElementById("infoScreen").style.width = "100%";
   }
@@ -46,6 +47,7 @@ export class AppComponent {
   /* Close */
   closeNav() {
     document.getElementById("infoScreen").style.display = "none";
+    document.getElementById("keyboardShortcuts").style.display = "none";
     // document.getElementById("infoScreen").style.width = "0%";
   }
 
@@ -61,6 +63,21 @@ export class AppComponent {
       this.model.setProfileString("1ABC-1CAB-1BCA");
     }
 
+  }
+
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === "?") {
+      document.getElementById("infoScreen").style.display = "none";
+      if (document.getElementById("keyboardShortcuts").style.display !== "block") document.getElementById("keyboardShortcuts").style.display = "block";
+      else document.getElementById("keyboardShortcuts").style.display = "none";
+    }
+    if (event.key === "i") {
+      this.openNav();
+    }
+    if (event.key === "x") {
+      this.closeNav();
+    }
   }
 }
 

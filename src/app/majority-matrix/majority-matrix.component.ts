@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,ChangeDetectorRef,ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, Input,ChangeDetectorRef,ChangeDetectionStrategy,HostListener} from '@angular/core';
 import { ProfileExtractionService } from "../services/profile-extraction/profile-extraction.service";
 import { ProfileModel,Profile,Matrix } from "../model";
 import {ErrorBlock} from "../error-box/error-box.component";
@@ -220,6 +220,14 @@ export class MajorityMatrixComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === "m") this.toggleVisibility();
+    if (event.key === "w") this.randomizeStaircase();
+    if (event.key === "e") this.toggleMode();
+    if (event.key === "o") this.computeMinimalProfile(this.copy2D(this.model.majorityMatrix.staircase));
   }
 
 }

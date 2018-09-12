@@ -61,7 +61,7 @@ export class BarChartComponent implements OnInit {
                     if(frac.length>1) {
                       label += " ("+frac+ ")";
                     }
-                    return rounded === 0 ? null : label;
+                    return eval(frac) === 0 ? null : label;
                 }
             }
       //mode:"index",

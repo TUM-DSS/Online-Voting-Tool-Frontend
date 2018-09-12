@@ -35,6 +35,67 @@
 
 
 </div>
+
+<div id="keyboardShortcuts" class="overlay">
+
+  <!-- Button to close the overlay navigation -->
+  <a href="javascript:void(0)" class="closebtn" (click) = "closeNav()">&times;</a>
+
+  <!-- Overlay content -->
+  <div class="overlay-content">
+    <table>
+      <tr>
+        <th>Key</th>
+        <th>Command</th>
+      </tr>
+      <tr>
+        <td>p</td>
+        <td>Show / Hide the <u>p</u>reference profile</td>
+      </tr>
+      <tr>
+        <td>r</td>
+        <td><u>R</u>andomize the preference profile (Impartial Culture)</td>
+      </tr>
+      <tr>
+        <td>c</td>
+        <td>Randomize without <u>C</u>ondorcet winner</td>
+      </tr>
+      <tr>
+        <td>m</td>
+        <td>Show / Hide majority <u>m</u>atrix</td>
+      </tr>
+      <tr>
+        <td>w</td>
+        <td>Randomize <u>w</u>eights of majority matrix</td>
+      </tr>
+      <tr>
+        <td>e</td>
+        <td>Enter / Leave <u>e</u>dit mode of the majority matrix</td>
+      </tr>
+      <tr>
+        <td>o</td>
+        <td>Compute an <u>o</u>ptimal profile for the majority matrix</td>
+      </tr>
+      <tr>
+        <td>s</td>
+        <td>Show / Hide the <u>s</u>ettings for maximal lottery</td>
+      </tr>
+      <tr>
+        <td>t</td>
+        <td>Toggle the <u>t</u>ie-breaking of maximal lotteries</td>
+      </tr>
+      <tr>
+        <td>f</td>
+        <td>Show / Hide the additional Social Choice <u>F</u>unctions</td>
+      </tr>
+    </table>
+
+  </div>
+
+
+
+</div>
+
 <app-profile [model] = "model" [advancedMode] = "advancedMode"></app-profile>
 <app-result-visualization [advancedMode] = "advancedMode" [model] = "model"></app-result-visualization>
 <hr class="my-4">

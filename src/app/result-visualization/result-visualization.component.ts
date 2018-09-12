@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, HostListener} from '@angular/core';
 import {Profile, ProfileModel} from "../model";
 import {VoteFetcherService} from "../services/vote-fetcher/vote-fetcher.service";
 import {EfficencyTestService} from "../services/efficency-test/efficency-test.service"
@@ -499,7 +499,7 @@ export class ResultVisualizationComponent implements OnInit {
               }
               else if (data.tooltip != undefined && data.tooltip.length > 0) {
                 this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
-                console.log(data.tooltip);
+                // console.log(data.tooltip);
                 this.socialChoiceTooltips[i] = data.tooltip.replace(/ /g,'&nbsp;').replace(/\/n/g,'<br />');
 
                 // Adjust Condorcet SCF name to "weak" version if needed
@@ -677,5 +677,13 @@ export class ResultVisualizationComponent implements OnInit {
       return "Loading..."+e;
     }
 
+  }
+
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === "s") this.toggleMLSettingsVisibility();
+    if (event.key === "t") document.getElementById("tieSwitch").click();
+    if (event.key === "f") this.toggleSCFVisibility();
+    if (event.key === "l") document.getElementById("SdsResult").hidden = !document.getElementById("SdsResult").hidden;
   }
 }

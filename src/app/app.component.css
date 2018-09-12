@@ -73,3 +73,7 @@
     width: 80%;
   }
 }
+
+td {
+  text-align: left;
+}

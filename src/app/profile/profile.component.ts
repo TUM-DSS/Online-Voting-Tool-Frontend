@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, HostListener} from '@angular/core';
 import { AfterViewChecked, ElementRef, ViewChild} from '@angular/core'
 import { SortablejsModule } from 'angular-sortablejs';
 import { ProfileModel,Profile,Matrix } from "../model";
@@ -148,6 +148,13 @@ export class ProfileComponent implements OnInit {
     } else {
       this.model.randomize();
     }
+  }
+
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === "p") this.toggleVisibility();
+    if (event.key === "r") this.model.randomize();
+    if (event.key === "c" && this.profileOptions.numberOfCandidates > 2 && (this.profileOptions.numberOfCandidates != 3 || this.model.numberOfVoters != 4)) this.model.randomizeWithoutCondorcet();
   }
 
 }

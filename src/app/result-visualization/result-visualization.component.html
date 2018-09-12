@@ -9,7 +9,7 @@
   </ul>
 </div>
 
-<div class="jumbotron">
+<div id="SdsResult" class="jumbotron">
   <div style="min-height: 20em;"> <!-- class="container" -->
     <h3 class="headlinetooltip">{{menues[selectedItem.menu].list[selectedItem.item].name}}<span *ngIf="tieBreakingActive" class="headlinetooltiptext" [innerHTML]=getLotteryForTooltip()></span></h3>
     <div *ngIf="tieWasBroken">
@@ -95,7 +95,7 @@
             <div class="headlinetooltip">
             <strong style="display:block;">Tie-breaking:</strong>
             <label class="switch">
-              <input type="checkbox" (click)="toggleTieBreaking()" checked>
+              <input id="tieSwitch" type="checkbox" (click)="toggleTieBreaking()" checked>
               <span class="toggleslider round"></span>
             </label>
             <span style="width: 250px; left: -50%; margin-left: 0;" class="headlinetooltiptext">In case of multiple maximal lotteries, return the average of extremal maximal lotteries</span>
