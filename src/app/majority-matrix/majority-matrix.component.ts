@@ -130,7 +130,7 @@ export class MajorityMatrixComponent implements OnInit {
         this.model.updateProfiles(data.profiles);
         if(data.minimal) {
           document.getElementById("minimalID").hidden = false;
-          setTimeout(function () {document.getElementById("minimalID").hidden = true;},4000);
+          this.model.timer = setTimeout(function () {document.getElementById("minimalID").hidden = true;},4000);
         }
       } else {
         //console.log("Fail");
@@ -168,6 +168,7 @@ export class MajorityMatrixComponent implements OnInit {
   randomizeStaircase() {
     // Close minimality notifications first
     document.getElementById("minimalID").hidden = true;
+    if (this.model.timer !== undefined) clearTimeout(this.model.timer);
 
     let newStaircase = this.copy2D(this.model.majorityMatrix.staircase);
 
@@ -227,7 +228,11 @@ export class MajorityMatrixComponent implements OnInit {
     if (event.key === "m") this.toggleVisibility();
     if (event.key === "w") this.randomizeStaircase();
     if (event.key === "e") this.toggleMode();
-    if (event.key === "o") this.computeMinimalProfile(this.copy2D(this.model.majorityMatrix.staircase));
+    if (event.key === "o") {
+      document.getElementById("minimalID").hidden = true;
+      if (this.model.timer !== undefined) clearTimeout(this.model.timer);
+      this.computeMinimalProfile(this.copy2D(this.model.majorityMatrix.staircase));
+    }
   }
 
 }

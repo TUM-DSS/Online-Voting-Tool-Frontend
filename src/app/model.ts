@@ -18,7 +18,8 @@ export class ProfileModel {
   changeRef: any
   updateListener : () => any
   setProfileStringListener : () => any
-  allowStringUpdate : boolean
+  allowStringUpdate : boolean;
+  timer;
 
   constructor(size : number, private router) {
     this.numberOfCandidates = size;
@@ -300,6 +301,10 @@ export class ProfileModel {
   }
 
   randomize() {
+    // Close minimality message and stop timeout for closing the message
+    document.getElementById("minimalID").hidden = true;
+    if (this.timer !== undefined) clearTimeout(this.timer);
+
     const voterCount = this.getNumberOfVoters();
 
     this.allowStringUpdate = true;
@@ -309,6 +314,10 @@ export class ProfileModel {
   }
 
   randomizeWithoutCondorcet() {
+    // Close minimality message and stop timeout for closing the message
+    document.getElementById("minimalID").hidden = true;
+    if (this.timer !== undefined) clearTimeout(this.timer);
+
     const voterCount = this.getNumberOfVoters();
 
     this.allowStringUpdate = true;
