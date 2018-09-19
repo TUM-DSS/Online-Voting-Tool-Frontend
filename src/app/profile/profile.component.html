@@ -9,7 +9,7 @@
              style="width:4em;display: inline;"
              (click)="selectEverything()"
              pattern="[0-9]*"/>
-    <a (click)="toggleVisibility()">voters over </a>
+    <a (click)="toggleVisibility()">Voters over </a>
     <input [disabled]="model.majorityMatrixIsDirty" class="form-control"
     (input)="onCandidateNumberUpdate()" id="numberOfCandidates"
     type="Number" min="{{profileOptions.minNumber}}" max="{{profileOptions.maxNumber}}" step="1" value="4"
@@ -17,7 +17,7 @@
     style="width:4em;display: inline;"
     (click)="selectEverything()"
     pattern="[0-9]*"/>
-    <a (click)="toggleVisibility()"> alternatives</a></h3>
+    <a (click)="toggleVisibility()"> Alternatives</a></h3>
   <div #scrollContainer class="row" style="overflow:scroll; width:90%;" [hidden] = "!visible">
     <div class="d-flex flex-row flex-nowrap" >
       <app-profile-box class="card card-block bg-primary" style="width: 10.8rem; margin-right:5px; display:inline-block" *ngFor="let profile of model.profiles; let i = index"  [model] = "model" [index] = "i"></app-profile-box>

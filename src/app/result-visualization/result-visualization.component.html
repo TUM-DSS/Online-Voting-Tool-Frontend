@@ -86,19 +86,19 @@
              {{menues[selectedItem.menu].list[selectedItem.item].paraMax}}
             </span>
             <strong style="display:block">{{voteParameter}}</strong>
-            <span style="width: 250px; left: 20%" class="headlinetooltiptext">Exponent 0 corresponds to C1-ML and<br />exponent 1 to C2-ML, which is the default</span>
+            <span style="width: 250px; left: 20%" class="headlinetooltiptext">Exponent 0 corresponds to C1-ML and<br />exponent 1 to C2-ML, which is the default.</span>
             </div>
           </td>
 
 
           <td>
             <div class="headlinetooltip">
-            <strong style="display:block;">Tie-breaking:</strong>
+            <strong style="display:block;">Tie-Breaking:</strong>
             <label class="switch">
               <input id="tieSwitch" type="checkbox" (click)="toggleTieBreaking()" checked>
               <span class="toggleslider round"></span>
             </label>
-            <span style="width: 250px; left: -50%; margin-left: 0;" class="headlinetooltiptext">In case of multiple maximal lotteries, return the average of extremal maximal lotteries</span>
+            <span style="width: 250px; left: -50%; margin-left: 0;" class="headlinetooltiptext">In case of multiple maximal lotteries, return the average of extremal maximal lotteries.</span>
             </div>
             </td>
 
@@ -120,7 +120,7 @@
 
 <div style="margin: 2vw 1vw 1vw 2vw;">  <!--*ngIf="advancedMode"-->
   <h3><button (click)="toggleSCFVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visibleSCF? "&#9660;":"&#9654;"}}</button>
-    <a (click)="toggleSCFVisibility()">Other rules</a></h3>
+    <a (click)="toggleSCFVisibility()">Other Rules</a></h3>
   <div style="overflow-x: auto">
   <div class="center-div" [hidden] = "!visibleSCF">
     <table style="vertical-align: top">

@@ -115,12 +115,7 @@ export class ResultVisualizationComponent implements OnInit {
     this.waitSub = [];
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
     this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin","Coombs"];
-    this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set","Kemeny"];
-    // SWFs use fixed tie-breaking and are thus only displayed in the advanced mode
-    if (Globals.advancedMode) {
-      this.thirdColumn.push("Schulze");
-      this.thirdColumn.push("Ranked Pairs");
-    }
+    this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set","Kemeny","Schulze","Ranked Pairs"];
     this.forthColumn = ["Condorcet","Pareto"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn).concat(this.forthColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
@@ -134,11 +129,11 @@ export class ResultVisualizationComponent implements OnInit {
         name:"Social Decision Schemes",
         list: [
           {
-            name: "Maximal lottery",
+            name: "Maximal Lottery",
             hasParameter : true,
             paraMin : 0,
             paraMax : 5,
-            paraName: "Majority margin exponent"
+            paraName: "Majority Margin Exponent"
           },
           {
             name: "Random Dictatorship",
@@ -168,7 +163,7 @@ export class ResultVisualizationComponent implements OnInit {
             hasParameter : false
           },
           {
-            name: "Ranked Pairs",
+            name: "Ranked Pairs Ranking",
             hasParameter : false
           }
         ]
@@ -470,11 +465,14 @@ export class ResultVisualizationComponent implements OnInit {
             }
             if (data.type === "Profile") { // SWF and we show the top-rank only
               let socialWelfareRanking = data.result;
-              this.socialChoiceResults[i] = this.model.getIdentifier(socialWelfareRanking[0]);
-              data.tooltip = this.socialChoiceResults[i];
-              for (let j = 1; j < socialWelfareRanking.length; j++) {
-                data.tooltip += " > " + this.model.getIdentifier(socialWelfareRanking[j]);
+              this.socialChoiceResults[i] = "";
+              if (data.winners !== undefined) {
+                for (let l = 0; l < data.winners.length; l++) this.socialChoiceResults[i]+= this.model.getIdentifier(parseInt(data.winners[l])) + ",";
+                this.socialChoiceResults[i] = this.socialChoiceResults[i].slice(0, -1);
               }
+              else this.socialChoiceResults[i] =  this.model.getIdentifier(socialWelfareRanking[0]);
+              data.tooltip = (data.winners !== undefined && data.winners.length > 1 ? "E.g. " : "") + this.model.getIdentifier(socialWelfareRanking[0]);
+              for (let j = 1; j < socialWelfareRanking.length; j++) data.tooltip += " > " + this.model.getIdentifier(socialWelfareRanking[j]);
             }
 
 
