@@ -265,11 +265,11 @@ export class ProfileModel {
     }
 
     this.updateMatrix();
-    this.updateComponents();
 
     this.callListener();
     // Update the total number of voters in the profile component
     this.numberOfVoters = this.getNumberOfVoters();
+    this.updateComponents();
   }
 
   /**
@@ -403,7 +403,7 @@ export class ProfileModel {
       // If there was no violation, the subset to test is indeed a component!
       set.sort();
       for (let l = 0; l < set.length; l++) this.componentColorOfCandidates[set[l]] = set[0];
-      elementsInFoundComponents.push(set);
+      elementsInFoundComponents = elementsInFoundComponents.concat(set);
     }
   }
 
