@@ -2,6 +2,7 @@ import { Component, OnInit, Input,ChangeDetectorRef,ChangeDetectionStrategy,Host
 import { ProfileExtractionService } from "../services/profile-extraction/profile-extraction.service";
 import { ProfileModel,Profile,Matrix } from "../model";
 import {ErrorBlock} from "../error-box/error-box.component";
+import {barColors} from "../barColors";
 import {Globals} from "../globals";
 
 /**
@@ -24,6 +25,7 @@ export class MajorityMatrixComponent implements OnInit {
   errorBlock: ErrorBlock;
   advancedMode : boolean;
   weightLimit: number;
+  colors: string[];
 
   constructor(private ref:ChangeDetectorRef, private extract:ProfileExtractionService) {
     setInterval(() => {
@@ -41,6 +43,7 @@ export class MajorityMatrixComponent implements OnInit {
     this.visible = false;
     this.advancedMode = Globals.advancedMode;
     this.weightLimit = 5;
+    this.colors = barColors.defaultHexColors;
   }
 
   ngOnInit() {

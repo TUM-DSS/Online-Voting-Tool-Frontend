@@ -28,7 +28,8 @@
                   {{canX == canY? 0 : -tempStaircase[canX][canY-(canX+1)] }}
                 </div>
               </div>
-            <div *ngIf="!editMode"><a (click)="toggleMode()">{{model.majorityMatrix.get(canY,canX)}}</a></div>
+            <div *ngIf="!editMode && model.componentColorOfCandidates[canX] !== -1 && model.componentColorOfCandidates[canX] === model.componentColorOfCandidates[canY]"><a (click)="toggleMode()" [ngStyle]="{'color': colors[model.componentColorOfCandidates[canX]], 'font-weight': 'bold'}">{{model.majorityMatrix.get(canY,canX)}}</a></div>
+            <div *ngIf="!editMode && (model.componentColorOfCandidates[canX] === -1 || model.componentColorOfCandidates[canX] !== model.componentColorOfCandidates[canY])"><a (click)="toggleMode()">{{model.majorityMatrix.get(canY,canX)}}</a></div>
           </td>
         </tr>
       </tbody>

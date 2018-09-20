@@ -15,6 +15,7 @@ export class ProfileModel {
   numberOfCandidates : number
   numberOfVoters : number;
   nameOfCandidates = ["A","B","C","D","E","F","G","H","I","J"];
+  componentColorOfCandidates: number[];
   changeRef: any
   updateListener : () => any
   setProfileStringListener : () => any
@@ -42,6 +43,8 @@ export class ProfileModel {
     this.majorityMatrix = new Matrix(size);
     this.majorityMatrixIsDirty = false;
     this.allowStringUpdate = false;
+    this.componentColorOfCandidates = new Array(10);
+    this.componentColorOfCandidates.fill(-1);
 
     this.updateModel();
   }
@@ -262,6 +265,7 @@ export class ProfileModel {
     }
 
     this.updateMatrix();
+    this.updateComponents();
 
     this.callListener();
     // Update the total number of voters in the profile component
@@ -356,16 +360,81 @@ export class ProfileModel {
   }
 
   generateRandomPreference() {
-    var out = new Profile(this.numberOfCandidates,1);
+    let out = new Profile(this.numberOfCandidates, 1);
 
-    var pref = [];
-    for(var i = 0; i < this.numberOfCandidates;i++) {
-      var index = Math.floor(Math.random() * (pref.length+1));
+    let pref = [];
+    for(let i = 0; i < this.numberOfCandidates; i++) {
+      const index = Math.floor(Math.random() * (pref.length + 1));
       pref.splice(index,0,i);
     }
     out.relation = pref;
     return out;
   }
+
+  updateComponents() {
+    // Flash old entries in the color array
+    this.componentColorOfCandidates.fill(-1);
+
+    // Get all alternatives which are not Pareto dominated!
+    const fullMargins = this.getFullMargins(this.majorityMatrix.staircase);
+    let paretoOptimalAlternatives = Array.apply(null, {length: this.numberOfCandidates}).map(Number.call, Number);
+    paretoOptimalAlternatives = paretoOptimalAlternatives.filter(alternative => !fullMargins[alternative].includes(-1 * this.numberOfVoters));
+
+    // Generate all (non-trivial, i.e. of size between 2 and m-1) subsets of these non-dominated alternatives
+    let subsets = this.getAllSubsets(paretoOptimalAlternatives).filter(set => set.length > 1 && set.length < this.numberOfCandidates);
+    subsets.sort(function (a, b) {
+      return a.length - b.length;
+    });
+
+    // Check for component
+    let elementsInFoundComponents = [];
+    componentLoop:
+    for(let i = 0; i < subsets.length; i++) {
+      let set = subsets[i];
+
+      // The subset to test must not intersect with another component
+      for (let j = 0; j < elementsInFoundComponents.length; j++) if (set.includes(elementsInFoundComponents[j])) continue componentLoop;
+
+      for(let k = 0; k < this.numberOfCandidates; k++) if (!set.includes(k)) {
+        // All alternatives in the subset to test must have the same relation with an arbitrary alternative k outside of the set
+        let referenceWeight = fullMargins[set[0]][k];
+        for (let l = 0; l < set.length; l++) if (fullMargins[set[l]][k] !== referenceWeight) continue componentLoop;
+      }
+      // If there was no violation, the subset to test is indeed a component!
+      set.sort();
+      for (let l = 0; l < set.length; l++) this.componentColorOfCandidates[set[l]] = set[0];
+      elementsInFoundComponents.push(set);
+    }
+  }
+
+  getAllSubsets(set) {
+    return set.reduce(
+      (subsets, value) => subsets.concat(
+        subsets.map(set => [value,...set])
+      ),
+      [[]]
+    );
+  }
+
+  getFullMargins(stair) {
+    let size = stair[0].length+1;
+
+    let out = [];
+    for (let i = 0; i < size; i++) {
+      let temp = [];
+      for (let j = 0; j < size; j++) {
+        if(i<j) {
+          temp.push(stair[i][j-(i+1)]);
+        } else if(i>j) {
+          temp.push(-stair[j][i-(j+1)]);
+        } else {
+          temp.push(0);
+        }
+      }
+      out.push(temp);
+    }
+    return out;
+  };
 }
 
 
