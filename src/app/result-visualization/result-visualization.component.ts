@@ -17,7 +17,7 @@ declare var createjs: any;
 * Types of the answers the vote server can give.
 */
 enum ResultDataType {
-  Lotteries, Profile, None
+  Matrix, Lotteries, Profile, None
 }
 
 /**
@@ -76,6 +76,7 @@ export class ResultVisualizationComponent implements OnInit {
   resultBarData: BarChartData;
   resultCount: number;
   maximalResultCount: number;
+  resultMatrix: number[][];
 
   showInvalidMessage : boolean;
   errorBlock: ErrorBlock;
@@ -166,6 +167,23 @@ export class ResultVisualizationComponent implements OnInit {
             name: "Ranked Pairs Ranking",
             hasParameter : false
           }
+        ]
+      },
+      {
+        name:"Random Assignment",
+        list: [
+          {
+            name: "Random Serial Dictatorship",
+            hasParameter : false
+          },
+          // {
+          //   name: "Probabilistic Serial",
+          //   hasParameter : false
+          // },
+          // {
+          //   name: "Popular Random Assignment",
+          //   hasParameter : false
+          // }
         ]
       }
     ];
@@ -606,12 +624,21 @@ export class ResultVisualizationComponent implements OnInit {
         //console.log("Test Data", data.result, profiles);
         this.tester.testLotteries(data.result, data.exact, profiles).subscribe(data => this.updateEfficiencyCallback(data));
 
-      } else {
+      } else if(typeTemp == ResultDataType.Profile) {
         //Profile
         this.resultProfile = data.result;
         if (data.count !== undefined && data.maximumCount !== undefined) {
           this.resultCount = data.count;
           this.maximalResultCount = data.maximumCount;
+        }
+      }
+      else if(typeTemp == ResultDataType.Matrix) {
+        this.resultMatrix = data.result;
+        for(let i=0; i < data.result[0].length; i++) {
+          for (let j = 0; j < data.result[0].length; j++) {
+            let fraction = math.format(math.fraction(this.resultMatrix[i][j][0],this.resultMatrix[i][j][1]));
+            this.resultMatrix[i][j] = this.resultMatrix[i][j][0] === 0 ? 0 : ( this.resultMatrix[i][j][0] === this.resultMatrix[i][j][1] ? 1 : fraction);
+          }
         }
       }
 
@@ -675,6 +702,13 @@ export class ResultVisualizationComponent implements OnInit {
       return "Loading..."+e;
     }
 
+  }
+
+  /**
+   * Helper Function. Generates an array of a given size where entry i is i
+   */
+  getCandidateArray(size : number) {
+    return Array.from(new Array(size), (x,i) => i);
   }
 
   @HostListener('document:keypress', ['$event'])

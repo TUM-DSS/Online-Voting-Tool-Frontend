@@ -61,6 +61,28 @@
         </ul>
 
       </div>
+      <div *ngSwitchCase="resultDataType.Matrix">
+        <div class="table-responsive">
+          <table class="table table-hover" style="max-width: 100%; margin: 0 0 0 0; table-layout: fixed;">
+            <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" *ngFor="let can of getCandidateArray(model.numberOfCandidates);">
+                <div>{{model.getIdentifier(can)}}</div>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let voter of getCandidateArray(model.numberOfCandidates);">
+              <th scope="row">{{voter}}</th>
+              <td *ngFor="let canX of getCandidateArray(model.numberOfCandidates);">
+                <div>{{resultMatrix[voter][canX]}}</div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <app-efficiency-chart *ngIf="(resultType == resultDataType.Lotteries) && !waiting" [data]="efficiencyData"></app-efficiency-chart>

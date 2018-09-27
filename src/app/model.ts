@@ -380,6 +380,16 @@ export class ProfileModel {
     let paretoOptimalAlternatives = Array.apply(null, {length: this.numberOfCandidates}).map(Number.call, Number);
     paretoOptimalAlternatives = paretoOptimalAlternatives.filter(alternative => !fullMargins[alternative].includes(-1 * this.numberOfVoters));
 
+    // // Just a test
+    // let waString = "directed+graph+{";
+    // for(let k = 0; k < this.numberOfCandidates; k++) {
+    //   for(let l = k+1; l < this.numberOfCandidates; l++) {
+    //     if (fullMargins[k][l] > 0) {waString += ""+k+"->"+l+",";}
+    //     if (fullMargins[k][l] < 0) {waString += ""+l+"->"+k+",";}
+    //   }
+    // }
+    // console.log(waString+"}");
+
     // Generate all (non-trivial, i.e. of size between 2 and m-1) subsets of these non-dominated alternatives
     let subsets = this.getAllSubsets(paretoOptimalAlternatives).filter(set => set.length > 1 && set.length < this.numberOfCandidates);
     subsets.sort(function (a, b) {
