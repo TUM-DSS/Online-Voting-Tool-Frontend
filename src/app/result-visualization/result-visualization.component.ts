@@ -76,7 +76,7 @@ export class ResultVisualizationComponent implements OnInit {
   resultBarData: BarChartData;
   resultCount: number;
   maximalResultCount: number;
-  resultMatrix: number[][];
+  resultMatrix: String[][];
 
   showInvalidMessage : boolean;
   errorBlock: ErrorBlock;
@@ -176,10 +176,10 @@ export class ResultVisualizationComponent implements OnInit {
             name: "Random Serial Dictatorship",
             hasParameter : false
           },
-          // {
-          //   name: "Probabilistic Serial",
-          //   hasParameter : false
-          // },
+          {
+            name: "Probabilistic Serial Rule",
+            hasParameter : false
+          },
           // {
           //   name: "Popular Random Assignment",
           //   hasParameter : false
@@ -634,12 +634,17 @@ export class ResultVisualizationComponent implements OnInit {
       }
       else if(typeTemp == ResultDataType.Matrix) {
         this.resultMatrix = data.result;
-        for(let i=0; i < data.result[0].length; i++) {
-          for (let j = 0; j < data.result[0].length; j++) {
-            let fraction = math.format(math.fraction(this.resultMatrix[i][j][0],this.resultMatrix[i][j][1]));
-            this.resultMatrix[i][j] = this.resultMatrix[i][j][0] === 0 ? 0 : ( this.resultMatrix[i][j][0] === this.resultMatrix[i][j][1] ? 1 : fraction);
+
+          for(let i=0; i < data.result[0].length; i++) {
+            for (let j = 0; j < data.result[0].length; j++) {
+            //   if (data.result[0][0][0] !== undefined) {
+              let fraction = math.format(math.fraction(data.result[i][j][0], data.result[i][j][1]));
+              this.resultMatrix[i][j] = data.result[i][j][0] === 0 ? 0 : ( data.result[i][j][0] === data.result[i][j][1] ? 1 : fraction);
+            // }
+            // else this.resultMatrix[i][j] = math.format(this.resultMatrix[i][j]);
           }
         }
+
       }
 
       this.resultType = typeTemp;
