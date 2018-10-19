@@ -17,7 +17,7 @@ declare var createjs: any;
 * Types of the answers the vote server can give.
 */
 enum ResultDataType {
-  Matrix, Lotteries, Profile, None
+  Matrices, Matrix, Lotteries, Profile, None
 }
 
 /**
@@ -143,6 +143,10 @@ export class ResultVisualizationComponent implements OnInit {
           {
             name: "Proportional Borda",
             hasParameter : false
+          },
+          {
+            name: "Pluri-Borda",
+            hasParameter : false
           }
           // ,
           // {
@@ -180,10 +184,10 @@ export class ResultVisualizationComponent implements OnInit {
             name: "Probabilistic Serial Rule",
             hasParameter : false
           },
-          // {
-          //   name: "Popular Random Assignment",
-          //   hasParameter : false
-          // }
+          {
+            name: "Popular Random Assignment",
+            hasParameter : false
+          }
         ]
       }
     ];
@@ -447,6 +451,12 @@ export class ResultVisualizationComponent implements OnInit {
 
     // Prevent wrong colors, e.g., if ML times out
     barColors.resultLotteryForColoring = [];
+    for(let v=0; v < this.model.numberOfVoters; v++) {
+      barColors.resultLotteryForColoring[v] = [];
+      for(let a=0; a < this.model.numberOfCandidates; a++) {
+        barColors.resultLotteryForColoring[v][a] = 0.01;
+      }
+    }
 
     this.closeInvalidMessage();
     this.tieWasBroken = false;
@@ -568,7 +578,9 @@ export class ResultVisualizationComponent implements OnInit {
           }
         }
         tmp = tmp.map(d => d/numberOfLotteries);
-        barColors.resultLotteryForColoring = tmp;
+        for(let v=0; v < this.model.numberOfVoters; v++) {
+          barColors.resultLotteryForColoring[v] = tmp;
+        }
 
         let exactTemp;
         if (data.exact !== undefined) {
@@ -638,13 +650,14 @@ export class ResultVisualizationComponent implements OnInit {
           for(let i=0; i < data.result[0].length; i++) {
             for (let j = 0; j < data.result[0].length; j++) {
             //   if (data.result[0][0][0] !== undefined) {
-              let fraction = math.format(math.fraction(data.result[i][j][0], data.result[i][j][1]));
-              this.resultMatrix[i][j] = data.result[i][j][0] === 0 ? 0 : ( data.result[i][j][0] === data.result[i][j][1] ? 1 : fraction);
+              let fraction = math.fraction(data.result[i][j][0], data.result[i][j][1]);
+              let fractionAsString = math.format(fraction);
+              this.resultMatrix[i][j] = data.result[i][j][0] === 0 ? 0 : ( data.result[i][j][0] === data.result[i][j][1] ? 1 : fractionAsString);
+              barColors.resultLotteryForColoring[i][j] = math.number(fraction);
             // }
             // else this.resultMatrix[i][j] = math.format(this.resultMatrix[i][j]);
           }
         }
-
       }
 
       this.resultType = typeTemp;

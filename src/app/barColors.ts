@@ -1,6 +1,6 @@
 //Default color for each alternative
 export class barColors {
-  static resultLotteryForColoring: number[];
+  static resultLotteryForColoring: number[][];
   static defaultColors = [
   [230,23,23],
   [23,106,230],
@@ -98,14 +98,14 @@ export class barColors {
   /**
   * Returns a CSS RGB value. That is a desaturated Version of the Bar Chart Color.
   */
-  static getHTMLColor(index : number) {
+  static getHTMLColor(index : number, voter : number) {
     let color = barColors.defaultColors[index];
     let r = color[0];
     let g = color[1];
     let b = color[2];
     let hsv = barColors.rgbToHsv(r,g,b);
     try{
-      hsv[1] = 0.03 + (this.resultLotteryForColoring[index] > 0.001 ? 0.2 : 0) + 0.2*this.resultLotteryForColoring[index];
+      hsv[1] = 0.03 + (this.resultLotteryForColoring[voter][index] > 0.001 ? 0.2 : 0) + 0.2*this.resultLotteryForColoring[voter][index];
     }
     catch(err) {
       hsv[1] = 0;

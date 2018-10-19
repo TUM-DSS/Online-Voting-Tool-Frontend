@@ -23,7 +23,7 @@
     <li class="list-group-item"
         style="text-align:center; size: 20px"
         *ngFor="let item of model.profiles[index].relation"
-        [style.background]="getColor(item)"
+        [style.background]="getColor(item,index)"
         [class.draggable]="!model.majorityMatrixIsDirty"
         [class.disabled]="model.majorityMatrixIsDirty">{{ model.getIdentifier(item) }}</li>
 </ul>
