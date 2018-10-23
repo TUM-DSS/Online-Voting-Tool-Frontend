@@ -38,14 +38,19 @@ export class ProfileBoxComponent implements OnInit {
   }
 
   getColor(index, voter) {
-    let voterIndex = 0;
-    let counter = 0;
-    while (counter < voter) {
-      voterIndex += this.model.profiles[voterIndex].numberOfVoters;
-      counter++;
+    try {
+      let voterIndex = 0;
+      let counter = 0;
+      while (counter < voter) {
+        voterIndex += this.model.profiles[voterIndex].numberOfVoters;
+        counter++;
+      }
+      return barColors.getHTMLColor(index, voterIndex);
     }
-    // console.log("voter: "+voter +"   index: "+ voterIndex);
-    return barColors.getHTMLColor(index, voterIndex);
+    catch (e) {
+      return barColors.getHTMLColor(index, voter);
+    }
+
   }
 
   /*
