@@ -24,6 +24,7 @@
       <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
     </div>
 
+    <!--Win Wheel-->
     <div [hidden]="!tieBreakingActive || waiting || (resultType != resultDataType.Lotteries)" (click)="startWheelAnimation()">
       <div [ngSwitch]="getWheelWinner">
       <div *ngSwitchCase="'none'" style="text-align: center; margin: 0; padding: 0; color: black; font-size: 30px">
@@ -45,22 +46,22 @@
       <div *ngIf="!tieBreakingActive">
       <app-bar-chart *ngSwitchCase="resultDataType.Lotteries" [data] = "resultBarData" [lotteries]="resultLotteries"></app-bar-chart>
       </div>
+
+      <!--Social Welfare Function (SWF) / Social Preference Function (SPF)-->
       <div *ngSwitchCase="resultDataType.Profile">
         <div *ngIf="resultCount > 1 && resultCount < maximalResultCount">There are a total of {{resultCount}} SWF rankings. One example is:</div>
         <div *ngIf="resultCount > 1 && resultCount >= maximalResultCount && maximalResultCount > 1">There are more than {{maximalResultCount}} SWF rankings. One example is:</div>
         <div *ngIf="resultCount > 1 && maximalResultCount == 1">There might be several SWF rankings. One example is:</div>
       </div>
       <div *ngSwitchCase="resultDataType.Profile" class="card card-block bg-primary" style="width: 13rem; margin-right:5px; display:inline-block">
-        <!--<div class="card-header text-white d-flex w-100">-->
-          <!--SWF ranking-->
-        <!--</div>-->
         <ul class="list-group list-group-flush">
             <li class="list-group-item"
                 style="text-align:center"
                 *ngFor="let item of resultProfile">{{ model.getIdentifier(item) }}</li>
         </ul>
-
       </div>
+
+      <!--Assignment rules-->
       <div *ngSwitchCase="resultDataType.Matrix">
         <div class="table-responsive">
           <table class="table table-hover" style="max-width: 100%; margin: 0 0 0 0; table-layout: fixed;">
@@ -85,8 +86,9 @@
       </div>
     </div>
 
-    <app-efficiency-chart *ngIf="(resultType == resultDataType.Lotteries) && !waiting" [data]="efficiencyData"></app-efficiency-chart>
+    <app-efficiency-chart *ngIf="(resultType == resultDataType.Lotteries || resultType == resultDataType.Matrix) && !waiting" [data]="efficiencyData"></app-efficiency-chart>
 
+    <!--Settings-->
     <div *ngIf="menues[selectedItem.menu].list[selectedItem.item].hasParameter" style="margin-bottom:1em;">
       <h4><button (click)="toggleMLSettingsVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visibleSettings? "&#9660;":"&#9654;"}}</button>
         <a (click)="toggleMLSettingsVisibility()">Settings</a></h4>
@@ -137,9 +139,22 @@
 
     </div>
   </div>
+
+    <!--Settings for random assignment-->
+    <div *ngIf="menues[selectedItem.menu].name === 'Random Assignment'" [hidden]="waiting" style="margin-bottom:1em; text-align: center;">
+      <div class="headlinetooltip" style="text-align: center;">
+        <strong style="display:block;">Show exact result:</strong>
+        <label class="switch">
+          <input id="arithmeticSwitch" type="checkbox" (click)="toggleFormat()" checked>
+          <span class="toggleslider round"></span>
+        </label>
+      </div>
+    </div>
+
   </div>
 </div>
 
+<!--Social Choice Functions (SCFs)-->
 <div style="margin: 2vw 1vw 1vw 2vw;">  <!--*ngIf="advancedMode"-->
   <h3><button (click)="toggleSCFVisibility()" style="font-size:16px ;background:none; border:none; color: #2fa4e7" class="toggleButton">{{visibleSCF? "&#9660;":"&#9654;"}}</button>
     <a (click)="toggleSCFVisibility()">Other Rules</a></h3>

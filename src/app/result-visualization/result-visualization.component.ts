@@ -95,6 +95,7 @@ export class ResultVisualizationComponent implements OnInit {
 
   tieBreakingActive : boolean;
   tieWasBroken : boolean;
+  arithmeticResult : boolean;
   visibleSCF : boolean;
   visibleSettings : boolean;
   soundActive : boolean;
@@ -210,6 +211,7 @@ export class ResultVisualizationComponent implements OnInit {
 
     this.tieBreakingActive = true;
     this.tieWasBroken = false;
+    this.arithmeticResult = true;
     this.visibleSCF = Globals.advancedMode;
     this.visibleSettings = false;
     // The vote parameter is (only) the "signed exponent" at the moment. The default is hardcoded to 1 at the moment:
@@ -390,6 +392,14 @@ export class ResultVisualizationComponent implements OnInit {
    */
   toggleTieBreaking() {
     this.tieBreakingActive = !this.tieBreakingActive;
+    this.updateVisualization();
+  }
+
+  /**
+   * Show exact results or approximations
+   */
+  toggleFormat() {
+    this.arithmeticResult = !this.arithmeticResult;
     this.updateVisualization();
   }
 
@@ -631,10 +641,10 @@ export class ResultVisualizationComponent implements OnInit {
         }
 
         //Test for efficiency
-        let profiles = this.model.profiles.map(p => p.relation);
+        let voters = this.model.profiles.map(p => p.relation);
 
         //console.log("Test Data", data.result, profiles);
-        this.tester.testLotteries(data.result, data.exact, profiles).subscribe(data => this.updateEfficiencyCallback(data));
+        this.tester.testLotteries(data.result, data.exact, voters).subscribe(data => this.updateEfficiencyCallback(data));
 
       } else if(typeTemp == ResultDataType.Profile) {
         //Profile
@@ -645,19 +655,22 @@ export class ResultVisualizationComponent implements OnInit {
         }
       }
       else if(typeTemp == ResultDataType.Matrix) {
-        this.resultMatrix = data.result;
+        this.resultMatrix = JSON.parse(JSON.stringify(data.result)); // Deep copy
 
-          for(let i=0; i < data.result[0].length; i++) {
-            for (let j = 0; j < data.result[0].length; j++) {
-            //   if (data.result[0][0][0] !== undefined) {
-              let fraction = math.fraction(data.result[i][j][0], data.result[i][j][1]);
-              let fractionAsString = math.format(fraction);
-              this.resultMatrix[i][j] = data.result[i][j][0] === 0 ? 0 : ( data.result[i][j][0] === data.result[i][j][1] ? 1 : fractionAsString);
-              barColors.resultLotteryForColoring[i][j] = math.number(fraction);
-            // }
-            // else this.resultMatrix[i][j] = math.format(this.resultMatrix[i][j]);
+        for(let i=0; i < data.result[0].length; i++) {
+          for (let j = 0; j < data.result[0].length; j++) {
+            let fraction = math.fraction(data.result[i][j][0], data.result[i][j][1]);
+            let fractionAsString = math.format(fraction);
+            if (!this.arithmeticResult) fractionAsString = data.result[i][j][0] === 0 ? 0 : (data.result[i][j][0] === data.result[i][j][1] ? 1 : (Math.round((data.result[i][j][0] / data.result[i][j][1]) * 100) / 100));
+            this.resultMatrix[i][j] = data.result[i][j][0] === 0 ? 0 : ( data.result[i][j][0] === data.result[i][j][1] ? 1 : fractionAsString);
+            barColors.resultLotteryForColoring[i][j] = math.number(fraction);
           }
         }
+
+        //Test for efficiency
+        let voters = this.model.profiles.map(p => p.relation);
+        this.tester.testLotteries("Matrix", data.result, voters).subscribe(data => this.updateEfficiencyCallback(data));
+
       }
 
       this.resultType = typeTemp;

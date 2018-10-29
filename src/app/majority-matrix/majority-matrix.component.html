@@ -40,6 +40,7 @@
 
 
   <button class="btn btn-primary"  (click) = "toggleMode()">{{profileComputationRunning ? "Computing ..." : (editMode ? "Save" : "Edit") }}</button>
+  <button class="btn btn-primary"  (click) = "visualize()" [hidden]="editMode || profileComputationRunning">Visualize</button>
   <button class="btn btn-danger" (click) = "resetEdit()" [hidden]="!editMode || profileComputationRunning">Reset</button>
   <button class="btn btn-info" (click) = "doubleStaircase()" [hidden]="!editMode || profileComputationRunning">Double Entries</button>
   <button class="btn btn-info" (click) = "randomizeStaircase()" [hidden]="profileComputationRunning">Randomize</button>

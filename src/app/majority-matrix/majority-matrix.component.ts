@@ -165,6 +165,22 @@ export class MajorityMatrixComponent implements OnInit {
     }
   }
 
+  visualize() {
+    let fullMatrix = this.model.getFullMargins(this.model.majorityMatrix.staircase);
+    let endOfLine = "%0A";
+    let url = "http://graphonline.ru/en/?matrix=";
+    for (let row of fullMatrix) {
+      for (let entry of row) {
+        url += Math.max(entry, 0);
+        url += ","
+      }
+      url = url.slice(0, -1);
+      url += endOfLine;
+    }
+    url = url.slice(0, -3);
+    location.href = url;
+  }
+
   /**
   * Generate a random staircase
   */

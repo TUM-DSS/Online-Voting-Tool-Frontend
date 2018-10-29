@@ -11,7 +11,7 @@ export class EfficencyTestService {
   url = "http://localhost:8080";
 
   constructor(private http : Http) {
-    console.log("EfficencyTestService Init")
+    console.log("EfficiencyTestService Init")
   }
 
   /**
@@ -25,7 +25,7 @@ export class EfficencyTestService {
   *   pcresult  (list of efficiency objects)
   * }
   *
-  * An efficency object:
+  * An efficiency object:
   * {
   *   success, (boolean, true if there was no error)
   *   msg,     (optional error message if success was false)
@@ -34,13 +34,13 @@ export class EfficencyTestService {
   * }
   *
   */
-  testLotteries(lotteries, exact, profiles) {
+  testLotteries(lotteries, exact, voters) {
     let headers = new Headers();
     headers.append("Content-Type","application/json");
     let data = {
       lotteries: lotteries,
       exact: exact,
-      profile: profiles
+      profile: voters
     };
 
     return this.http.post(this.url+"/test",data,{headers:headers})

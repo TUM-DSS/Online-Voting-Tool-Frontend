@@ -15,7 +15,10 @@
         <span class="tooltiptext" *ngIf="sdRes.success && !sdRes.efficient">
           Dominated by: <br/>
           <div *ngFor="let prob of sdRes.dominator; let j = index;">
-            {{getDomText(prob,j)}}
+            <span *ngIf="!sdRes.isMatrix">{{getDomText(prob,j)}}</span>
+          </div>
+          <div *ngFor="let prob of sdRes.dominator; let j = index;">
+            <span *ngIf="sdRes.isMatrix">{{getDomTextWithSize(prob,j, sdRes.sizeOfResult)}}</span>
           </div>
         </span>
 
@@ -35,7 +38,10 @@
         <span class="tooltiptext" *ngIf="data.pcresult[i].success && !data.pcresult[i].efficient">
           Dominated by: <br/>
           <div *ngFor="let prob of data.pcresult[i].dominator; let j = index;">
-            {{getDomText(prob,j)}}
+            <span *ngIf="!data.pcresult[i].isMatrix">{{getDomText(prob,j)}}</span>
+          </div>
+          <div  *ngFor="let prob of data.pcresult[i].dominator; let j = index;">
+            <span *ngIf="data.pcresult[i].isMatrix">{{getDomTextWithSize(prob,j, data.pcresult[i].sizeOfResult)}}</span>
           </div>
         </span>
 
