@@ -542,6 +542,9 @@ export class ResultVisualizationComponent implements OnInit {
                 if(data.tooltip.includes("Weak Condorcet")) {
                   this.socialChoiceFunctions[i] = "Weak Condorcet";
                 }
+                else if(data.tooltip.includes("Majority")) {
+                  this.socialChoiceFunctions[i] = "Majority winner";
+                }
                 else if(data.tooltip.includes("Condorcet")) {
                   this.socialChoiceFunctions[i] = "Condorcet";
                 }
