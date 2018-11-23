@@ -118,7 +118,7 @@ export class ResultVisualizationComponent implements OnInit {
     this.firstColumn = ["Borda","Nanson","Baldwin","Black","MaxiMin","Tideman"];
     this.secondColumn = ["Plurality","Plurality with Runoff","Instant Runoff","Anti-Plurality","Bucklin","Coombs"];
     this.thirdColumn = ["Copeland","Uncovered Set","Essential Set","Bipartisan Set","Kemeny","Schulze","Ranked Pairs"];
-    this.forthColumn = ["Condorcet","Pareto"];
+    this.forthColumn = ["Condorcet","Pareto","Mixed Efficient"];
     this.socialChoiceFunctions = this.firstColumn.concat(this.secondColumn).concat(this.thirdColumn).concat(this.forthColumn);
     this.socialChoiceResults = Array.from(new Array(this.socialChoiceFunctions.length),(x)=>"Loading");
     this.socialChoiceTooltips = [];
