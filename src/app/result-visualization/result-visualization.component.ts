@@ -548,6 +548,12 @@ export class ResultVisualizationComponent implements OnInit {
                 else if(data.tooltip.includes("Condorcet")) {
                   this.socialChoiceFunctions[i] = "Condorcet";
                 }
+                else if(data.tooltip.includes("Ultimate") && !data.tooltip.includes("Black")) {
+                  this.socialChoiceFunctions[i] = "Ultimate Scoring winner";
+                }
+                else if(data.tooltip.includes("Borda") && !data.tooltip.includes("Black")) {
+                  this.socialChoiceFunctions[i] = "Borda";
+                }
               }
               else {
                 this.socialChoiceTooltipsActive[i] = false;
