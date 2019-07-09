@@ -62,15 +62,22 @@ export class ProfileModel {
 
     let profs = prof.split("-");
 
+    let maximalNumberOfVoters = 1200;
+    let numberOfVotersCounter = 0;
+    let len = -1;
+
     let newProfiles = [];
     for (let inpString of profs) {
         inpString = inpString.toUpperCase();
 
-        let len = -1;
         if(inpString.match(/\d+[A-Z]+/) && !inpString.includes(".")){
           let match = /(\d+)([A-Z]+)/.exec(inpString);
           let num = +match[1];
           let profString = match[2];
+
+          numberOfVotersCounter += num;
+          if (numberOfVotersCounter > maximalNumberOfVoters) return;
+          console.log(numberOfVotersCounter);
 
           if(len == -1) {
             len = profString.length;
@@ -106,6 +113,9 @@ export class ProfileModel {
           }
           let num = +match[1];
           let profString = match[2];
+
+          numberOfVotersCounter += num;
+          if (numberOfVotersCounter > maximalNumberOfVoters) return;
 
           if(len == -1) {
             len = profString.length;
