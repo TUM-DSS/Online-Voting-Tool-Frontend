@@ -11,7 +11,7 @@
 
 <div id="SdsResult" class="jumbotron">
   <div style="min-height: 20em;"> <!-- class="container" -->
-    <h3 class="headlinetooltip">{{menues[selectedItem.menu].list[selectedItem.item].name}}<span *ngIf="tieBreakingActive" class="headlinetooltiptext" [innerHTML]=getLotteryForTooltip()></span></h3>
+    <h3 class="headlinetooltip">{{menues[selectedItem.menu].list[selectedItem.item].name}}<span *ngIf="tieBreakingActive && (resultType == resultDataType.Lotteries)" class="headlinetooltiptext" [innerHTML]=getLotteryForTooltip()></span></h3>
     <div *ngIf="tieWasBroken">
       There are multiple maximal lotteries; showing the average of the extremal lotteries.
     </div>

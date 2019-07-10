@@ -77,7 +77,6 @@ export class ProfileModel {
 
           numberOfVotersCounter += num;
           if (numberOfVotersCounter > maximalNumberOfVoters) return;
-          console.log(numberOfVotersCounter);
 
           if(len == -1) {
             len = profString.length;

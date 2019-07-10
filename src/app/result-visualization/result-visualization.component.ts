@@ -488,6 +488,12 @@ export class ResultVisualizationComponent implements OnInit {
                                   data => this.updateVisualizationCallback(data),
                                   error=> this.updateVisualizationCallback({success:false,msg:"Server Timeout. Reload to try again."})));
 
+    // For correctly naming the alternatives later on
+    const modelReference = this.model;
+    const convertTooltipMatchToName = function (match) {
+      return modelReference.getIdentifier(match.substr(12));
+    };
+
     // Request all Social Choice Functions
 
     for (let i = 0; i < this.socialChoiceFunctions.length; i++) {
@@ -535,8 +541,7 @@ export class ResultVisualizationComponent implements OnInit {
               }
               else if (data.tooltip != undefined && data.tooltip.length > 0) {
                 this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
-                // console.log(data.tooltip);
-                this.socialChoiceTooltips[i] = data.tooltip.replace(/ /g,'&nbsp;').replace(/\/n/g,'<br />');
+                this.socialChoiceTooltips[i] = data.tooltip.replace(/ /g,'&nbsp;').replace(/\/n/g,'<br />').replace(/Alternative_./g, convertTooltipMatchToName);
 
                 // Adjust Condorcet SCF name to "weak" version if needed
                 if(data.tooltip.includes("Weak Condorcet")) {
