@@ -523,7 +523,7 @@ export class ResultVisualizationComponent implements OnInit {
             // (Try to) Add Tooltips
             try{
               if (this.socialChoiceFunctions[i] == "Kemeny") {
-                this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
+                this.socialChoiceTooltipsActive[i] = true; //Globals.advancedMode;
                 let socialWelfareRankings = data.tooltip;
                 this.socialChoiceTooltips[i] = "";
                 for (let j = 0; j < socialWelfareRankings.length; j++) {
@@ -540,7 +540,7 @@ export class ResultVisualizationComponent implements OnInit {
 
               }
               else if (data.tooltip != undefined && data.tooltip.length > 0) {
-                this.socialChoiceTooltipsActive[i] = Globals.advancedMode;
+                this.socialChoiceTooltipsActive[i] = true; //Globals.advancedMode;
                 this.socialChoiceTooltips[i] = data.tooltip.replace(/ /g,'&nbsp;').replace(/\/n/g,'<br />').replace(/Alternative_./g, convertTooltipMatchToName);
 
                 // Adjust Condorcet SCF name to "weak" version if needed
