@@ -17,7 +17,7 @@ import {Globals} from "../globals";
 export class MajorityMatrixComponent implements OnInit {
   @Input() model : ProfileModel;
   visible: boolean;
-  editMode:boolean;
+  // editMode:boolean;
   profileComputationRunning: boolean;
   tempStaircase: number[][];
   nameOfCandidates = ["A","B","C","D","E","F","G","H","I","J"];
@@ -31,7 +31,7 @@ export class MajorityMatrixComponent implements OnInit {
     setInterval(() => {
       this.ref.markForCheck();
     }, 500);
-    this.editMode = false;
+    Globals.globalEditMode = false;
     this.profileComputationRunning = false;
     this.showInvalidMessage = false;
 
@@ -53,7 +53,7 @@ export class MajorityMatrixComponent implements OnInit {
   * Show / Hide the Majority Matrix.
   */
   toggleVisibility() {
-    if (this.editMode) {
+    if (Globals.globalEditMode) {
       // If the user tries to hide the majority matrix while editing, switch to view mode.
       this.toggleMode();
     }
@@ -62,7 +62,7 @@ export class MajorityMatrixComponent implements OnInit {
     }
     else {
       // If there is still an invalid message shown, then only hide the majority matrix if in view mode.
-      if (!this.editMode) {
+      if (!Globals.globalEditMode) {
         this.closeInvalidMessage();
         this.visible = !this.visible;
       }
@@ -94,10 +94,10 @@ export class MajorityMatrixComponent implements OnInit {
   * Toggle between view and edit mode.
   */
   toggleMode() {
-    if(!this.editMode) {
+    if(!Globals.globalEditMode) {
       this.resetEdit();
       this.nameOfCandidates = this.model.nameOfCandidates;
-      this.editMode = true;
+      Globals.globalEditMode = true;
       this.model.majorityMatrixIsDirty = true;
     } else {
       //Check & Save
@@ -119,6 +119,11 @@ export class MajorityMatrixComponent implements OnInit {
     }
   }
 
+  // Get editMode status
+  get editMode() {
+    return Globals.globalEditMode;
+  }
+
   /**
    * Compute minimal profile for new matrix
    */
@@ -127,7 +132,7 @@ export class MajorityMatrixComponent implements OnInit {
     this.extract.getProfiles(staircase).subscribe(data => {
       if(data.success) {
         //console.log("Success");
-        this.editMode = false;
+        Globals.globalEditMode = false;
         this.profileComputationRunning = false;
         this.model.majorityMatrixIsDirty = false;
         this.model.updateProfiles(data.profiles);
@@ -160,7 +165,7 @@ export class MajorityMatrixComponent implements OnInit {
   resetEdit() {
     this.tempStaircase = this.copy2D(this.model.majorityMatrix.staircase);
     this.closeInvalidMessage();
-    if(this.editMode) {
+    if(Globals.globalEditMode) {
       this.toggleMode();
     }
   }
@@ -244,6 +249,7 @@ export class MajorityMatrixComponent implements OnInit {
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (Globals.globalEditMode) return;
     if (event.key === "m") this.toggleVisibility();
     if (event.key === "w") this.randomizeStaircase();
     if (event.key === "e") this.toggleMode();

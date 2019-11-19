@@ -758,6 +758,7 @@ export class ResultVisualizationComponent implements OnInit {
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (Globals.globalEditMode) return;
     if (event.key === "s") this.toggleMLSettingsVisibility();
     if (event.key === "t") document.getElementById("tieSwitch").click();
     if (event.key === "f") this.toggleSCFVisibility();

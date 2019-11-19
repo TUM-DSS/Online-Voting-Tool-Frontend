@@ -67,6 +67,7 @@ export class AppComponent {
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (Globals.globalEditMode) return;
     if (event.key === "?") {
       document.getElementById("infoScreen").style.display = "none";
       if (document.getElementById("keyboardShortcuts").style.display !== "block") document.getElementById("keyboardShortcuts").style.display = "block";
