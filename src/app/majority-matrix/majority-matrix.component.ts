@@ -77,6 +77,7 @@ export class MajorityMatrixComponent implements OnInit {
     for (let i = 0; i < this.model.numberOfCandidates; i++) {
       for (let j = 0; j < this.model.numberOfCandidates; j++) {
         l+= this.model.majorityMatrix.get(i,j)+" ";
+        // l+= this.tempStaircase[i][j]+" ";
       }
       l+="\n"
     }
@@ -101,7 +102,21 @@ export class MajorityMatrixComponent implements OnInit {
       this.model.majorityMatrixIsDirty = true;
     } else {
       //Check & Save
-      if(!this.isValidStaircase(this.tempStaircase)) {
+
+      // Check if all inputs are integer
+      let nonIntegers = false;
+      for (let i = 0; i < this.tempStaircase.length; i++) {
+        for (let j = 0; j < this.tempStaircase.length - i; j++) {
+          if (!Number.isInteger(this.tempStaircase[i][j])) {
+            nonIntegers = true;
+          }
+        }
+      }
+
+      // In backend: Treat non-integers below x.5 as upper bounds and non-integers above x.5 as lower bounds
+
+
+      if(!nonIntegers && !this.isValidStaircase(this.tempStaircase)) {
         // Invalid Staircase
         //console.log("Matrix Invalid");
         this.showInvalidMessage = true;
@@ -206,6 +221,7 @@ export class MajorityMatrixComponent implements OnInit {
         if (canX > canY) {
           let sign = Math.random() > 0.5 ? 1 : -1;
           let absoluteValue = 2 * Math.floor(Math.random() * (basis+1));
+          // let absoluteValue = Math.random() * this.weightLimit; // for debugging non-integer inputs
           newStaircase[canY][canX-(canY+1)] =  sign * (absoluteValue + (even ? 0 : 1));
         }
       }
