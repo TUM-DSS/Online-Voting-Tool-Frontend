@@ -16,6 +16,7 @@ export class AppComponent {
   model : ProfileModel;
 
   paramSub : any;
+  year : number = new Date().getFullYear();
 
   constructor(private router: Router, private route: ActivatedRoute, private titleService: Title ) {
     console.log(this.route.queryParams['profile']);
